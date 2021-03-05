@@ -32,6 +32,3 @@ hugo.linux
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# Theme exampleSite
-themes/cactus/exampleSite/
