@@ -1,0 +1,24 @@
+{
+  "list": [
+    {
+      "name":"Volleyball Analytics",
+      "url":"https://github.com/paulj1989/volleyball-analytics",
+      "desc":"Developing expected value metrics for volleyball"
+    },
+    {
+      "name":"Player Similarities",
+      "url":"https://github.com/paulj1989/player-similarities",
+      "desc":"Using cluster analysis & nearest neighbors methods for identifying similar players"
+    },
+    {
+      "name":"Political Language in the Bulgarian Constitutional Court",
+      "url":"https://github.com/paulj1989/bulgarian-constitutional-court-decisions",
+      "desc":"Analyzing Bulgarian Constitutional Court texts using NLP"
+    },
+    {
+      "name":"Football Analytics",
+      "url":"https://github.com/paulj1989/football-analytics",
+      "desc":"Analyzing & visualizing football data for a variety of mediums"
+    }
+  ]
+}
