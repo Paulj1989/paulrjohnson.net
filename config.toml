@@ -24,7 +24,7 @@ weight = 3
 
 [[menu.main]]
 name = "CV"
-url = "/cv.pdf"
+url = "/cv"
 weight = 4
 
 [markup]
