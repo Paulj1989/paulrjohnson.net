@@ -1,6 +1,6 @@
 baseURL = "https://paulrjohnson.net"
 languageCode = "en-us"
-title = "Paul Johnson - Social Scientist & Data Scientist"
+title = "Paul Johnson"
 theme = "cactus"
 # googleAnalytics = "G-8HRG061J1N"
 
@@ -40,7 +40,7 @@ weight = 4
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
 
   # Home page settings
-  description = "I'm Paul, a social scientist and data scientist based in London, United Kingdom. My research has focused on party and party system change, particularly the development of new political parties in established systems. Now, I am broadly interested in applying my formal education in statistics and quantitative methods and a passion for coding and computing, to use machine learning techniques for modeling human behavior and the social world."
+  description = "I'm Paul, a social scientist and data scientist based in London, United Kingdom. My research has focused on party and party system change, particularly the development of new political parties in established systems. Now, I am broadly interested in applying my formal education in statistics and quantitative methods and a passion for coding and computing, to using machine learning techniques for modeling human behavior and the social world."
   mainSection = "posts" # your main section
   showAllPostsOnHomePage = false # default
   postsOnHomePage = 3 # this option will be ignored if showAllPostsOnHomePage is set to true
