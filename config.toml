@@ -45,7 +45,7 @@ weight = 5
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
 
   # Home page settings
-  description = "I'm Paul, a social scientist and data scientist based in London, United Kingdom. My research has focused on party and party system change, particularly the development of new political parties in established systems. Now, I am broadly interested in applying my formal education in statistics and quantitative methods and a passion for coding and computing, to using machine learning techniques for modeling human behavior and the social world."
+  description = "I'm Paul, a data scientist based in London, United Kingdom, currently working in population health management at the NHS. My academic background is in political science, focusing on party and party system change, particularly the development of new political parties in established systems. Now, I am broadly interested in applying my formal education in statistics and quantitative methods and a passion for coding and computing, to modeling human behavior and the social world."
   mainSection = "posts" # your main section
   showAllPostsOnHomePage = false # default
   postsOnHomePage = 3 # this option will be ignored if showAllPostsOnHomePage is set to true
