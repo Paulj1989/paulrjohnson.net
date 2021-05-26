@@ -14,7 +14,7 @@ keywords:
 
 ## Publications
 
-- Johnson, P., & Cantu, F. (2020) ["The Nationalization of Mexican Parties"](https://www.politicaygobierno.cide.edu/index.php/pyg/article/view/1276/1029). *Política y Gobierno* 27 (2)
+- Johnson, P., & Cantu, F. (2020) ["The Nationalization of Mexican Parties"](https://www.dropbox.com/s/hziiab4k4u8im6p/Johnson%20%26%20Cantu%20%282020%29%20-%20The%20Nationalization%20of%20Mexican%20Parties.pdf?dl=0). *Política y Gobierno* 27 (2)
 
 ## Working Papers
 
