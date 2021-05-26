@@ -8,7 +8,7 @@ keywords:
 ---
 ![Paul](/images/paul_medium.png)
 
-I'm Paul. A social scientist from the UK transitioning out of academia to pursue a career in data science and research.
+I'm Paul. A social scientist from the UK transitioning out of academia to pursue a career in data science. I work for the NHS South, Central, and West CSU, in their Population Health Management team.
 
 As a political scientist, my research interests are centered around party and party system change, particularly the development of new political parties in established systems. However, I am broadly interested in applying machine learning techniques to modeling human behavior.
 
