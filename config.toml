@@ -45,7 +45,7 @@ weight = 5
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
 
   # Home page settings
-  description = "I'm Paul, a data scientist based in London, currently working in population health management at the NHS. I became a data scientist after leaving academia to pursue a field that gives me the opportunity to use my skill set to have a more direct impact on the world. I'm interested in combining my quantitative social science background with the application of machine learning and deep learning, to better understand human behavior and the social world."
+  description = "I'm Paul, a data scientist based in London, currently working in population health management at the NHS. I became a data scientist after leaving academia to pursue a field that gives me the opportunity to use my skill set to have a more direct impact on the world. I'm interested in combining my quantitative social science background with the application of machine learning and deep learning, to understand and predict human behavior and the social world."
   mainSection = "posts" # your main section
   showAllPostsOnHomePage = false # default
   postsOnHomePage = 3 # this option will be ignored if showAllPostsOnHomePage is set to true
