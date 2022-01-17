@@ -1,0 +1,19 @@
+---
+title: Making Myself Accountable
+date: 2022-01-17 09:00:00
+tags:
+    - Data Science
+category: me
+keywords:
+    - Updates
+---
+
+One of my goals when setting up this site was to use the blog section reasonably frequently to share some of my work and share anything particularly interesting that I've learned in my development as a data scientist. There hasn't been much sharing going on. I'd like to think that isn't because I haven't done or learned anything interesting (...), I just haven't found the time to share it.
+
+I'm the ideas man. No one told me I'd also have to be the one to finish the ideas too. That seems deeply unfair.
+
+But having realized that everything I've thought about sharing either hasn't made it out of my head, or has been shared with friends in the form of a dumb joke, I'm looking to set myself some goals that will make the blog a little more active. So I'm using this space as an opportunity to hold myself accountable to my own fantastical intentions.
+
+Over the course of the next 12 months, I'm going to try and average a blog post a month, around data science generally, and anything cool that I'm either learning or doing.
+
+Given that everything is posting and everyone is a poster, it's time I put some hours in at the content factory. New Year, New Me.
