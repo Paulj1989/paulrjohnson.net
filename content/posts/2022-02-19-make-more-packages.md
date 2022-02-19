@@ -1,0 +1,126 @@
+---
+title: Make More Packages!
+date: 2022-02-19 13:15:00
+tags:
+    - R
+    - Data Science
+    - Package Development
+category:  data science
+keywords:
+    - rlang
+    - r
+    - r package
+    - data science
+---
+
+Having learned R in an academic context, I wasn't exposed to programming in a linear path that taught me the basics of programming theory and application. I learned how to carry out statistical analysis using R, and my interaction with packages was that they would help me get the job done without having to do everything manually. As a result, package development has always intimidated me a little bit. It seemed like the responsibility of much smarter people that know what they're doing, and that can build packages that can help me figure out what I'm doing too.
+
+To be fair, that was probably an accurate description of my situation for... a good few years of my time using R. But practice makes you less bad at things, and over time I've gone from being someone that uses R like it's a boiling pot of oil that they're about to chuck a fistful of frozen chips at for the first time, to someone that has full confidence that they can't do any damage because they've already burned the house down anyway.
+
+That is (mostly) a lie. I'm now (mostly) good at what I do. But that didn't stop package development being a process that intimidated me.
+
+However, I recently made the jump into some basic package development as a result of working on an internal package that I am helping to develop. While it wasn't being built entirely from scratch, this package was a good opportunity for me to play around with some cool functions and learn about package infrastructure. Having done so, I realised that the process is actually pretty painless.
+
+To follow-up on what I'd learned, I decided to build my own (stupid but funny) package from scratch, and made [{nice}](https://github.com/Paulj1989/nice).
+
+Now, I thought I would write this short blog post detailing the process for creating a very basic package, in the hope that it might help someone else overcome an imagined barrier to entry. I will run through the process of setting up a package, adding some simple functions, and then building out the basic infrastructure with documentation and testing, using {nice} as an example.
+
+## Initial Setup
+
+In order to build a basic package from scratch, you should only need to rely on four different packages that will aid you in setting everything up, building the correct infrastructure, and documenting and testing your functions.
+
+The packages you need:
+
+- [{devtools}](https://devtools.r-lib.org/)
+- [{usethis}](https://usethis.r-lib.org/)
+- [{roxygen2}](https://roxygen2.r-lib.org/)
+- [{testthat}](https://testthat.r-lib.org/)
+
+{devtools} is responsible for the majority of the functions you'll need to build and maintain a package and {usethis} handles the initial setup of the project, while {roxygen2} helps you document your package, and {testthat} simplifies unit testing.
+
+## Functions
+
+Packages are effectively just a way of housing and distributing functions. If you're making a package, you'll need some functions! They don't need to be wildly complex. They just need to work, and ideally they would be reasonably useful too. However, in the absence of useful functions, we've got an example of a funny function instead:
+
+```r
+check <- function(x) {
+  if (x %in% c(69, 0.69)) {
+    print("Nice!")
+  } else {
+    print("Not very nice.")
+  }
+}
+```
+
+This is very simple. All it is doing is checking if an object _x_ matches either the number 69 or 0.69. If it does, then it returns "Nice!", and if it doesn't, it returns "Not very nice.". If you're just looking to build a basic package as a means of learning how to do so, this is all you need! You can build on this iteratively, as you become more confident with package development, or come up with other useful functions your package should include.
+
+I think it is generally best practice to dedicate a different file to each individual function, though it's not absolutely necessary. If you choose to, you can store all your functions in one file, and this might be a sensible approach if you're creating a package that contains all your miscellaneous functions. However, for anything a little more meaty than that, I think the best approach is to split out everything into files for each function. That makes it easier for someone (likely including yourself) to navigate the source code.
+
+## Documentation
+
+The next step is to document your package, so anyone using it will have some guidance on what they're doing and why. Documentation doesn't need to be complicated, though if the function it is documenting is pretty complex, it should probably go into plenty of detail to help anyone trying to use it. In the {nice} example, the functions are super simple, so there's no sense in overdoing the docs either.
+
+You need to add comments at the beginning of your function script which explain what the function does, details any of the required parameters for the function to run, and give some examples of usage. In order for {roxygen2} to recognise the comments that need to be turned into documentation, you have to add #' in front of them.
+
+Below is a basic example of what is needed, corresponding to the {nice} check function above:
+
+```r
+#' Checking whether your R output is really nice
+#'
+#' @keywords nice
+#' @export
+#' @examples
+#' check(69)
+```
+
+Having done this, devtools will process the documentation so that it all works as expected:
+
+```r
+devtools::document()
+```
+
+You can get a look at your documentation by calling _?function_ like you normally would. In this case, calling _?check_ returns the documentation for the {nice} check function.
+
+## Testing
+
+In order to reduce the likelihood that your package becomes a mess of errors, it is important to test it. The best way of doing this is automating your tests, to make everything reproducible, and reduce your own opportunities to do anything stupid!
+
+To set up your tests, the following creates a new script for all tests of the particular function(s) you're working on.
+
+```r
+usethis::use_test("name")
+```
+
+An example of a basic test:
+
+```r
+test_that("check returns correct type of response", {
+  nice <- check(69)
+  expect_type(nice, "character")
+})
+```
+
+This test is, as it describes, checking that _check_ is returning the right type of output when it runs. The test creates an object called _nice_ that contains the output from the _check_ function, when the input it receives is 69. The test expects the object to be of type character, and if that is so, then it will pass the test. If you want to build further tests for this particular function, you could check that the function correctly recognises whether the input is nice or not, and returns the correct response.
+
+This would look as follows:
+
+```r
+test_that("check returns correct positive response", {
+  nice <- check(69)
+  expect_equal(nice, "Nice!")
+})
+```
+
+Once you have set up some tests that you want to use to check your functions, you can run those tests by calling on devtools:
+
+```r
+devtools::test()
+```
+
+This will run through each test and check that it returns the expected output. If it doesn't it will show that it has failed, and show you where exactly that failure has occurred, in order to help you fix it. If it has worked, then you're all good!
+
+## Further Reading
+
+This was a very, very quick run-through on how to create a basic package, just to get started, but if you want to make something that is a little more useful than some dumb function to check if your outputs are nice, then there's plenty of resources for how to take your packages from basics to CRAN and beyond.
+
+The starting point, as is often the case, is Hadley Wickham. Hadley Wickham and Jenny Bryan's [_R Packages_](https://r-pkgs.org/index.html) is an excellent resource for learning to make some killer packages. And if you're looking to learn how to build the kind of functions that belong in those killer packages, then Hadley Wickham's [_Advanced R_](https://adv-r.hadley.nz/) will get you most of the way there.
