@@ -41,7 +41,7 @@ weight = 5
 [params]
 
   colortheme = "dark" # dark, light, white, or classic
-  highlight: "github.styl"
+  highlight = "github.styl"
   rss = false # generate rss feed. default value is false
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
 
