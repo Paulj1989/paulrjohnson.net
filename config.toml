@@ -51,7 +51,7 @@ weight = 5
 
 [params]
 
-  colortheme = "light" # dark, light, white, or classic
+  colortheme = "classic" # dark, light, white, or classic
   rss = false # generate rss feed. default value is false
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
 
