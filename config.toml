@@ -38,10 +38,20 @@ weight = 5
     ordered = false
     startLevel = 2
 
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = "github"
+    tabWidth = 4
+
 [params]
 
-  colortheme = "dark" # dark, light, white, or classic
-  highlight = "github.styl"
+  colortheme = "light" # dark, light, white, or classic
   rss = false # generate rss feed. default value is false
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
 
