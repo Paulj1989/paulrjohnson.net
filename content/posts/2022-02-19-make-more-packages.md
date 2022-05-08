@@ -21,9 +21,9 @@ That is (mostly) a lie. I'm now (mostly) good at what I do. But that didn't stop
 
 However, I recently made the jump into some basic package development as a result of working on an internal package that I am helping to develop. While it wasn't being built entirely from scratch, this package was a good opportunity for me to play around with some cool functions and learn about package infrastructure. Having done so, I realised that the process is actually pretty painless.
 
-To follow-up on what I'd learned, I decided to build my own (stupid but funny) package from scratch, and made [{nice}](https://github.com/Paulj1989/nice).
+To follow-up on what I'd learned, I decided to build my own (stupid but funny) package from scratch, and made [**nice**](https://github.com/Paulj1989/nice).
 
-Now, I thought I would write this short blog post detailing the process for creating a very basic package, in the hope that it might help someone else overcome an imagined barrier to entry. I will run through the process of setting up a package, adding some simple functions, and then building out the basic infrastructure with documentation and testing, using {nice} as an example.
+Now, I thought I would write this short blog post detailing the process for creating a very basic package, in the hope that it might help someone else overcome an imagined barrier to entry. I will run through the process of setting up a package, adding some simple functions, and then building out the basic infrastructure with documentation and testing, using **nice** as an example.
 
 ## Initial Setup
 
@@ -31,25 +31,25 @@ In order to build a basic package from scratch, you should only need to rely on 
 
 The packages you need:
 
-- [{devtools}](https://devtools.r-lib.org/)
-- [{usethis}](https://usethis.r-lib.org/)
-- [{roxygen2}](https://roxygen2.r-lib.org/)
-- [{testthat}](https://testthat.r-lib.org/)
+- [**devtools**](https://devtools.r-lib.org/)
+- [**usethis**](https://usethis.r-lib.org/)
+- [**roxygen2**](https://roxygen2.r-lib.org/)
+- [**testthat**](https://testthat.r-lib.org/)
 
-{devtools} is responsible for the majority of the functions you'll need to build and maintain a package and {usethis} handles the initial setup of the project, while {roxygen2} helps you document your package, and {testthat} simplifies unit testing.
+**devtools** is responsible for the majority of the functions you'll need to build and maintain a package and **usethis** handles the initial setup of the project, while **roxygen2** helps you document your package, and **testthat** simplifies unit testing.
 
 ## Functions
 
 Packages are effectively just a way of housing and distributing functions. If you're making a package, you'll need some functions! They don't need to be wildly complex. They just need to work, and ideally they would be reasonably useful too. However, in the absence of useful functions, we've got an example of a funny function instead:
 
 ```r
-check <- function(x) {
-  if (x %in% c(69, 0.69)) {
+check <- function(x) **
+  if (x %in% c(69, 0.69)) **
     print("Nice!")
-  } else {
+  ** else **
     print("Not very nice.")
-  }
-}
+  **
+**
 ```
 
 This is very simple. All it is doing is checking if an object _x_ matches either the number 69 or 0.69. If it does, then it returns "Nice!", and if it doesn't, it returns "Not very nice.". If you're just looking to build a basic package as a means of learning how to do so, this is all you need! You can build on this iteratively, as you become more confident with package development, or come up with other useful functions your package should include.
@@ -58,11 +58,11 @@ I think it is generally best practice to dedicate a different file to each indiv
 
 ## Documentation
 
-The next step is to document your package, so anyone using it will have some guidance on what they're doing and why. Documentation doesn't need to be complicated, though if the function it is documenting is pretty complex, it should probably go into plenty of detail to help anyone trying to use it. In the {nice} example, the functions are super simple, so there's no sense in overdoing the docs either.
+The next step is to document your package, so anyone using it will have some guidance on what they're doing and why. Documentation doesn't need to be complicated, though if the function it is documenting is pretty complex, it should probably go into plenty of detail to help anyone trying to use it. In the **nice** example, the functions are super simple, so there's no sense in overdoing the docs either.
 
-You need to add comments at the beginning of your function script which explain what the function does, details any of the required parameters for the function to run, and give some examples of usage. In order for {roxygen2} to recognise the comments that need to be turned into documentation, you have to add #' in front of them.
+You need to add comments at the beginning of your function script which explain what the function does, details any of the required parameters for the function to run, and give some examples of usage. In order for **roxygen2** to recognise the comments that need to be turned into documentation, you have to add #' in front of them.
 
-Below is a basic example of what is needed, corresponding to the {nice} check function above:
+Below is a basic example of what is needed, corresponding to the **nice** check function above:
 
 ```r
 #' Checking whether your R output is really nice
@@ -79,7 +79,7 @@ Having done this, devtools will process the documentation so that it all works a
 devtools::document()
 ```
 
-You can get a look at your documentation by calling _?function_ like you normally would. In this case, calling _?check_ returns the documentation for the {nice} check function.
+You can get a look at your documentation by calling _?function_ like you normally would. In this case, calling _?check_ returns the documentation for the **nice** check function.
 
 ## Testing
 
@@ -94,10 +94,10 @@ usethis::use_test("name")
 An example of a basic test:
 
 ```r
-test_that("check returns correct type of response", {
+test_that("check returns correct type of response", **
   nice <- check(69)
   expect_type(nice, "character")
-})
+**)
 ```
 
 This test is, as it describes, checking that _check_ is returning the right type of output when it runs. The test creates an object called _nice_ that contains the output from the _check_ function, when the input it receives is 69. The test expects the object to be of type character, and if that is so, then it will pass the test. If you want to build further tests for this particular function, you could check that the function correctly recognises whether the input is nice or not, and returns the correct response.
@@ -105,10 +105,10 @@ This test is, as it describes, checking that _check_ is returning the right type
 This would look as follows:
 
 ```r
-test_that("check returns correct positive response", {
+test_that("check returns correct positive response", **
   nice <- check(69)
   expect_equal(nice, "Nice!")
-})
+**)
 ```
 
 Once you have set up some tests that you want to use to check your functions, you can run those tests by calling on devtools:

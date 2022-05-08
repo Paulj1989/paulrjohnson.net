@@ -1,5 +1,5 @@
 ---
-title: Combining Tidymodels and Caret for Machine Learning in R
+title: Combining **tidymodels** and **caret** for Machine Learning in R
 date: 2022-05-07 10:30:00
 tags:
     - Machine Learning
@@ -9,18 +9,18 @@ keywords:
     - Data Science
     - R
     - Caret
-    - Tidymodels
+    - tidymodels
 ---
 
-The two main approaches to building machine learning models in R are caret and tidymodels. Having tried both, I found that I struggled to pick my favorite. There's elements of both that made more intuitive sense to me than the other. I think it's a product of having become very familiar with the tidyverse, particularly dplyr, for data wrangling, but still using a lot of Base R functions for statistical modeling.
+The two main approaches to building machine learning models in R are [**caret**](https://github.com/topepo/caret/) and [**tidymodels**](https://www.tidymodels.org/). Having tried both, I found that I struggled to pick my favorite. There's elements of both that made more intuitive sense to me than the other. I think it's a product of having become very familiar with the **tidyverse**, particularly **dplyr**, for data wrangling, but still using a lot of Base R functions for statistical modeling.
 
-The process for prepping the data for a machine learning model seems to make a ton of sense to me when done in tidymodels (using recipes and rsample), but the equivalent process using caret felt a little clunky. However, specifying and training models using caret made a lot of sense to my broken brain.
+The process for prepping the data for a machine learning model seems to make a ton of sense to me when done in **tidymodels** (using [**recipes**](https://recipes.tidymodels.org/) and [**rsample**](https://rsample.tidymodels.org/)), but the equivalent process using **caret** felt a little clunky. However, specifying and training models using **caret** made a lot of sense to my broken brain.
 
-Anyway, I recently discovered something that is probably entirely unremarkable to everyone else, and that probably shouldn't have taken me by surprise... You can just combine the two! You can split and preprocess your data using the tidymodels framework before defecting to caret for the next steps. What a time to be alive.
+Anyway, I recently discovered something that is probably entirely unremarkable to everyone else, and that probably shouldn't have taken me by surprise... You can just combine the two! You can split and preprocess your data using the **tidymodels** framework before defecting to **caret** for the next steps. What a time to be alive.
 
 ## Training a Random Forest Model to Predict Diabetes
 
-Because I'm not a savage, I won't leave you without a simple worked example. We'll use Gary Hutson's really useful MLDataR package to grab a toy diabetes dataset, cleaning the variable names using janitor, and converting the target variable, diabetic_class, to a factor.
+Because I'm not a savage, I won't leave you without a simple worked example. We'll use [Gary Hutson](https://hutsons-hacks.info/)'s really useful [**MLDataR**](https://cran.r-project.org/web/packages/MLDataR/vignettes/MLDataR.html) package to grab a toy diabetes dataset, cleaning the variable names using [**janitor**](http://sfirke.github.io/janitor/), and converting the target variable, *diabetic_class*, to a factor.
 
 ```R
 # import packages
@@ -36,7 +36,7 @@ df <-
   dplyr::mutate(diabetic_class = as.factor(diabetic_class))
 ```
 
-Having done this, we can use rsample to split the data into a train and test set.
+Having done this, we can use **rsample** to split the data into a train and test set.
 
 ```R
 # split train/test data
@@ -51,7 +51,7 @@ train_df <- rsample::training(train_test_split)
 test_df <- rsample::testing(train_test_split)
 ```
 
-The next step is a little more involved, and is where I think tidymodels really excels. Using the recipes package, we can specify all the preprocessing steps needed for the dataset, such that the data will then be ready for training a machine learning model.
+The next step is a little more involved, and is where I think **tidymodels** really excels. Using the **recipes** package, we can specify all the preprocessing steps needed for the dataset, such that the data will then be ready for training a machine learning model.
 
 ```R
 # preprocessing
@@ -67,7 +67,7 @@ model_recipe <-
   step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE)
 ```
 
-You can check that all the preprocessing steps are working as expected by using prep() and juice().
+You can check that all the preprocessing steps are working as expected by using *prep()* and *juice()*.
 
 ```R
 # check preprocessing results
@@ -77,9 +77,9 @@ model_recipe %>%
 
 ```
 
-If everything looks alright, you can take the model_recipe object that you've created and use it as the model formula that you would otherwise have to specify in the caret train() function.
+If everything looks alright, you can take the *model_recipe* object that you've created and use it as the model formula that you would otherwise have to specify in the **caret** *train()* function.
 
-For the rest of the process, you can switch over to caret, first using the trainControl() function to specify the training parameters and then the train() function for the model training.
+For the rest of the process, you can switch over to **caret**, first using the *trainControl()* function to specify the training parameters and then the *train()* function for the model training.
 
 ```R
 # set random seed
@@ -194,8 +194,8 @@ The results are pretty good for a very quick model. How exciting. Lets pretend t
 
 ## Conclusion
 
-So there you have it, if you're in the same position as me and you're struggling to pick between tidymodels and caret, because both frameworks offer something you like, you can just combine the two and make Frankenstein's framework.
+So there you have it, if you're in the same position as me and you're struggling to pick between **tidymodels** and **caret**, because both frameworks offer something you like, you can just combine the two and make Frankenstein's framework.
 
-Ultimately, despite this blog post, I'm probably going to stick with tidymodels (why am I like this?). I think that I'm going to force myself to get used to the tidymodels framework end-to-end because a) it is receiving tons of development so it's probably going to continue to get better and bigger, and will be leading the way for the foreseeable future, and b) because in reality I think the explicit way that you structure each step is probably sensible, even if it confuses me a bit.
+Ultimately, despite this blog post, I'm probably going to stick with **tidymodels** (why am I like this?). I think that I'm going to force myself to get used to the **tidymodels** framework end-to-end because a) it is receiving tons of development so it's probably going to continue to get better and bigger, and will be leading the way for the foreseeable future, and b) because in reality I think the explicit way that you structure each step is probably sensible, even if it confuses me a bit.
 
 But it's nice to know that I've got options.
