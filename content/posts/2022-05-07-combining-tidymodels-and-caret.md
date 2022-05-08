@@ -3,12 +3,15 @@ title: Combining **tidymodels** and **caret** for Machine Learning in R
 date: 2022-05-07 10:30:00
 tags:
     - Machine Learning
+    - R
+    - Data Science
 category: data-science
 keywords:
-    - Machine Learning
-    - Data Science
-    - R
-    - Caret
+    - machine learning
+    - data science
+    - r
+    - rlang
+    - caret
     - tidymodels
 ---
 
