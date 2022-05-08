@@ -1,5 +1,5 @@
 ---
-title: Combining **tidymodels** and **caret** for Machine Learning in R
+title: Combining Tidymodels and Caret for Machine Learning in R
 date: 2022-05-07 10:30:00
 tags:
     - Machine Learning
