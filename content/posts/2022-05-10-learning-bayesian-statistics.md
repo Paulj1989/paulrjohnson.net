@@ -3,8 +3,8 @@ title: Resources for Learning Bayesian Statistics
 date: 2022-05-10 11:00:00
 tags:
     - Statistics
-    - Data Science
     - Bayes
+    - Data Science
 category: statistics
 keywords:
     - data science
