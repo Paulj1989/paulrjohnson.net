@@ -2,7 +2,7 @@ baseURL = "https://paulrjohnson.net"
 languageCode = "en-us"
 title = "Paul Johnson"
 theme = "cactus"
-# googleAnalytics = "UA-191373128-1"
+googleAnalytics = "UA-191373128-1"
 
 # summaryLength = 2
 
