@@ -8,7 +8,7 @@
     {
       "name":"Player Similarities",
       "url":"https://github.com/paulj1989/player-similarities",
-      "desc":"Using cluster analysis & nearest neighbors methods for identifying similar players"
+      "desc":"Using machine learning to identify groups of similar football players"
     },
     {
       "name":"{nice}",
