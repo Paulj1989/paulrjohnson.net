@@ -11,9 +11,9 @@
       "desc":"Using cluster analysis & nearest neighbors methods for identifying similar players"
     },
     {
-      "name":"Political Language in the Bulgarian Constitutional Court",
-      "url":"https://github.com/paulj1989/bulgarian-constitutional-court-decisions",
-      "desc":"Analyzing Bulgarian Constitutional Court texts using NLP"
+      "name":"{nice}",
+      "url":"https://github.com/Paulj1989/nice",
+      "desc":"Making stupid R packages because I'm a child"
     },
     {
       "name":"Football Analytics",
