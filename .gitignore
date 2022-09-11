@@ -34,5 +34,8 @@ hugo.linux
 !.vscode/extensions.json
 
 ### Content ###
-
 \drafts
+
+### R & Quarto ###
+.Rproj.user
+/.quarto/
