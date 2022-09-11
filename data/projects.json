@@ -16,9 +16,9 @@
       "desc":"Making stupid R packages because I'm a child"
     },
     {
-      "name":"Football Analytics",
-      "url":"https://github.com/paulj1989/football-analytics",
-      "desc":"Analyzing & visualizing football data for a variety of mediums"
+      "name":"Money in Football",
+      "url":"https://github.com/paulj1989/money-in-football",
+      "desc":"Analysing resources and performance using Bayesian multilevel models"
     }
   ]
 }
