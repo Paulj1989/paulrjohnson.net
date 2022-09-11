@@ -1,6 +1,6 @@
 ---
 title: Making Myself Accountable
-date: 2022-01-17 09:00:00
+date: 2022-01-17
 tags:
     - Data Science
 category: me

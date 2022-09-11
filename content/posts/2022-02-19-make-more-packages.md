@@ -1,6 +1,6 @@
 ---
 title: Make More Packages!
-date: 2022-02-19 13:15:00
+date: 2022-02-19
 tags:
     - R
     - Data Science
