@@ -1,6 +1,6 @@
 ---
 title: Setting up a Hugo Website with Quarto
-date: 2022-09-11 20:30:00
+date: 2022-09-11 20:00:00
 tags:
     - Quarto
     - R
