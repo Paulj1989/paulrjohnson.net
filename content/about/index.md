@@ -1,6 +1,6 @@
 ---
 title: About
-date: 2021-03-07 17:45
+date: 2021-03-07
 tags:
     - About
 category: about-me

@@ -1,6 +1,6 @@
 ---
 title: Research
-date: 2021-03-04 09:45
+date: 2021-03-04
 tags:
     - Research
 category: political-science
