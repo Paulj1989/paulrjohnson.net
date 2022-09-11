@@ -1,0 +1,72 @@
+---
+title: Setting up a Hugo Website with Quarto
+date: 2022-09-11 20:30:00
+tags:
+    - Quarto
+    - R
+category: quarto
+keywords:
+    - quarto
+    - markdown
+    - hugo
+    - r
+    - rlang
+---
+
+
+
+Like every other nerd that likes R and has used RMarkdown more than one time in their entire life, I am now in the process of transitioning to using Quarto, and I want to let the world know! I wanted to make good use of Quarto, including utilising the really nice job it does with rendering R, Python, Julia, and JavaScript (not that I'm writing a lot of Julia or JavaScript) and outputting it in a HTML document. However, I didn't want to give up this lovely website I had already put together using Hugo. What a conundrum... Well, it turns out it's relatively easy to use Quarto with a Hugo site. These folks really have thought of everything!
+
+This isn't a tutorial for building a Hugo website or building a website from scratch with Quarto. These are more involved processes (though neither are incredibly difficult). If that's what you're looking for, here are some links that might point you in the right direction.
+
+Hugo Tutorials:
+
+- [Hugo - Quick Start](https://gohugo.io/getting-started/quick-start/)
+- [freeCodeCamp - How to Create Your First Hugo Blog](https://www.freecodecamp.org/news/your-first-hugo-blog-a-practical-guide/)
+
+Quarto Tutorials:
+
+- [Quarto - Creating a Website](https://quarto.org/docs/websites/)
+- [Bea Milz - Creating a Blog with Quarto in 10 Steps](https://beamilz.com/posts/2022-06-05-creating-a-blog-with-quarto/en/)
+- [Albert Rapp - The Ultimate Guide to Starting a Quarto Blog](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html)
+
+No, my ambitions with this blog post are considerably less ambitious. I just want to show you how to set your existing Hugo website up so that you can use Quarto to write your blog posts (and any other pages).
+
+## Setting Up Hugo for Quarto Files
+
+The first step is to make some changes to your 'config.toml' file so that it doesn't try and publish your Quarto documents, whether they are in qmd or ipynb format. You need to add the following code to the file:
+
+    ignoreFiles = [ "\\.qmd$", "\\.ipynb$" ]
+
+I added it to the opening section of the config file, with the baseUrl, title, theme etc.
+
+You also need to add some configuration to the markup section of the config file, in order to make sure Hugo handles raw HTML appropriately, because R and Python will sometimes give HTML as an output rather than Markdown.
+
+    [markup.goldmark.renderer]
+      unsafe= true
+
+This is essentially everything you need to get your Hugo website set up to deal with Quarto without losing its mind.
+
+## Creating Blog Posts
+
+This is the part that I expected to at least be a little bit harder than it turned out to be. Once you have set your config file up, you can now create new posts (and any other pages) in pretty much the same way you did in the before times. In my case, all the blog posts are stored under 'content/posts', and it's the same deal now in this exciting new Quarto world.
+
+Blog posts are written in a qmd file, with the YAML front matter looking much the same as the typical Markdown posts for Hugo sites, with tags, categories, keywords etc., and `format: hugo` added so that Quarto knows how to render the file. This can be also be added to a '\_quarto.yml' file, as I have done, if you are treating the site as a Quarto project.
+
+Once you've done all this, you can render your Quarto files and it will produce Markdown files that Hugo will publish as blog posts.
+
+## Don't Forget to Render
+
+The biggest problem I've faced with this process, in the short time since making the change, is that I am a stupid person and that I sometimes do stupid things.
+
+When you've written your posts in a qmd file you have to remember to render them as and when you make changes that you want to deploy. I have already managed to forget to do that on a couple occasions, pushing changes that I haven't rendered, resulting in qmd files that don't line up with the md file, and therefore don't show on the site. Think of all the funny things you might write that people won't get to see, and it's all your fault.
+
+![Spend some time in the shame cube](https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif)
+
+## Conclusion
+
+The rendering issue isn't ideal, because as much as I'd like to believe that I will eventually remember that I need to render before I publish posts, I happen to know that I am a buffoon, so I am certain that I will forget enough that it's going to be a bit of a nuisance.
+
+This should be something that I can resolve by setting up a GitHub Actions workflow to render files when pushed to the repository. It's not something I've done just yet, mostly because it is 8pm on a Sunday and I can't be bothered to take that extra step right now. But maybe I'll write another post about that when I get round to it. Because everything is content and everybody is posting.
+
+However, everything else is exceptionally smooth, and very easy to set up. It takes a matter of minutes to make the change and now your Hugo site can be used with Quarto, making it so much easier to write about and incorporate R, Python, and other programming languages in your blog posts. Great success!
