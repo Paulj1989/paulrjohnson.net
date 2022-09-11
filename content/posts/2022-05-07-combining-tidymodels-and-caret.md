@@ -35,7 +35,6 @@ Because I'm not a savage, I won't leave you without a simple worked example. We'
 
 ``` r
 # import packages
-
 suppressPackageStartupMessages({
   library(dplyr)
   library(caret)
@@ -169,7 +168,7 @@ print(rf_mod)
     ROC was used to select the optimal model using the largest value.
     The final value used for the model was mtry = 2.
 
-Not bad! The best performing model has an ROC of 0.995 and both the sensitivity and specificity are around 0.98. Pretty solid for a quick and easy model.
+Not bad! The best performing model has an ROC of 0.995 and both the sensitivity and specificity are \~0.95. Pretty solid for a quick and easy model.
 
 To really test the model's performance, we want to see how it copes with the test data that it hasn't seen.
 
