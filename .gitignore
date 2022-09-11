@@ -19,6 +19,7 @@
 # Generated files by hugo
 /public/
 /resources/_gen/
+.hugo_build.lock
 
 # Executable may be added to repository
 hugo.exe
@@ -39,3 +40,4 @@ hugo.linux
 ### R & Quarto ###
 .Rproj.user
 /.quarto/
+
