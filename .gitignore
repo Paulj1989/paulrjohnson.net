@@ -39,5 +39,6 @@ hugo.linux
 
 ### R & Quarto ###
 .Rproj.user
+.Rhistory
 /.quarto/
 
