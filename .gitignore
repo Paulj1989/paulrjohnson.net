@@ -32,3 +32,7 @@ hugo.linux
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+### Content ###
+
+\drafts
