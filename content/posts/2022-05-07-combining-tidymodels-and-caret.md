@@ -13,15 +13,9 @@ keywords:
     - rlang
     - caret
     - tidymodels
-format:
-  hugo:
-    warning: false
 ---
 
 
-
-- <a href="#training-a-random-forest-model-to-predict-diabetes" id="toc-training-a-random-forest-model-to-predict-diabetes">Training a Random Forest Model to Predict Diabetes</a>
-- <a href="#conclusion" id="toc-conclusion">Conclusion</a>
 
 The two main approaches to building machine learning models in R are [**caret**](https://github.com/topepo/caret/) and [**tidymodels**](https://www.tidymodels.org/). Having tried both, I found that I struggled to pick my favorite. There's elements of both that made more intuitive sense to me than the other. I think it's a product of having become very familiar with the **tidyverse**, particularly **dplyr**, for data wrangling, but still using a lot of Base R functions for statistical modeling.
 
