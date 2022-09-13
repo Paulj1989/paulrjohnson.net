@@ -1,12 +1,13 @@
 ---
 title: About
-date: 2021-03-07
-tags:
-    - About
 category: about-me
-keywords:
+showtoc: false
+ShowReadingTime: false
+ShowWordCount: false
+editPost: 
+  Text: " "
 ---
-![Paul](/images/paul_medium.png)
+<!-- ![Paul](/images/paul_medium.png) -->
 
 I'm a data scientist working for the NHS South, Central and West CSU in their Population Health Management team. My work has included leveraging publicly available data to understand the impact that deprivation has on health inequalities in England, and using event counts data to build forecasting models of utilisation of NHS resources.
 

@@ -1,14 +1,11 @@
 ---
 title: Research
-date: 2021-03-04
-tags:
-    - Research
 category: political-science
-keywords:
-    - Comparative Politics
-    - Political Parties
-    - Mexican Politics
-    - Statistics
+showtoc: false
+ShowReadingTime: false
+ShowWordCount: false
+editPost: 
+  Text: " "
 ---
 
 
