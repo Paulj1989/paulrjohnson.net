@@ -45,7 +45,7 @@ params:
   tocopen: true
 
   assets:
-    # disableHLJS: false # to disable highlight.js
+    disableHLJS: true # to disable highlight.js
     # disableFingerprinting: true
     favicon: "images/favicon/octopus-favicon.ico"
     favicon16x16: "images/favicon/octopus-favicon-16x16.png"
@@ -78,9 +78,9 @@ params:
     #     url: cv
 
   # home-info mode
-  homeInfoParams:
-    Title: "Hi there \U0001F44B"
-    Content: Welcome to my blog
+  # homeInfoParams:
+  #   Title: "Hi there \U0001F44B"
+  #   Content: Welcome to my blog
 
   socialIcons:
     - name: twitter
