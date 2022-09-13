@@ -152,7 +152,6 @@ markup:
     lineNumbersInTable: true
     tabwidth: 4
     noClasses: false
-    style: monokai
   goldmark:
     renderer:
       unsafe: true
