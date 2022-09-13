@@ -71,9 +71,9 @@ model_recipe <-
   recipe(diabetic_class ~ ., data = train_df) %>%
   # combine low frequency factor levels
   step_other(all_nominal(), threshold = 0.05) %>%
-  # remove no variance predictors which provide no predictive information
+  # remove predictors with zero variance
   step_nzv(all_predictors()) %>%
-  # normalize numeric variables to have a standard deviation of one and a mean of zero
+  # normalize numeric variables (sigma = 1, mu = 0)
   step_normalize(all_numeric()) %>%
   # convert nominal variables to numeric binary variables
   step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE)

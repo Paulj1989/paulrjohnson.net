@@ -11,6 +11,7 @@ keywords:
     - hugo
     - r
     - rlang
+format: hugo
 ---
 
 
@@ -36,14 +37,18 @@ No, my ambitions with this blog post are considerably less ambitious. I just wan
 
 The first step is to make some changes to your 'config.toml' file so that it doesn't try and publish your Quarto documents, whether they are in qmd or ipynb format. You need to add the following code to the file:
 
-    ignoreFiles = [ "\\.qmd$", "\\.ipynb$" ]
+``` toml
+ignoreFiles = [ "\\.qmd$", "\\.ipynb$" ]
+```
 
 I added it to the opening section of the config file, with the baseUrl, title, theme etc.
 
 You also need to add some configuration to the markup section of the config file, in order to make sure Hugo handles raw HTML appropriately, because R and Python will sometimes give HTML as an output rather than Markdown.
 
-    [markup.goldmark.renderer]
-      unsafe= true
+``` toml
+[markup.goldmark.renderer]
+  unsafe= true
+```
 
 This is essentially everything you need to get your Hugo website set up to deal with Quarto without losing its mind.
 
@@ -61,7 +66,7 @@ The biggest problem I've faced with this process, in the short time since making
 
 When you've written your posts in a qmd file you have to remember to render them as and when you make changes that you want to deploy. I have already managed to forget to do that on a couple occasions, pushing changes that I haven't rendered, resulting in qmd files that don't line up with the md file, and therefore don't show on the site. Think of all the funny things you might write that people won't get to see, and it's all your fault.
 
-![Spend some time in the shame cube](https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif)
+![Spend some time in the shame cube](https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif#center)
 
 ## Conclusion
 
