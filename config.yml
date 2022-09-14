@@ -1,7 +1,13 @@
 baseURL: "https://paulrjohnson.net"
 title: Paul Johnson
 paginate: 5
-theme: PaperMod
+
+# Modules
+module:
+  imports:
+    # project theme
+    - path: github.com/adityatelange/hugo-PaperMod
+
 
 enableRobotsTXT: true
 buildDrafts: false
