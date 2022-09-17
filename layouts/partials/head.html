@@ -42,18 +42,6 @@
 {{- $includes := slice }}
 {{- $includes = $includes | append (" " | resources.FromString "assets/css/includes-blank.css")}}
 
-{{ if or .Params.math .Site.Params.math }}
-{{ partial "katex.html" . }}
-{{ end }}
-
-{{ if .Page.Store.Get "hasMermaid" }}
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>
-    mermaid.initialize({ startOnLoad: true });
-  </script>
-{{ end }}
-
-
 {{- if not (eq site.Params.assets.disableScrollBarStyle true) }}
     {{- $ScrollStyle := (resources.Get "css/includes/scroll-bar.css") }}
     {{- $includes = (append $ScrollStyle $includes) }}
