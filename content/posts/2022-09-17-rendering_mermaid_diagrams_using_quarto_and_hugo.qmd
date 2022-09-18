@@ -73,20 +73,21 @@ If @fig-mermaid-flowchart isn't enough to convince you, how about some Gantt cha
 %%| echo: fenced
 %%| fig-cap: Oh you real fancy huh?
 
+%%{init: {'theme': 'default', 'themeVariables': { 'textColor': '#798189'}}}%%
 gantt
     title Big Ol' Gantts
     dateFormat  YYYY-MM-DD
     section Section
-    Some Normal Tasks : a1, 2022-09-01, 15d
+    Some Normal Tasks : done, a1, 2022-09-01, 15d
     But Wait, There's More! :after a1, 20d
     section And ANOTHER
-    Deary Me, It's Never Ending : 2022-10-01, 20d
+    Deary Me, It's Never Ending : crit, 2022-10-01, 20d
     I Hate This Project : 14d
 ```
 
-The dark and light theme my Hugo site uses doesn't handle the Gantt chart as well as the other Mermaid diagrams. If I use the neutral Mermaid theme, it doesn't show as clearly when using the dark Hugo theme, and vice versa with the dark Mermaid theme and light Hugo theme. This isn't ideal, but I'm sure you can customise the Mermaid theme yourself, if you need to.
+The dark and light theme my Hugo site uses doesn't handle the Gantt chart as well as the other Mermaid diagrams. If I use the neutral Mermaid theme, it doesn't show as clearly when using the dark Hugo theme, and vice versa with the dark Mermaid theme and light Hugo theme. This isn't ideal, but you can [customise the appearance](https://mermaid-js.github.io/mermaid/#/theming?id=theme-variables-reference-table) of your Mermaid diagrams too. 
 
-I've stuck with the neutral Mermaid theme because it seems to be the best fit for flowcharts with the two different Hugo themes, and flowcharts are the diagrams I'm going to be using Mermaid for most often on this site.
+I've stuck with the neutral Mermaid theme for the rest of the site because it seems to be the best fit for flowcharts with the two different Hugo themes, and flowcharts are the diagrams I'm going to be using Mermaid for most often on this site. However, for this Gantt chart I've customised the appearance a little, using ```%%init%%```, using the default theme and a grey text colour that works slightly better (though it's still not brilliant).
 
 ### Git Graphs
 
