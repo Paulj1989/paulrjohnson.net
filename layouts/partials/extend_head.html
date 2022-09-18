@@ -8,3 +8,6 @@
 {{ partial "katex.html" . }}
 {{ end }}
 
+{{ if .Page.Params.mermaid }}
+{{ partial "mermaid.html" . }}
+{{ end }}
