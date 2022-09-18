@@ -142,6 +142,8 @@ Figure 2: Oh you real fancy huh?
 
 The dark and light theme my Hugo site uses doesn't handle the Gantt chart as well as the other Mermaid diagrams. If I use the neutral Mermaid theme, it doesn't show as clearly when using the dark Hugo theme, and vice versa with the dark Mermaid theme and light Hugo theme. This isn't ideal, but I'm sure you can customise the Mermaid theme yourself, if you need to.
 
+I've stuck with the neutral Mermaid theme because it seems to be the best fit for flowcharts with the two different Hugo themes, and flowcharts are the diagrams I'm going to be using Mermaid for most often on this site.
+
 ### Git Graphs
 
 So you've got [Figure 1](#fig-mermaid-flowchart) to wow people with your idea and [Figure 2](#fig-mermaid-gantt) to manage the project, but now you need some git graphs to show how you broke everything.
