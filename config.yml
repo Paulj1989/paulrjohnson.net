@@ -1,6 +1,8 @@
 baseURL: "https://paulrjohnson.net"
 title: Paul Johnson
 paginate: 5
+permalinks:
+  posts: /:year/:month/:title/
 
 # Modules
 module:
