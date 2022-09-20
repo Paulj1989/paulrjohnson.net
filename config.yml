@@ -1,6 +1,6 @@
 baseURL: "https://paulrjohnson.net"
 title: Paul Johnson
-paginate: 5
+paginate: 10
 permalinks:
   posts: /:year/:month/:title/
 
