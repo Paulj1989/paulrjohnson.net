@@ -113,7 +113,7 @@ Below are some examples of simple multilevel model structures, where `x` refers 
 
 ::: {#fig-mlm}
 
-![Multilevel Data Structures](mlm_example.png "Multilevel Data Structures")
+![Multilevel Data Structures](/mlm_example.png "Multilevel Data Structures")
 
 Multilevel Data Structures (Source: [Gelman & Hill (2006)](http://www.stat.columbia.edu/~gelman/arm/))
 :::
