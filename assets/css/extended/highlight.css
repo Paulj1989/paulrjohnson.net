@@ -1,7 +1,7 @@
 /* Custom Syntax Highlighting CSS Using Dracula as a Base /*
 
-/* Background */ .bg { color: #f8f8f2; background-color: unset !important; }
-/* PreWrapper */ .chroma { color: #f8f8f2; background-color: unset !important; }
+/* Background */ .bg { color: #f8f8f2; background-color: #282a36; }
+/* PreWrapper */ .chroma { color: #f8f8f2; background-color: #282a36; }
 /* Other */ .chroma .x {  }
 /* Error */ .chroma .err {  }
 /* CodeLine */ .chroma .cl {  }

@@ -34,7 +34,7 @@ params:
   images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
   defaultTheme: light # dark, light
-  disableThemeToggle: true
+  disableThemeToggle: false
 
   ShowReadingTime: true
   ShowShareButtons: false
