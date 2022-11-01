@@ -154,13 +154,15 @@ markup:
   highlight:
     codeFences: true
     guessSyntax: true
-    hl_lines: ""
+    hl_Lines: ""
+    hl_inline: false
+    lineAnchors: ""
     lineNoStart: 1
     lineNos: true
-    lineNumbersInTable: true
-    tabwidth: 4
+    lineNumbersInTable: false
     noClasses: false
+    noHl: false
+    tabWidth: 4
   goldmark:
     renderer:
       unsafe: true
-
