@@ -1,6 +1,6 @@
 ---
-title: Combining Tidymodels and Caret for Machine Learning in R
-summary: How to use functionality from both Tidymodels and Caret to build a machine learning solution in R
+title: Combining Tidymodels & Caret for Machine Learning in R
+summary: How to combine the functionality from both the Tidymodels framework and Caret to build a machine learning solution in R that is the best of both worlds.
 date: 2022-05-07
 tags:
     - Machine Learning
