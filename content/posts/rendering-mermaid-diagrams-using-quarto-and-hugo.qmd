@@ -5,6 +5,7 @@ date: 2022-09-17
 tags:
     - Quarto
     - Mermaid
+    - Hugo
 category: quarto
 keywords:
     - quarto

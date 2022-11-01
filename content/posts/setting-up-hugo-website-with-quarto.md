@@ -1,20 +1,20 @@
 ---
 title: Setting up a Hugo Website with Quarto
+summary: An extension of the Quarto documentation (that didn't work off the shelf for me) for getting a Hugo website working with Quarto seamlessly.
 date: 2022-09-11
 tags:
     - Quarto
     - R
+    - Hugo
 category: quarto
 keywords:
     - quarto
     - markdown
     - hugo
-    - r
+    - rstats
     - rlang
 format: hugo
 ---
-
-
 
 Like every other nerd that likes R and has used RMarkdown more than one time in their entire life, I am now in the process of transitioning to using Quarto, and I want to let the world know! I wanted to make good use of Quarto, including utilising the really nice job it does with rendering R, Python, Julia, and JavaScript (not that I'm writing a lot of Julia or JavaScript) and outputting it in a HTML document. However, I didn't want to give up this lovely website I had already put together using Hugo. What a conundrum... Well, it turns out it's relatively easy to use Quarto with a Hugo site. These folks really have thought of everything!
 
@@ -22,14 +22,14 @@ This isn't a tutorial for building a Hugo website or building a website from scr
 
 Hugo Tutorials:
 
-- [Hugo - Quick Start](https://gohugo.io/getting-started/quick-start/)
-- [freeCodeCamp - How to Create Your First Hugo Blog](https://www.freecodecamp.org/news/your-first-hugo-blog-a-practical-guide/)
+-   [Hugo - Quick Start](https://gohugo.io/getting-started/quick-start/)
+-   [freeCodeCamp - How to Create Your First Hugo Blog](https://www.freecodecamp.org/news/your-first-hugo-blog-a-practical-guide/)
 
 Quarto Tutorials:
 
-- [Quarto - Creating a Website](https://quarto.org/docs/websites/)
-- [Bea Milz - Creating a Blog with Quarto in 10 Steps](https://beamilz.com/posts/2022-06-05-creating-a-blog-with-quarto/en/)
-- [Albert Rapp - The Ultimate Guide to Starting a Quarto Blog](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html)
+-   [Quarto - Creating a Website](https://quarto.org/docs/websites/)
+-   [Bea Milz - Creating a Blog with Quarto in 10 Steps](https://beamilz.com/posts/2022-06-05-creating-a-blog-with-quarto/en/)
+-   [Albert Rapp - The Ultimate Guide to Starting a Quarto Blog](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html)
 
 No, my ambitions with this blog post are considerably less ambitious. I just want to show you how to set your existing Hugo website up so that you can use Quarto to write your blog posts (and any other pages).
 

@@ -1,5 +1,6 @@
 ---
 title: Recent Football Analytics Articles
+summary: A short summary of some of the football analytics pieces I have written recently (as of 04/20).
 date: 2020-04-14
 tags:
     - Sports Analytics

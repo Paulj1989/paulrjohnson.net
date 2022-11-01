@@ -1,5 +1,6 @@
 ---
 title: Making Myself Accountable
+summary: Setting myself a goal to try and write one blog post a month for the whole of 2022, so that I can come back to it and assess just how much I missed my target by at the end of the year.
 date: 2022-01-17
 tags:
     - Data Science

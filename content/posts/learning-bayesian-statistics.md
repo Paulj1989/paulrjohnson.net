@@ -1,5 +1,6 @@
 ---
 title: Resources for Learning Bayesian Statistics
+summary: Learning Bayesian statistics is hard enough already, so maybe I can help make that journey very slightly easier for someone else by pointing them to some of the best resources I've come across.
 date: 2022-05-10
 tags:
     - Statistics
