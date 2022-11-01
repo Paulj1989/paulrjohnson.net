@@ -1,5 +1,6 @@
 ---
 title: Combining Tidymodels and Caret for Machine Learning in R
+summary: How to use functionality from both Tidymodels and Caret to build a machine learning solution in R
 date: 2022-05-07
 tags:
     - Machine Learning
@@ -33,6 +34,7 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(caret)
   library(recipes)
+  library(randomForest)
 })
 
 # load data
