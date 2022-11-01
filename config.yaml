@@ -158,7 +158,7 @@ markup:
     hl_inline: false
     lineAnchors: ""
     lineNoStart: 1
-    lineNos: true
+    lineNos: false
     lineNumbersInTable: false
     noClasses: false
     noHl: false
