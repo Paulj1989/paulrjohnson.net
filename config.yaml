@@ -34,7 +34,7 @@ params:
   images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
   defaultTheme: light # dark, light
-  disableThemeToggle: false
+  disableThemeToggle: true
 
   ShowReadingTime: true
   ShowShareButtons: false
@@ -93,8 +93,8 @@ params:
   socialIcons:
     - name: twitter
       url: "https://twitter.com/paul_johnson89"
-    - name: email
-      url: "mailto: paul@paulrjohnson.net"
+    - name: mastodon
+      url: "@paulj1989@mastodon.social"
     - name: linkedin
       url: "https://linkedin.com/paulj1989"
     - name: github
