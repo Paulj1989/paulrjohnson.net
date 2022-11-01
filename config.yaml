@@ -99,6 +99,8 @@ params:
       url: "https://linkedin.com/paulj1989"
     - name: github
       url: "https://github.com/paulj1989"
+    - name: stackoverflow
+      url: "https://stats.stackexchange.com/users/320054/paul-johnson"
 
   analytics:
     google:
