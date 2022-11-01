@@ -1,5 +1,6 @@
 ---
-title: Combining Tidymodels and Caret for Machine Learning in R
+title: Combining Tidymodels & Caret for Machine Learning in R
+summary: How to combine the functionality from both the Tidymodels framework and Caret to build models that combine the best of both worlds.
 date: 2022-05-07
 tags:
     - Machine Learning
@@ -9,13 +10,11 @@ category: data-science
 keywords:
     - machine learning
     - data science
-    - r
+    - rstats
     - rlang
     - caret
     - tidymodels
 ---
-
-
 
 The two main approaches to building machine learning models in R are [**caret**](https://github.com/topepo/caret/) and [**tidymodels**](https://www.tidymodels.org/). Having tried both, I found that I struggled to pick my favorite. There's elements of both that made more intuitive sense to me than the other. I think it's a product of having become very familiar with the **tidyverse**, particularly **dplyr**, for data wrangling, but still using a lot of Base R functions for statistical modeling.
 
@@ -33,6 +32,7 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(caret)
   library(recipes)
+  library(randomForest)
 })
 
 # load data

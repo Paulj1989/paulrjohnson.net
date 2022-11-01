@@ -1,15 +1,17 @@
 ---
 title: Setting up a Hugo Website with Quarto
+summary: An extension of the Quarto documentation (that didn't work off the shelf for me) for getting a Hugo website working with Quarto seamlessly.
 date: 2022-09-11
 tags:
     - Quarto
     - R
+    - Hugo
 category: quarto
 keywords:
     - quarto
     - markdown
     - hugo
-    - r
+    - rstats
     - rlang
 format: hugo
 ---

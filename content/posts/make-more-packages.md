@@ -1,5 +1,6 @@
 ---
 title: Make More Packages!
+summary: How (and why) to learn basic package development in R, for data scientists.
 date: 2022-02-19
 tags:
     - R
@@ -8,14 +9,12 @@ tags:
 category:  data science
 keywords:
     - rlang
-    - r
-    - r package
-    - data science
+    - rstats
+    - packages
+    - software engineering
 execute: 
   eval: false
 ---
-
-
 
 Having learned R in an academic context, I wasn't exposed to programming in a linear path that taught me the basics of programming theory and application. I learned how to carry out statistical analysis using R, and my interaction with packages was that they would help me get the job done without having to do everything manually. As a result, package development has always intimidated me a little bit. It seemed like the responsibility of much smarter people that know what they're doing, and that can build packages that can help me figure out what I'm doing too.
 
@@ -35,10 +34,10 @@ In order to build a basic package from scratch, you should only need to rely on 
 
 The packages you need:
 
-- [**devtools**](https://devtools.r-lib.org/)
-- [**usethis**](https://usethis.r-lib.org/)
-- [**roxygen2**](https://roxygen2.r-lib.org/)
-- [**testthat**](https://testthat.r-lib.org/)
+-   [**devtools**](https://devtools.r-lib.org/)
+-   [**usethis**](https://usethis.r-lib.org/)
+-   [**roxygen2**](https://roxygen2.r-lib.org/)
+-   [**testthat**](https://testthat.r-lib.org/)
 
 **devtools** is responsible for the majority of the functions you'll need to build and maintain a package and **usethis** handles the initial setup of the project, while **roxygen2** helps you document your package, and **testthat** simplifies unit testing.
 
@@ -64,7 +63,7 @@ I think it is generally best practice to dedicate a different file to each indiv
 
 The next step is to document your package, so anyone using it will have some guidance on what they're doing and why. Documentation doesn't need to be complicated, though if the function it is documenting is pretty complex, it should probably go into plenty of detail to help anyone trying to use it. In the **nice** example, the functions are super simple, so there's no sense in overdoing the docs either.
 
-You need to add comments at the beginning of your function script which explain what the function does, details any of the required parameters for the function to run, and give some examples of usage. In order for **roxygen2** to recognise the comments that need to be turned into documentation, you have to add \#' in front of them.
+You need to add comments at the beginning of your function script which explain what the function does, details any of the required parameters for the function to run, and give some examples of usage. In order for **roxygen2** to recognise the comments that need to be turned into documentation, you have to add #' in front of them.
 
 Below is a basic example of what is needed, corresponding to the **nice** check function above:
 

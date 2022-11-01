@@ -1,9 +1,11 @@
 ---
 title: Rendering Mermaid Diagrams on a Hugo Website Using Quarto
+summary: How to get your mermaid diagrams to show up on your Hugo blog when using Quarto, so that you don't have to go through the same trial and error nightmare that I did!
 date: 2022-09-17
 tags:
     - Quarto
     - Mermaid
+    - Hugo
 category: quarto
 keywords:
     - quarto
