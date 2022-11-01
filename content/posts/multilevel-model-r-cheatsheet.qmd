@@ -1,5 +1,6 @@
 ---
 title: A Cheatsheet for Building Mutilevel Models in R
+summary: A short introduction to basic multilevel modelling syntax in R (using lme4, brms or rstanarm).
 date: 2022-11-01
 tags:
     - Statistics
@@ -16,7 +17,7 @@ keywords:
     - hierarchical models
     - mixed effects models
     - regression
-    - r
+    - rstats
     - rlang
 math: true
 mermaid: true

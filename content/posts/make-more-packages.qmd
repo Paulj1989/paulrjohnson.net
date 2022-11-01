@@ -1,5 +1,6 @@
 ---
 title: Make More Packages!
+summary: How (and why) to learn basic package development in R, for data scientists.
 date: 2022-02-19
 tags:
     - R
@@ -8,9 +9,9 @@ tags:
 category:  data science
 keywords:
     - rlang
-    - r
-    - r package
-    - data science
+    - rstats
+    - packages
+    - software engineering
 execute: 
   eval: false
 ---

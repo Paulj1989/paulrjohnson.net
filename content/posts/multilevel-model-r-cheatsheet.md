@@ -1,5 +1,6 @@
 ---
 title: A Cheatsheet for Building Mutilevel Models in R
+summary: A short introduction to basic multilevel modelling syntax in R (using lme4, brms or rstanarm).
 date: 2022-11-01
 tags:
     - Statistics
@@ -16,9 +17,8 @@ keywords:
     - hierarchical models
     - mixed effects models
     - regression
-    - r
+    - rstats
     - rlang
-format: hugo
 math: true
 mermaid: true
 execute: 
@@ -108,7 +108,7 @@ The basic structure of multilevel models in R is very similar to typical `lm()` 
 
 Below are some examples of simple multilevel model structures, where `x` refers to a unit-level variable and `g` refers to the group variable. [Figure 2](#fig-mlm) demonstrates visually the multilevel models that will be covered.
 
-![Multilevel Data Structures](/mlm_example.png "Multilevel Data Structures")
+![Multilevel Data Structures](../..\mlm_example.png "Multilevel Data Structures")
 
 Figure 2: Multilevel Data Structures (Source: [Gelman & Hill (2006)](http://www.stat.columbia.edu/~gelman/arm/))
 

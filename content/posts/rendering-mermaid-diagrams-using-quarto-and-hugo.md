@@ -1,5 +1,6 @@
 ---
 title: Rendering Mermaid Diagrams on a Hugo Website Using Quarto
+summary: How to get your mermaid diagrams to show up on your Hugo blog when using Quarto, so that you don't have to go through the same trial and error nightmare that I did!
 date: 2022-09-17
 tags:
     - Quarto
@@ -13,11 +14,9 @@ keywords:
 mermaid: true
 ---
 
-
-
-<script  src="2022-09-17-rendering_mermaid_diagrams_using_quarto_and_hugo_files/libs/quarto-diagram/mermaid.min.js"></script>
-<script  src="2022-09-17-rendering_mermaid_diagrams_using_quarto_and_hugo_files/libs/quarto-diagram/mermaid-init.js"></script>
-<link  href="2022-09-17-rendering_mermaid_diagrams_using_quarto_and_hugo_files/libs/quarto-diagram/mermaid.css" rel="stylesheet" />
+<script  src="rendering-mermaid-diagrams-using-quarto-and-hugo_files/libs/quarto-diagram/mermaid.min.js"></script>
+<script  src="rendering-mermaid-diagrams-using-quarto-and-hugo_files/libs/quarto-diagram/mermaid-init.js"></script>
+<link  href="rendering-mermaid-diagrams-using-quarto-and-hugo_files/libs/quarto-diagram/mermaid.css" rel="stylesheet" />
 
 I find a lot of the methods for drawing diagrams and flow charts using code to be a bit of a nightmare. I'm not sure what it is, perhaps I'm just a bit stupid, but they always seem a little more convoluted than I can handle. It's possible that the design is actually of some value when it comes to drawing diagrams that are much larger and more complicated than I am generally dealing with, but in my case, it always seems to be a lot of work for what little I'm trying to do.
 
@@ -72,10 +71,8 @@ graph LR
 ```
 ````
 
-<div id="fig-mermaid-flowchart">
-
 <p>
-<pre class="mermaid" data-tooltip-selector="#mermaid-tooltip-1">
+<pre class="mermaid mermaid-js" data-tooltip-selector="#mermaid-tooltip-1">
 graph LR
     A([Oooh]) --&gt; B([Would You])
     B --&gt; C([Look at This])
@@ -84,15 +81,9 @@ graph LR
     C --&gt; F[Flowchart]
 </pre>
 
-<div id="mermaid-tooltip-1" class="mermaidTooltip">
-
-</div>
-
 </p>
 
 Figure 1: Wow look how it flows.
-
-</div>
 
 ### Gantt Charts
 
@@ -116,10 +107,8 @@ gantt
 ```
 ````
 
-<div id="fig-mermaid-gantt">
-
 <p>
-<pre class="mermaid" data-tooltip-selector="#mermaid-tooltip-2">
+<pre class="mermaid mermaid-js" data-tooltip-selector="#mermaid-tooltip-2">
 %%{init: {&#39;theme&#39;: &#39;default&#39;, &#39;themeVariables&#39;: { &#39;textColor&#39;: &#39;#798189&#39;}}}%%
 gantt
     title Big Ol&#39; Gantts
@@ -132,15 +121,9 @@ gantt
     I Hate This Project : 14d
 </pre>
 
-<div id="mermaid-tooltip-2" class="mermaidTooltip">
-
-</div>
-
 </p>
 
 Figure 2: Oh you real fancy huh?
-
-</div>
 
 The dark and light theme my Hugo site uses doesn't handle the Gantt chart as well as the other Mermaid diagrams. If I use the neutral Mermaid theme, it doesn't show as clearly when using the dark Hugo theme, and vice versa with the dark Mermaid theme and light Hugo theme. This isn't ideal, but you can [customise the appearance](https://mermaid-js.github.io/mermaid/#/theming?id=theme-variables-reference-table) of your Mermaid diagrams too.
 
@@ -169,10 +152,8 @@ gitGraph
 ```
 ````
 
-<div id="fig-mermaid-git">
-
 <p>
-<pre class="mermaid" data-tooltip-selector="#mermaid-tooltip-3">
+<pre class="mermaid mermaid-js" data-tooltip-selector="#mermaid-tooltip-3">
 gitGraph
   commit
   commit
@@ -186,15 +167,9 @@ gitGraph
   commit
 </pre>
 
-<div id="mermaid-tooltip-3" class="mermaidTooltip">
-
-</div>
-
 </p>
 
 Figure 3: Git a load of this!
-
-</div>
 
 ## Conclusion
 
