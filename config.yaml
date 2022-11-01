@@ -94,7 +94,7 @@ params:
     - name: twitter
       url: "https://twitter.com/paul_johnson89"
     - name: mastodon
-      url: "@paulj1989@mastodon.social"
+      url: "https://mastodon.social/@paulj1989"
     - name: linkedin
       url: "https://linkedin.com/paulj1989"
     - name: github
