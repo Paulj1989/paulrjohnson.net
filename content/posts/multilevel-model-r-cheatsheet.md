@@ -255,7 +255,7 @@ Given how complex things can get with MLMs, this cheatsheet is obviously only sc
 -   [Gelman et al. - Applied Regression and Multilevel Models](http://www.stat.columbia.edu/~gelman/armm/)[^6]
 -   [{brms} Vignettes](https://paul-buerkner.github.io/brms/articles/index.html)
 
-[^1]: There are some minor distinction, but the terms are often used interchangeably.
+[^1]: There are some minor distinctions, but the terms are often used interchangeably.
 
 [^2]: Does a blog post get to call itself a cheatsheet?
 
