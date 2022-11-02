@@ -55,14 +55,14 @@ params:
   assets:
     disableHLJS: true # to disable highlight.js
     # disableFingerprinting: true
-    favicon: "images/favicon/octopus-favicon.ico"
-    favicon16x16: "images/favicon/octopus-favicon-16x16.png"
-    favicon32x32: "images/favicon/octopus-favicon-32x32.png"
-    apple_touch_icon: "images/favicon/octopus-apple-touch-icon.png"
-    safari_pinned_tab: "images/favicon/octopus-apple-touch-icon.png"
+    # favicon: "images/favicon/octopus-favicon.ico"
+    # favicon16x16: "images/favicon/octopus-favicon-16x16.png"
+    # favicon32x32: "images/favicon/octopus-favicon-32x32.png"
+    # apple_touch_icon: "images/favicon/octopus-apple-touch-icon.png"
+    # safari_pinned_tab: "images/favicon/octopus-apple-touch-icon.png"
 
   label:
-    text: "Paul Johnson"
+    text: "P(Johnson) > 0.05"
     icon: /apple-touch-icon.png
     iconHeight: 35
 
