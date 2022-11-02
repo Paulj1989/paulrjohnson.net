@@ -70,7 +70,7 @@ params:
   profileMode:
     enabled: true # needs to be explicitly set
     title: Paul Johnson
-    subtitle: "Data Scientist Interested in Causal Inference & Machine Learning"
+    subtitle: "Data Scientist Interested in Using Causal Inference & Machine Learning to Understand and/or Predict Human Behaviour"
     imageUrl: "images/paul_medium.png"
     imageWidth: 240
     imageHeight: 240
@@ -136,9 +136,9 @@ menu:
       name: About
       url: /about/
       weight: 10
-    - identifier: research
-      name: Research
-      url: /research/
+    - identifier: projects
+      name: Projects
+      url: /projects/
       weight: 20
     - identifier: blog
       name: Blog
