@@ -8,13 +8,15 @@ editPost:
   Text: " "
 ---
 
-## Sports Analytics
+## Data Science
+
+### Sports Analytics
 
 - [Expected Kills](https://github.com/Paulj1989/expected-kills) - Predicting kills in volleyball using XGBoost
 - [Money in Football](https://github.com/Paulj1989/money-in-football) - Bayesian multilevel model measuring the effect of football (soccer) club resources on total league points across seven European leagues and ten seasons.
 - [Player Similarities](https://github.com/Paulj1989/player-similarities) - Using clustering methods to measure player similarity within positions
 
-## Package Development
+### Package Development
 
 - [Nice](https://github.com/Paulj1989/nice) - The stupidest R package ever created
 
