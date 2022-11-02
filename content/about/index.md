@@ -10,7 +10,7 @@ editPost:
 
 <div>
     <div style="float: right; position: relative; top: 0px; padding: 30px;">
-    ![Paul](/images/paul_medium.png)
+    ![Paul](images/paul_medium.png)
     </div>
 
 Data scientist based in London, UK. Currently working for the NHS South, Central and West CSU in their Population Health Management team, where I work on a wide range of data science problems, from providing technical expertise when designing evaluations of healthcare interventions, building and deploying demand forecasting models, and driving the organisation's development of data infrastructure and data science expertise to grow the organisation's data science capabilities.
