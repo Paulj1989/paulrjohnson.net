@@ -9,9 +9,9 @@ editPost:
 ---
 
 <div>
-  <div style="float: right; position: relative; top: -20px; padding: 10px;">
+  <div style="float: right; position: relative; top: -20px; padding: 5px;">
 
-<img src="/images/paul2.png" alt="Me sat in a hammock wearing a bright yellow 90s Borussia Dortmund shirt" width="300">
+<img src="/images/paul2.png" alt="Me sat in a hammock wearing a bright yellow 90s Borussia Dortmund shirt" width="400">
     
 </div>
 
