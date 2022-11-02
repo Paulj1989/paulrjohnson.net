@@ -70,7 +70,7 @@ params:
   profileMode:
     enabled: true # needs to be explicitly set
     title: Paul Johnson
-    subtitle: "Data Scientist Interested in Using Causal Inference & Machine Learning to Understand and/or Predict Human Behaviour"
+    subtitle: "Data Scientist Interested in Using Causal Inference & Machine Learning to Understand and/or Predict Human Behaviour. I am passionate about tackling real-world questions, using data as a means for identifying and solving meaningful and interesting puzzles."
     imageUrl: "images/paul_medium.png"
     imageWidth: 240
     imageHeight: 240
