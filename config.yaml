@@ -100,7 +100,7 @@ params:
     - name: github
       url: "https://github.com/paulj1989"
     - name: stackoverflow
-      url: "https://stats.stackexchange.com/users/320054/paul-johnson"
+      url: "https://stackexchange.com/users/21427434/paul-johnson?tab=accounts"
 
   analytics:
     google:
