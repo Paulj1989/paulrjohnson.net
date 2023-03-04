@@ -101,6 +101,8 @@ params:
       url: "https://github.com/paulj1989"
     - name: stackoverflow
       url: "https://stackexchange.com/users/21427434/paul-johnson?tab=accounts"
+    - name: kaggle
+      url: "https://www.kaggle.com/paulrjohnson"
 
   analytics:
     google:
