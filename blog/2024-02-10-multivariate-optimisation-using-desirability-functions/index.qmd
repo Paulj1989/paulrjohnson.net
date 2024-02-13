@@ -1,0 +1,246 @@
+---
+title: "Multivariate Optimisation Using Desirability Functions"
+subtitle: "Using the {desirability2} package to optimise across multiple variables"
+author: Paul Johnson
+date: "2024-02-10"
+image: math.jpg
+categories:
+    - Optimisation
+    - Football Analytics
+    - Data Science
+    - R
+    - Tidymodels
+draft: true
+---
+
+```{r}
+#| label: setup
+
+# import packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(worldfootballR)
+  library(desirability2)
+})
+
+# get raw data
+standard_stats <-
+  fb_big5_advanced_season_stats(
+    season_end_year = 2023,
+    stat_type = "standard",
+    team_or_player = "player"
+  ) |>
+  janitor::clean_names(
+    replace = c(
+      "_Playing" = "",
+      "_Expected" = "",
+      "_Progression" = "",
+      "PK" = "pk",
+      "PKatt" = "pk_att",
+      "xG" = "xg",
+      "xAG" = "xag",
+      "_Per_90" = "90",
+      "_Per" = "90"
+    )
+  ) |>
+  mutate(
+    across(
+      starts_with("prg"), ~ round(.x/mins90, 2), 
+      .names = "{.col}90"
+      ),
+    position = stringr::str_split_i(pos, pattern = ",", i = 1)
+    ) |> 
+  select(player, position, squad, comp, ends_with("90"))
+
+shooting_stats <-
+  fb_big5_advanced_season_stats(
+    season_end_year = 2023,
+    stat_type = "shooting",
+    team_or_player = "player"
+    ) |> 
+  janitor::clean_names(replace = c("_Standard" = "", "_per_90" = "90")) |>
+  select(player, squad, sh90, dist)
+
+gca_stats <-
+  fb_big5_advanced_season_stats(
+    season_end_year = 2023, 
+    stat_type = "gca", 
+    team_or_player = "player"
+  ) |>
+  janitor::clean_names(replace = c("_SCA" = "")) |> 
+  select(player, squad, sca90)
+
+# join full dataset
+big_five_stats <-
+  standard_stats |> 
+  full_join(shooting_stats) |> 
+  full_join(gca_stats) |> 
+  tibble() |> 
+  tidyr::drop_na() |> 
+  filter(mins90 > 10) |> 
+  rename(team = squad, league = comp)
+```
+
+# Ball Progression
+
+I'm not particularly sure how to weight the different measures of ball progression. It seems reasonable to weight progressive passes and carries equally, but should progressive receptions also be given equal weight? Maybe? I could see an argument for and against this, and I think any decision that is not weighting variables equally should be done based on a solid theoretical basis. Given the absence of anything like that, I'll treat them equally in this instance.
+
+```{r}
+#| label: progression
+
+ball_progression <- 
+  big_five_stats |>
+  mutate(
+    across(
+      starts_with("prg"),
+      ~ d_max(.x, use_data = TRUE),
+      .names = "d_{.col}"
+      ),
+    d_prg = d_overall(across(starts_with("d_")))
+  ) |> 
+  select(player, position, team, league, starts_with("prg"), starts_with("d_")) |> 
+  arrange(desc(d_prg))
+
+ball_progression |> 
+  head(10)
+```
+
+```{r}
+#| label: league-progression
+
+ball_progression |> 
+  summarise(across(starts_with("d_"), mean), .by = league) |> 
+  arrange(desc(d_prg))
+```
+
+```{r}
+#| label: team-progression
+
+ball_progression |> 
+  summarise(across(starts_with("d_"), mean), .by = team) |> 
+  arrange(desc(d_prg))  
+```
+
+```{r}
+#| label: position-progression
+
+ball_progression |> 
+  summarise(across(starts_with("d_"), mean), .by = position) |> 
+  arrange(desc(d_prg_c90))  
+
+ball_progression |> 
+  summarise(across(starts_with("d_"), mean), .by = position) |> 
+  arrange(desc(d_prg_p90))  
+
+ball_progression |> 
+  summarise(across(starts_with("d_"), mean), .by = position) |> 
+  arrange(desc(d_prg_r90))  
+```
+
+# Goal Threat
+
+```{r}
+#| label: goal-threat
+
+goal_threat <- 
+  big_five_stats |>
+  mutate(
+    across(
+      .cols = c(g_minus_pk90, npxg90, sh90),
+      ~ d_max(.x, use_data = TRUE),
+      .names = "d_{.col}"
+      ),
+    d_goals = d_overall(across(starts_with("d_")))
+  ) |> 
+  select(player, team, league, position, g_minus_pk90, npxg90, sh90, starts_with("d_")) |> 
+  arrange(desc(d_goals))
+
+goal_threat |> 
+  head(10)
+```
+
+```{r}
+#| label: league-goal-threat
+
+goal_threat |> 
+  summarise(across(starts_with("d_"), mean), .by = league) |> 
+  arrange(desc(d_goals))
+```
+
+```{r}
+#| label: team-goal-threat
+
+goal_threat |> 
+  summarise(across(starts_with("d_"), mean), .by = team) |> 
+  arrange(desc(d_goals))
+```
+
+```{r}
+#| label: position-goal-threat
+
+goal_threat |> 
+  summarise(across(starts_with("d_"), mean), .by = position) |> 
+  arrange(desc(d_goals))
+```
+
+# Chance Creation
+
+```{r}
+#| label: chance-creation
+
+chance_creation <- 
+  big_five_stats |>
+  mutate(
+    across(
+      .cols = c(ast90, xag90, sca90),
+      ~ d_max(.x, use_data = TRUE),
+      .names = "d_{.col}"
+      ),
+    d_chances = d_overall(across(starts_with("d_")))
+  ) |> 
+  select(player, team, league, position, ast90, xag90, sca90, starts_with("d_")) |> 
+  arrange(desc(d_chances))
+
+chance_creation |> 
+  head(10)
+```
+
+
+```{r}
+#| label: position-chance-creation
+
+chance_creation |> 
+  summarise(across(starts_with("d_"), mean), .by = position) |> 
+  arrange(desc(d_chances))
+```
+
+# Identifying the "Best" Offensive Players
+
+We could try and just take the overall desirability score of our three overall desirability scores, for goals, chance creation, and progression.
+
+```{r}
+#| label: best-players
+
+best_players <- 
+  goal_threat |> 
+  full_join(chance_creation) |> 
+  full_join(ball_progression) |> 
+  mutate(
+    d_best_players = d_overall(across(.cols = c(d_goals, d_chances, d_prg)))
+  ) |> 
+  select(player, team, league, position, d_goals, d_chances, d_prg, d_best_players) |> 
+  arrange(desc(d_best_players))
+
+best_players |> 
+  head(20)
+```
+
+However, at a glance, there are a few surprises in here. I think everyone in the top 20 is very good, but several players probably don't belong quite as high as they are in this ranking. Kingsley Coman, Edon Zhegrova, and Raphinha all jumped out at me, but they're not the only ones. 
+
+Although part of this will be league effects, one of the biggest issues is the fact that every variable that has gone into the desirability functions has been treated with equal weight. I don't think progressive receptions should be treated as though they are equally as valuable as goals.
+
+Desirability functions allow for the weighting of the parameters that make up the function, however, the difficulty here is I'm not entirely sure how I should weight these.
+
+## Acknowledgments {.appendix}
+
+Preview image by [Dan Cristian Pădureț](https://unsplash.com/@dancristianpaduret) on [Unsplash](https://unsplash.com/photos/a-blackboard-with-a-bunch-of-diagrams-on-it-h3kuhYUCE9A).

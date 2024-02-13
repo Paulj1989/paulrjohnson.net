@@ -1,0 +1,267 @@
+/*-- scss:defaults --*/
+
+// Quarto references:
+// Variables: https://github.com/quarto-dev/quarto-cli/src/resources/formats/html/bootstrap/_bootstrap-variables.scss
+// Rules: https://github.com/quarto-dev/quarto-cli/src/resources/formats/html/bootstrap/_bootstrap-rules.scss
+
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// Colors: Quarto variables
+// $primary:                    $spc-primary-light;
+$secondary:                     #2C3033;
+// Colors: custom variables
+// $primary-dark:               $spc-primary;
+// $secondary-light:            $spc-secondary-light;
+// $accent:                     $spc-accent; 
+// $accent-light:               $spc-accent-light;
+// $accent-dark:                $spc-accent-dark;
+
+// Body
+// $body-color:                 $primary-dark;
+// $body-bg:                    $spc-bg;
+// $body-secondary:             $accent-dark;
+
+// Fonts
+
+// stylelint-disable-next-line value-keyword-case
+$font-family-sans-serif: "Poppins", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-family-serif: "Lora", serif,;
+$headings-font-weight: 400;
+$font-family-monospace: "Fira Code", "Dank Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+$headings-font-family: "Lora";
+
+// Links
+$link-color:                        #43494D;
+$link-decoration:                   underline;
+$link-hover-color:                  #5A6266;
+$link-hover-decoration:             none;
+$btn-bg:                            #43494D;
+$pagination-active-bg:              #43494D;
+$pagination-active-border-color:    #43494D;
+
+/*-- scss:rules --*/
+
+// Code
+
+// Blockquotes
+
+// Social icons
+
+// home page
+.about-links .about-link i {
+//  color: #43494D !important;
+  &:hover {
+    filter: brightness(40%);
+    // color: #373a3c !important;
+    text-decoration: none !important;
+  }
+}
+
+// Contact  
+
+// Buttons
+
+// post links
+
+.btn-secondary {
+  color:  #43494D !important;
+  background: transparent;
+  border-radius: 5px;
+}
+
+// contact form
+.btn-primary {
+  color: white !important;
+  background-color:  #43494D !important;
+  border-color:  #43494D !important;
+  &:hover {
+    background-color:  #212529 !important;
+    border-color:  #212529 !important;
+    }
+}
+
+// pagination
+.page-link {
+  color: #43494D;
+  &:hover {
+    color: white !important;
+    background-color:  #43494D !important;
+    border-color:  #43494D !important;
+  }
+}
+
+
+// Categories
+
+// posts
+// .quarto-category {
+//  background-color: $primary;
+//   color: white;
+//  border-color: $primary;
+//   &:hover {
+//     background-color: white;
+//    color: $primary;
+//   }
+// }
+
+// listings
+// .listing-category {
+//  color: $secondary !important;
+//  border-color: $secondary !important;
+//   &:hover {
+//  background-color: $secondary;
+//   color: white !important;
+//   }
+// }
+
+// Navbar
+
+// header
+.navbar {
+  background: transparent;
+}
+
+// title
+.navbar-title {
+  color: #212529;
+  font-size: 0.75em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+
+  &:hover {
+    filter: brightness(50%);
+    border-bottom: 1px solid !important;
+    // color: #212529 !important;
+    text-decoration: none !important;
+  }
+}
+
+// links
+.navbar-nav .nav-link {
+    // color: $secondary !important;
+    // text-transform: uppercase;
+    color: #212529;
+    letter-spacing: .1em; 
+    border-bottom: 0px hidden; // $secondary;    
+    margin: 0px 10px 0px 10px; 
+    padding: 2px 2px 4px 2px !important;
+
+    &:hover {
+      filter: brightness(50%);
+      border-bottom: 1px solid; // $secondary !important;
+      padding: 2px 2px 0px 2px !important;
+      // color: #212529 !important;
+      text-decoration: none !important;
+    }
+}
+
+// Footer
+
+// links on left side
+// .nav-footer a {
+//     color: $secondary;
+//     // link on hover
+//     &:hover {
+//       color: $secondary-light;
+//     }
+// }
+
+// links on right side
+.nav-footer .nav-link {
+    &:hover {
+      text-decoration: underline;
+    }
+}
+
+// Listing cards
+.card {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-img {
+    border-radius: 4px 4px 0px 0px;
+}
+
+// Title block
+
+// make nav bar be centered in mobile
+.fixed-top {
+  position: absolute;
+}
+
+.aa-DetachedOverlay {
+  position: absolute;
+}
+
+// links in description
+
+.description a {
+  text-decoration: underline !important;
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+// Throughout the site
+
+// title
+.title {
+  font-size: 2.5em;
+  font-weight: 500;
+  line-height: 1.1em;
+}
+
+// subtitle
+.subtitle {
+  font-size: 1.2em;
+  // links within subtitles
+  a {
+    // color: white;
+    text-decoration: underline !important;
+    &:hover {
+      text-decoration: none !important;
+    }
+  }
+}
+
+// Mobile
+
+@media screen and (max-width: 991.98px) {
+  // social media links
+  .about-entity .about-links {
+    flex-direction: row !important;
+    justify-content: center !important;
+  }
+
+  // navigation footer
+  .nav-footer {
+      flex-direction: row;
+    }
+
+  .nav-footer-center {
+    order: 1 !important;
+    flex-basis: 100%;
+    margin: 0 0 -1.2em 0;
+  }
+
+  .nav-footer-right {
+    order: 2 !important;
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .nav-footer-left {
+    order: 3 !important;
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .navbar .quarto-navbar-tools {
+    text-align: left;
+  }
+}

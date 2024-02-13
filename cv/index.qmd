@@ -1,0 +1,77 @@
+---
+title: Paul Johnson
+subtitle: Data Scientist with Experience Across Social Science & Healthcare
+description: I am a data scientist in the Population Health Analytics team at the NHS South, Central and West CSU. I am interested in using causal inference and machine learning to help create actionable insights and shape business decisions.
+pagetitle: "Curriculum Vitae | Paul Johnson"
+header-includes: >
+  <link rel="stylesheet" href="../assets/cv.css">
+resources:
+  - ../assets/cv.css
+---
+
+## Education
+
+**M.A. Political Science** 
+\
+*University of Houston* [*2017 --- 2020*]{.cvdate}
+\
+\
+**M.Sc. Global Politics**
+\
+*University of Southampton* [*2011 --- 2012*]{.cvdate}
+\
+\
+**B.A. Politics**
+\
+*University of Sussex* [*2008 --- 2011*]{.cvdate}
+\
+
+## Selected Work Experience
+
+### Principal Data Scientist
+
+***NHS South, Central and West CSU*** [Nov 2021 --- Present]{.cvdate}
+
+- Providing technical expertise in analytics and research-focused projects across the organization, including experimental and observational analysis of healthcare interventions.
+- Building and deploying machine learning models that forecast the daily event counts in A&E and other Urgent and Emergency Care Services.
+- Leading the development of organisational expertise in data science,including demonstrating and training colleagues in statistics,machine learning, and programming.
+- Supporting the development of the organisation’s infrastructure for developing and deploying data science.
+
+### Associate BI Consultant
+
+***NHS South, Central and West CSU*** [April 2021 --- Nov 2021]{.cvdate}
+
+- Led research on the wider determinants of health inequalities and the role of deprivation in health outcomes.
+- Supported the Population Health Management team with research design, statistical modelling, and communication and visualization of findings.
+
+### Graduate Research/Teaching Assistant
+
+***University of Houston*** [July 2017 --- Dec 2020]{.cvdate}
+
+- Built natural language processing models for research into political language in legal texts.
+- Supported the Political Party Database Project in the administering of the expert survey and maintenance of the project website.
+- Courses: Intro to Comparative Politics, Mexican Politics, Comparative Elections, Media & Politics.
+
+### Fundraising Manager: Product Innovation
+
+***Marie Curie*** [Aug 2016 --- July 2017]{.cvdate}
+
+- Managed Marie Curie’s biggest regular fundraising campaign (Fundraising My Way).
+- Assisted the development of new fundraising products and the innovation of existing campaigns.
+
+### Events & Corporate Fundraiser
+
+***World Child Cancer*** [July 2015 --- April 2016]{.cvdate}
+
+- Developed, recruited, and managed the charity’s largest charity event to-date (Kilimanjaro trek) and various major events (Ride 100, Great North Run).
+- Supported the Head of Corporate Fundraising in the successful corporate partnership with Deutsche Bank.
+
+## Further Work Experience
+
+### Various Administrative Roles
+
+***Charity Sector & NHS***
+
+- Family for Every Child – Events Coordinator
+- University Hospital Southampton – Oncology Outpatient Clerk
+- University Hospital Southampton – Income Management Assistant
