@@ -1,13 +1,59 @@
 project:
-  title: "paulrjohnson.net"
-  execute-dir: project
+  type: website
+  post-render: 
+    - "cp -rnv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
+
+website:
+  title: "P(Johnson) > 0.05"
+  site-url: https://paulrjohnson.net
+  description: "Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors"
+  favicon: assets/img/favicon/apple-touch-icon.png
+  page-navigation: true
+  back-to-top-navigation: false
+  twitter-card: true
+  comments: false
+ 
+  navbar:
+    logo: assets/img/favicon/apple-touch-icon.png
+    tools:
+    - icon: github
+      href: https://www.github.com/paulj1989/paulrjohnson.net
+    right:
+      - text: Blog
+        aria-label: "Blog"
+        href: blog/index.qmd
+      - text: Projects
+        aria-label: "Project Portfolio"
+        href: projects/index.qmd
+      - text: Consultancy
+        aria-label: "Consultancy Enquiries"
+        href: consultancy/index.qmd
+      - text: Curriculum Vitae
+        aria-label: "Curriculum Vitae"
+        href: cv/index.qmd
+  
+  page-footer:  
+    left: >-
+     &#169; 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
+
+    right: 
+      # - text: "Accessibility"
+      #   aria-label: "Accessibility Commitment"
+      #   href: accessibility.qmd
+      - text: "License"
+        aria-label: "License Details"
+        href: license.qmd
 
 format: 
-  hugo:
-    fig-width: 12
-    fig-height: 8
-    fig-align: center
-    warning: false
+  html:
+    theme: 
+      - cosmo
+      - assets/paul-theme-light.scss
+    highlight-style: github
+    code-link: true
+    pagetitle: "{{< meta title >}} | Paul Johnson"
 
-editor_options: 
-  chunk_output_type: console
+execute: 
+  freeze: auto
+
+include-in-header: assets/umami.html
