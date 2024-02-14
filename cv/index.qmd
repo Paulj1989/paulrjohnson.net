@@ -1,7 +1,6 @@
 ---
 title: Paul Johnson
 subtitle: Data Scientist with Experience Across Social Science & Healthcare
-description: I am a data scientist in the Population Health Analytics team at the NHS South, Central and West CSU. I am interested in using causal inference and machine learning to help create actionable insights and shape business decisions.
 pagetitle: "Curriculum Vitae | Paul Johnson"
 header-includes: >
   <link rel="stylesheet" href="../assets/cv.css">
@@ -9,7 +8,7 @@ resources:
   - ../assets/cv.css
 ---
 
-## Education
+## Education  {{< fa graduation-cap >}}
 
 **M.A. Political Science** 
 \
@@ -26,7 +25,7 @@ resources:
 *University of Sussex* [*2008 --- 2011*]{.cvdate}
 \
 
-## Selected Work Experience
+## Selected Work Experience  {{< fa briefcase >}}
 
 ### Principal Data Scientist
 
@@ -66,7 +65,7 @@ resources:
 - Developed, recruited, and managed the charity’s largest charity event to-date (Kilimanjaro trek) and various major events (Ride 100, Great North Run).
 - Supported the Head of Corporate Fundraising in the successful corporate partnership with Deutsche Bank.
 
-## Further Work Experience
+## Further Work Experience  {{< fa clock-rotate-left >}}
 
 ### Various Administrative Roles
 

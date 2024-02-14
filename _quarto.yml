@@ -1,7 +1,5 @@
 project:
   type: website
-  post-render: 
-    - "cp -rnv static/. _site" # source: https://github.com/quarto-dev/quarto-cli/discussions/4162#discussioncomment-4831352
 
 website:
   title: "P(Johnson) > 0.05"
