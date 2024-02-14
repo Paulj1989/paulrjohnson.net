@@ -19,7 +19,7 @@ resources:
 
 ::: {.g-col-5 #note}
 
-# Contact {{< fa feather-pointed >}}
+# Consultancy {{< fa feather-pointed >}}
 
 I have experience asking scientific questions, designing research, and implementing statistical methods, with a focus on identifying meaningful insights from data. I have the technical knowledge and communication skills to work effectively at every stage of the data science life cycle, using the tools required for the project.
 
@@ -37,7 +37,7 @@ Please use this form to contact me, whether about consultancy, collaborations or
 <a class="link-dark me-1" href="https://linkedin.com/in/paulj1989" title="LinkedIn" target="_blank"rel="noopener">{{< fa brands linkedin >}}</a>
 <a class="link-dark me-1" href="https://github.com/paulj1989" title="github" target="_blank"rel="noopener">{{< fa brands github >}}</a>
 <a class="link-dark me-1" href="https://kaggle.com/paulrjohnson" title="github" target="_blank"rel="noopener">{{< fa brands kaggle >}}</a>
-<a class="link-dark me-1" href="https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en" title="Google Scholar" target="_blank"rel="noopener">{{< ai google-scholar >}}</a>
+<a class="link-dark me-1" href="https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en" title="Google Scholar" target="_blank"rel="noopener">{{< iconify fa6-brands google-scholar >}}</a>
 
 
 :::

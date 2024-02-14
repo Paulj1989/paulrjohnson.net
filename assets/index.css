@@ -11,7 +11,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05rem;
 }
 
 /* heading, subtitle, and blurb */
@@ -29,7 +29,7 @@
 .about-entity .about-links {
   justify-content: flex-end !important;
   column-gap: 0em !important;
-  font-size: 1.2em !important;
+  font-size: 1.2rem !important;
 }
 
 /* social links: individual links */
@@ -85,7 +85,7 @@
     /* social links: block of links */
     .about-entity .about-links {
       justify-content: center !important;
-      font-size: 1em !important;
+      font-size: 1rem !important;
     }
     
     /* blurb */

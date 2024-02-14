@@ -124,10 +124,10 @@ $pagination-active-border-color:    #43494D;
 // title
 .navbar-title {
   color: #212529;
-  font-size: 0.75em;
+  font-size: 0.85rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: 0.05rem;
 
   &:hover {
     filter: brightness(50%);
@@ -138,8 +138,8 @@ $pagination-active-border-color:    #43494D;
 // links
 .navbar-nav .nav-link {
     color: #212529;
-    letter-spacing: .1em; 
-    border-bottom: 0px hidden; // $secondary;    
+    letter-spacing: 0.05rem; 
+    border-bottom: 0px hidden;   
     margin: 0px 10px 0px 10px; 
     padding: 2px 2px 4px 2px !important;
 
@@ -148,6 +148,13 @@ $pagination-active-border-color:    #43494D;
       text-decoration: underline !important;
       padding: 2px 2px 0px 2px !important;
     }
+}
+
+.navbar .quarto-navbar-tools {
+    margin-left: auto;
+    order: 900;
+    font-size: 1.2rem;
+    margin-right: -0.5rem;
 }
 
 // Footer
@@ -203,14 +210,14 @@ $pagination-active-border-color:    #43494D;
 
 // title
 .title {
-  font-size: 2.5em;
+  font-size: 2.5rem;
   font-weight: 500;
   line-height: 1.1em;
 }
 
 // subtitle
 .subtitle {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   // links within subtitles
   a {
     // color: white;
@@ -230,10 +237,13 @@ $pagination-active-border-color:    #43494D;
     justify-content: center !important;
   }
   
-  // title
   .navbar-title {
-    font-size: 0.7em;
-    letter-spacing: 0.05em;
+    justify-content: center !important;
+    font-size: 0.85rem;
+  }
+  
+  .navbar .quarto-navbar-tools {
+    font-size: 1.2rem;
   }
 
   // navigation footer
