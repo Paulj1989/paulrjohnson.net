@@ -38,9 +38,6 @@ website:
      &#169; 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
 
     right: 
-      # - text: "Accessibility"
-      #   aria-label: "Accessibility Commitment"
-      #   href: accessibility.qmd
       - text: "License"
         aria-label: "License Details"
         href: license.qmd
