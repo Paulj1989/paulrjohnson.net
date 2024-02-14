@@ -63,7 +63,6 @@ $pagination-active-border-color:    #43494D;
 // Buttons
 
 // post links
-
 .btn-secondary {
   color:  #43494D !important;
   background: transparent;
@@ -128,20 +127,16 @@ $pagination-active-border-color:    #43494D;
   font-size: 0.75em;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: .1em;
+  letter-spacing: .05em;
 
   &:hover {
     filter: brightness(50%);
-    border-bottom: 1px solid !important;
-    // color: #212529 !important;
-    text-decoration: none !important;
+    text-decoration: underline !important;
   }
 }
 
 // links
 .navbar-nav .nav-link {
-    // color: $secondary !important;
-    // text-transform: uppercase;
     color: #212529;
     letter-spacing: .1em; 
     border-bottom: 0px hidden; // $secondary;    
@@ -150,10 +145,8 @@ $pagination-active-border-color:    #43494D;
 
     &:hover {
       filter: brightness(50%);
-      border-bottom: 1px solid; // $secondary !important;
+      text-decoration: underline !important;
       padding: 2px 2px 0px 2px !important;
-      // color: #212529 !important;
-      text-decoration: none !important;
     }
 }
 
@@ -199,7 +192,6 @@ $pagination-active-border-color:    #43494D;
 }
 
 // links in description
-
 .description a {
   text-decoration: underline !important;
   &:hover {
@@ -237,11 +229,17 @@ $pagination-active-border-color:    #43494D;
     flex-direction: row !important;
     justify-content: center !important;
   }
+  
+  // title
+  .navbar-title {
+    font-size: 0.7em;
+    letter-spacing: 0.05em;
+  }
 
   // navigation footer
   .nav-footer {
       flex-direction: row;
-    }
+  }
 
   .nav-footer-center {
     order: 1 !important;

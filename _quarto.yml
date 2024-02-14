@@ -8,6 +8,7 @@ website:
   site-url: https://paulrjohnson.net
   description: "Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors"
   favicon: assets/img/favicon/apple-touch-icon.png
+  search: false
   page-navigation: true
   back-to-top-navigation: false
   twitter-card: true
