@@ -5,10 +5,12 @@ subtitle: Selected Works from Data Science & Academia
 
 ## Data Science  {{< fa code-fork >}}
 
-- [Expected Kills](https://github.com/Paulj1989/expected-kills) - Predicting kills in volleyball using XGBoost
-- [Money in Football](https://github.com/Paulj1989/money-in-football) - Bayesian multilevel model measuring the effect of football (soccer) club resources on total league points across seven European leagues and ten seasons.
-- [Player Similarities](https://github.com/Paulj1989/player-similarities) - Using clustering methods to measure player similarity within positions
-- [Nice](https://github.com/Paulj1989/nice) - The stupidest R package ever created
+- Data Science Guides [[R](https://r-data-science-guides.netlify.app/)|[Python](https://python-data-science-guides.netlify.app/)] - Guides for common data science tasks, in R & Python.
+- [{scwplot}](https://nhs-south-central-and-west.github.io/scwplot/) - An R package for creating consistent SCW-style ggplot figures.
+- [CAIP App](https://rconnect-public.scwcsu.nhs.uk/caip/) - The PCN Capacity and Access Improvement Payment (CAIP) app.
+- [Expected Kills](https://github.com/Paulj1989/expected-kills) - Predicting kills in volleyball using XGBoost.
+- [Player Similarities](https://github.com/Paulj1989/player-similarities) - Using clustering methods to measure player similarity within positions.
+- [{nice}](https://github.com/Paulj1989/nice) - The stupidest R package ever created.
 
 ## Research Publications  {{< fa brain >}}
 
