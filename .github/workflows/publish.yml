@@ -25,7 +25,7 @@ jobs:
       #     needs: check
       
       - name: Install curl
-        run: sudo apt-get install libcurl4-openssl-dev
+        run: sudo apt-get install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
         
       - name: Setup Renv
         uses: r-lib/actions/setup-renv@v2
