@@ -87,7 +87,7 @@
       justify-content: center !important;
       font-size: 1em !important;
     }
-
+    
     /* blurb */
     .about-contents {
       padding: 0 0 0 0em !important;
@@ -97,10 +97,13 @@
     .about-links.subtitle {
       justify-content: center !important;
     }
-
-    /* move image up, adjust padding */
+    
+    /* image */
     .about-image {
+      max-width: 110%;
       order: 1 !important;
+      margin-top: 1em;
       padding: 0 2em 0 2em !important;
-    }
+  }
 }
+
