@@ -5,10 +5,10 @@ author: Paul Johnson
 date: 2022-05-10
 image: bayes.jpg
 categories:
-    - Bayesian Statistics
-    - Statistics
-    - Data Science
-    - Probability
+  - Bayesian Statistics
+  - Statistics
+  - Data Science
+  - Probability
 ---
 
 As a social scientist turned data scientist, my graduate school training taught me a lot of frequentist statistics that has served me well in my career since. However, there's one thing that frequentist statistics can't solve, and that's my lack of a personality. For that, we've got Bayesian statistics, the perfect substitute.

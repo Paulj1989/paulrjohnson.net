@@ -9,9 +9,6 @@ categories:
   - Markdown
   - Hugo
   - R
-aliases:
-  - 2022/09/setting-up-a-hugo-website-with-quarto
-  - setting-up-hugo-website-with-quarto
 ---
 
 Like every other nerd that likes R and has used RMarkdown more than one time in their entire life, I am now in the process of transitioning to using Quarto, and I want to let the world know! I wanted to make good use of Quarto, including utilising the really nice job it does with rendering R, Python, Julia, and JavaScript (not that I'm writing a lot of Julia or JavaScript) and outputting it in a HTML document. However, I didn't want to give up this lovely website I had already put together using Hugo. What a conundrum... Well, it turns out it's relatively easy to use Quarto with a Hugo site. These folks really have thought of everything!

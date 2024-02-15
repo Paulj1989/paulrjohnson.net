@@ -5,10 +5,10 @@ author: Paul Johnson
 date: 2022-02-19
 image: package.jpg
 categories:
-    - R
-    - Packages
-    - Software Development
-    - Data Science
+  - R
+  - Packages
+  - Software Development
+  - Data Science
 execute: 
   eval: false
 ---

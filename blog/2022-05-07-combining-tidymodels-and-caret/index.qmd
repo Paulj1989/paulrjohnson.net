@@ -5,11 +5,11 @@ author: Paul Johnson
 date: 2022-05-07
 image: robot.jpg
 categories:
-    - Machine Learning
-    - Data Science
-    - R
-    - Caret
-    - Tidymodels
+  - Machine Learning
+  - Data Science
+  - R
+  - Caret
+  - Tidymodels
 ---
 
 The two main approaches to building machine learning models in R are [**caret**](https://github.com/topepo/caret/) and [**tidymodels**](https://www.tidymodels.org/). Having tried both, I found that I struggled to pick my favorite. There's elements of both that made more intuitive sense to me than the other. I think it's a product of having become very familiar with the **tidyverse**, particularly **dplyr**, for data wrangling, but still using a lot of Base R functions for statistical modeling.
