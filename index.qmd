@@ -8,7 +8,7 @@ image-alt: "Me, Me, Me"
 twitter-card:
     title: Paul Johnson
     description: |
-      Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
+      A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
     image: assets/img/paul/paul3.png
 
 about:

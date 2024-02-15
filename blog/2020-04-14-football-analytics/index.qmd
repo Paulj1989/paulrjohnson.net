@@ -5,9 +5,12 @@ author: Paul Johnson
 date: 2020-04-14
 image: football.jpg
 categories:
-    - Football Analytics
-    - R
-    - Python
+  - Football Analytics
+  - R
+  - Python
+aliases:
+  - 2020/04/recent-football-analytics-articles
+  - football-analytics
 ---
 
 As a side-project/hobby, I write about football. Some of my recent work (as of 04/20) can be found below:
