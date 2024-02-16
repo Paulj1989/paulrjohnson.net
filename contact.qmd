@@ -44,7 +44,7 @@ However, for enquiries related to consultancy, collaborations, or speaking engag
 <input type="email" name="_replyto" id="email-address" class="form-control" placeholder="your@email.here" required>
 
 <label for="message">Message</label>
-  <textarea rows="14" name="message" id="message" class="form-control" placeholder="Type Message Here." required></textarea>
+  <textarea rows="14" name="message" id="message" class="form-control" placeholder="Type your message here" required></textarea>
 
 <button type="submit" class="btn btn-primary mt-4">Send message</button>
 </form>
