@@ -21,7 +21,7 @@ resources:
 
 # Consultancy {{< fa feather-pointed >}}
 
-I have experience asking scientific questions, designing research, and implementing statistical methods, with a focus on identifying meaningful insights from data. I have the technical knowledge and communication skills to work effectively at every stage of the data science life cycle, using the tools required for the project.
+I have experience asking scientific questions, designing research, and implementing statistical methods, with a focus on actionable meaningful insights from data. I have the technical and communication skills to work effectively at every stage of the data science life cycle, using the tools required for the project.
 
 If you want to hire me, here is a short list of some of my areas of expertise:
 
@@ -31,14 +31,13 @@ If you want to hire me, here is a short list of some of my areas of expertise:
 - Data visualisation
 - Scientific communication
 
-Please use this form to contact me, whether about consultancy, collaborations or to say hello.
+Please use this form for all enquiries about consultancy, collaborations, or speaking engagements.
 
 <a class="link-dark me-1" href="https://fosstodon.org/@paulj1989" title="mastodon" target="_blank" rel="noopener">{{< fa brands mastodon >}}</a>
 <a class="link-dark me-1" href="https://linkedin.com/in/paulj1989" title="LinkedIn" target="_blank"rel="noopener">{{< fa brands linkedin >}}</a>
 <a class="link-dark me-1" href="https://github.com/paulj1989" title="github" target="_blank"rel="noopener">{{< fa brands github >}}</a>
 <a class="link-dark me-1" href="https://kaggle.com/paulrjohnson" title="github" target="_blank"rel="noopener">{{< fa brands kaggle >}}</a>
 <a class="link-dark me-1" href="https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en" title="Google Scholar" target="_blank"rel="noopener">{{< iconify fa6-brands google-scholar >}}</a>
-
 
 :::
 <!-- source: https://github.com/mccarthy-m-g/tidytales/blob/main/about/index.qmd#L24-L46 -->
@@ -58,7 +57,7 @@ Please use this form to contact me, whether about consultancy, collaborations or
 <input type="email" name="_replyto" id="email-address" class="form-control" placeholder="your@email.here" required>
 
 <label for="message">Message</label>
-  <textarea rows="16" name="message" id="message" class="form-control" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Venenatis tellus in metus vulputate. Faucibus a pellentesque sit amet porttitor eget dolor morbi non. Tincidunt praesent semper feugiat nibh sed pulvinar. Viverra accumsan in nisl nisi. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Dignissim diam quis enim lobortis scelerisque fermentum dui. Sollicitudin aliquam ultrices sagittis orci a. Fames ac turpis egestas maecenas pharetra convallis. Et malesuada fames ac turpis egestas sed tempus.." required></textarea>
+  <textarea rows="15" name="message" id="message" class="form-control" placeholder="Type your message here" required></textarea>
 
 <button type="submit" class="btn btn-primary mt-4">Send message</button>
 </form>

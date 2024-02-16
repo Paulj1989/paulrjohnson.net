@@ -38,6 +38,9 @@ website:
      &#169; 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
 
     right: 
+      - text: "Contact"
+        aria-label: "Contact Form"
+        href: contact.qmd
       - text: "License"
         aria-label: "License Details"
         href: license.qmd

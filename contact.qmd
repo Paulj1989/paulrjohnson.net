@@ -1,0 +1,54 @@
+---
+pagetitle: Paul Johnson - Contact
+name: Contact Form
+page-layout: article
+format: 
+  html: 
+    grid:
+      margin-width: 0px
+      sidebar-width: 0px
+
+header-includes: >
+  <link rel="stylesheet" href="/assets/contact.css">
+resources:
+  - /assets/contact.css
+---
+
+::: {.grid}
+
+::: {.g-col-5 #note}
+
+# Contact {{< fa paper-plane >}}
+
+I am always open to hearing from anyone who wants to chat about data science, social science, or statistics. Any time spent talking to people on the internet about these topics is time not spent ruining evenings with friends and family going on about p-values or gradient boosting and refusing to talk about normal things like whether you'd rather have feet-shaped hands or hand-shaped feet (I don't know what normal people talk about).
+
+If you have any feedback or questions or want to say hello and chat about nerdy stuff, please use this contact form.
+
+However, for enquiries related to consultancy, collaborations, or speaking engagements, please head over to the [consultancy](/consultancy) page.
+
+:::
+<!-- source: https://github.com/mccarthy-m-g/tidytales/blob/main/about/index.qmd#L24-L46 -->
+
+::: {.g-col-1}
+:::
+
+::: {.g-col-6 #form}
+
+<form action="https://formspree.io/f/mjvnwolw" method="POST" accept-charset="utf-8">
+
+
+<label for="full-name">Full Name</label>
+<input type="text" name="name" id="full-name" class="form-control" placeholder="First and Last" required>
+
+<label for="email-address">Email Address</label>
+<input type="email" name="_replyto" id="email-address" class="form-control" placeholder="your@email.here" required>
+
+<label for="message">Message</label>
+  <textarea rows="14" name="message" id="message" class="form-control" placeholder="Type Message Here." required></textarea>
+
+<button type="submit" class="btn btn-primary mt-4">Send message</button>
+</form>
+:::
+
+:::
+<!-- end grid -->
