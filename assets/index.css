@@ -72,7 +72,7 @@
     /* move text up & center */
     .entity-contents {
       order: 2 !important;
-      margin: -4em 0 0 0 !important;
+      margin: -8em 0 0 0 !important;
       padding: 0 0 0 0em !important;
       text-align: center !important;
     }
