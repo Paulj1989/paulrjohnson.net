@@ -1,0 +1,17 @@
+---
+pagetitle: Page Not Found | Paul Johnson
+---
+
+<br>
+
+<div style="text-align: center">
+
+# {{< fa face-frown >}} Page Not Found {{< fa face-frown >}}
+
+The page you have requested cannot be found<br>(perhaps it has been moved or renamed).
+
+![](assets/img/lost.jpg){fig-align="center" width=60%}
+
+Please return from whence you came and try again.
+
+</div>
