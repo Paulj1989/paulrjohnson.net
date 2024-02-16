@@ -1,7 +1,6 @@
 ---
-pagetitle: Paul Johnson - Consultancy Enquiries
-# title: Send me a note
-name: Contact Form
+pagetitle: Consultancy Enquiries | Paul Johnson
+name: Consultancy Enquiries
 page-layout: article
 format: 
   html: 

@@ -1,5 +1,5 @@
 ---
-pagetitle: Paul Johnson - Contact
+pagetitle: Contact | Paul Johnson
 name: Contact Form
 page-layout: article
 format: 
