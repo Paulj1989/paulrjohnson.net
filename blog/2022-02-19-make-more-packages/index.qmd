@@ -25,7 +25,7 @@ To follow-up on what I'd learned, I decided to build my own (stupid but funny) p
 
 Now, I thought I would write this short blog post detailing the process for creating a very basic package, in the hope that it might help someone else overcome an imagined barrier to entry. I will run through the process of setting up a package, adding some simple functions, and then building out the basic infrastructure with documentation and testing, using **nice** as an example.
 
-## Initial Setup
+# Initial Setup
 
 In order to build a basic package from scratch, you should only need to rely on four different packages that will aid you in setting everything up, building the correct infrastructure, and documenting and testing your functions.
 
@@ -38,7 +38,7 @@ The packages you need:
 
 **devtools** is responsible for the majority of the functions you'll need to build and maintain a package and **usethis** handles the initial setup of the project, while **roxygen2** helps you document your package, and **testthat** simplifies unit testing.
 
-## Functions
+# Functions
 
 Packages are effectively just a way of housing and distributing functions. If you're making a package, you'll need some functions! They don't need to be wildly complex. They just need to work, and ideally they would be reasonably useful too. However, in the absence of useful functions, we've got an example of a funny function instead:
 
@@ -59,7 +59,7 @@ This is very simple. All it is doing is checking if an object _x_ matches either
 
 I think it is generally best practice to dedicate a different file to each individual function, though it's not absolutely necessary. If you choose to, you can store all your functions in one file, and this might be a sensible approach if you're creating a package that contains all your miscellaneous functions. However, for anything a little more meaty than that, I think the best approach is to split out everything into files for each function. That makes it easier for someone (likely including yourself) to navigate the source code.
 
-## Documentation
+# Documentation
 
 The next step is to document your package, so anyone using it will have some guidance on what they're doing and why. Documentation doesn't need to be complicated, though if the function it is documenting is pretty complex, it should probably go into plenty of detail to help anyone trying to use it. In the **nice** example, the functions are super simple, so there's no sense in overdoing the docs either.
 
@@ -90,7 +90,7 @@ devtools::document()
 
 You can get a look at your documentation by calling _?function_ like you normally would. In this case, calling _?check_ returns the documentation for the **nice** check function.
 
-## Testing
+# Testing
 
 In order to reduce the likelihood that your package becomes a mess of errors, it is important to test it. The best way of doing this is automating your tests, to make everything reproducible, and reduce your own opportunities to do anything stupid!
 
@@ -140,12 +140,12 @@ devtools::test()
 
 This will run through each test and check that it returns the expected output. If it doesn't it will show that it has failed, and show you where exactly that failure has occurred, in order to help you fix it. If it has worked, then you're all good!
 
-## Further Reading
+# Further Reading
 
 This was a very, very quick run-through on how to create a basic package, just to get started, but if you want to make something that is a little more useful than some dumb function to check if your outputs are nice, then there's plenty of resources for how to take your packages from basics to CRAN and beyond.
 
 The starting point, as is often the case, is Hadley Wickham. Hadley Wickham and Jenny Bryan's [_R Packages_](https://r-pkgs.org/index.html) is an excellent resource for learning to make some killer packages. And if you're looking to learn how to build the kind of functions that belong in those killer packages, then Hadley Wickham's [_Advanced R_](https://adv-r.hadley.nz/) will get you most of the way there.
 
-## Acknowledgments {.appendix}
+# Acknowledgments {.appendix}
 
 Preview image by [Jiawei Zhao](https://unsplash.com/@jiaweizhao) on [Unsplash](https://unsplash.com/photos/tuxedo-cat-in-brown-cardboard-box-W-ypTC6R7_k).

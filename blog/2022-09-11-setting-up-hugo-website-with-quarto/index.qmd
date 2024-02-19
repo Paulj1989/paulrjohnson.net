@@ -28,7 +28,7 @@ Quarto Tutorials:
 
 No, my ambitions with this blog post are considerably less ambitious. I just want to show you how to set your existing Hugo website up so that you can use Quarto to write your blog posts (and any other pages).
 
-## Setting Up Hugo for Quarto Files
+# Setting Up Hugo for Quarto Files
 
 The first step is to make some changes to your 'config.toml' file so that it doesn't try and publish your Quarto documents, whether they are in qmd or ipynb format. You need to add the following code to the file:
 
@@ -48,7 +48,7 @@ You also need to add some configuration to the markup section of the config file
 ```
 This is essentially everything you need to get your Hugo website set up to deal with Quarto without losing its mind.
 
-## Creating Blog Posts
+# Creating Blog Posts
 
 This is the part that I expected to at least be a little bit harder than it turned out to be. Once you have set your config file up, you can now create new posts (and any other pages) in pretty much the same way you did in the before times. In my case, all the blog posts are stored under 'content/posts', and it's the same deal now in this exciting new Quarto world.
 
@@ -56,7 +56,7 @@ Blog posts are written in a qmd file, with the YAML front matter looking much th
 
 Once you've done all this, you can render your Quarto files and it will produce Markdown files that Hugo will publish as blog posts.
 
-## Don't Forget to Render
+# Don't Forget to Render
 
 The biggest problem I've faced with this process, in the short time since making the change, is that I am a stupid person and that I sometimes do stupid things. 
 
@@ -64,7 +64,7 @@ When you've written your posts in a qmd file you have to remember to render them
 
 ![Spend some time in the shame cube](https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif#center)
 
-## Conclusion
+# Conclusion
 
 The rendering issue isn't ideal, because as much as I'd like to believe that I will eventually remember that I need to render before I publish posts, I happen to know that I am a buffoon, so I am certain that I will forget enough that it's going to be a bit of a nuisance.
 

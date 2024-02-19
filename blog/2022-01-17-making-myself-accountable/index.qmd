@@ -19,6 +19,6 @@ Over the course of the next 12 months, I'm going to try and average a blog post 
 
 Given that everything is posting and everyone is a poster, it's time I put some hours in at the content factory. New Year, New Me.
 
-## Acknowledgments {.appendix}
+# Acknowledgments {.appendix}
 
 Preview image by [Jack Lucas Smith](https://unsplash.com/@jacklucassmith) on [Unsplash](https://unsplash.com/photos/white-and-black-police-car-on-road-during-daytime-UqvSeGmFYBs).

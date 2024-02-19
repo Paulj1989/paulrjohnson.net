@@ -18,7 +18,7 @@ The process for prepping the data for a machine learning model seems to make a t
 
 Anyway, I recently discovered something that is probably entirely unremarkable to everyone else, and that probably shouldn't have taken me by surprise... You can just combine the two! You can split and preprocess your data using the **tidymodels** framework before defecting to **caret** for the next steps. What a time to be alive.
 
-## Training a Random Forest Model to Predict Diabetes
+# Training a Random Forest Model to Predict Diabetes
 
 Because I'm not a savage, I won't leave you without a simple worked example. We'll use [Gary Hutson](https://hutsons-hacks.info/)'s really useful [**MLDataR**](https://cran.r-project.org/web/packages/MLDataR/vignettes/MLDataR.html) package to grab a toy diabetes dataset, cleaning the variable names using [**janitor**](http://sfirke.github.io/janitor/), and converting the target variable, *diabetic_class*, to a factor.
 
@@ -177,7 +177,7 @@ confusionMatrix(
 
 The results are pretty good for a very quick model. How exciting. Lets pretend that it's because I'm a brilliant data scientist rather than it being due to the very clean, balanced toy dataset we used.
 
-## Conclusion
+# Conclusion
 
 So there you have it, if you're in the same position as me and you're struggling to pick between **tidymodels** and **caret**, because both frameworks offer something you like, you can just combine the two and make Frankenstein's framework.
 
@@ -185,6 +185,6 @@ Ultimately, despite this blog post, I'm probably going to stick with **tidymodel
 
 But it's nice to know that I've got options.
 
-## Acknowledgments {.appendix}
+# Acknowledgments {.appendix}
 
 Preview image by [Rock'n Roll Monkey](https://unsplash.com/@rocknrollmonkey) on [Unsplash](https://unsplash.com/photos/blue-plastic-robot-toy-R4WCbazrD1g).
