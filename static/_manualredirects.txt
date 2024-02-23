@@ -13,4 +13,4 @@ https://paulrjohnson.net/2022/09/setting-up-a-hugo-website-with-quarto/         
 
 https://paulrjohnson.net/2022/09/rendering-mermaid-diagrams-on-a-hugo-website-using-quarto/           https://paulrjohnson.net/blog/2022-09-17-rendering-mermaid-diagrams-using-quarto-and-hugo/ 301!
 
-https://paulrjohnson.net/2022/11/a-cheatsheet-for-building-multilevel-models-in-r/                    https://paulrjohnson.net/blog/2022-11-01-multilevel-model-r-cheatsheet/ 301!
+https://paulrjohnson.net/2022/11/a-cheatsheet-for-building-mutilevel-models-in-r/                     https://paulrjohnson.net/blog/2022-11-01-multilevel-model-r-cheatsheet/ 301!

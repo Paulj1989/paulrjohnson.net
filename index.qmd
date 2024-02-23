@@ -84,18 +84,15 @@ list_paths <- function(folder) {
     dplyr::mutate(folder = folder)
 }
 
-# define post folders
-folders <- c("blog")
-
-# list post paths by folder
-posts <- purrr::map(folders, list_paths) |> purrr::list_rbind()
+# list post paths in blog folder
+posts <- purrr::map("blog", list_paths) |> purrr::list_rbind()
 
 # extract short paths and create redirects
-posts <- 
+posts <-
   posts |> 
   dplyr::mutate(
     # extract the year-slugs
-    short_path = stringr::str_remove(path, "(?!\\d{4}-)\\d{2}-\\d{2}-(?!\\d)"),
+    short_path = stringr::str_remove(path, "(?!\\-)\\d{4}-\\d{2}-\\d{2}-"),
     # create short paths
     short_path = paste0(folder, "/", short_path),
     # create lines to insert to a netlify _redirect file
