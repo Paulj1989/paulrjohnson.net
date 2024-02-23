@@ -91,6 +91,7 @@ $pagination-active-border-color:    #43494D;
 }
 
 
+
 // Categories
 
 // posts
@@ -113,6 +114,10 @@ $pagination-active-border-color:    #43494D;
 //   color: white !important;
 //   }
 // }
+
+div.quarto-post .thumbnail img {
+    margin-top: -1em;
+}
 
 // Navbar
 
