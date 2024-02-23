@@ -54,6 +54,60 @@ I am a data scientist at NHS South, Central and West CSU. I am interested in app
 
 At heart, I want to understand how the world works, and I enjoy telling stories that help others do the same, leveraging data and my quantitative skill set in the process.
 
-<!-- [Learn More About Me &rarr;](/about){.about-links .subtitle} -->
-
 :::
+
+```{r import-manual-redirects}
+
+manual_redirects <-
+  readr::read_table(here::here("static", "_manualredirects.txt"),
+                    col_names = FALSE) |> 
+  dplyr::mutate(redirect = paste0(X1, " ", X2, " ", X3))
+
+manual_redirects <- manual_redirects$redirect
+```
+
+```{r write-redirects}
+
+# adapted from Silvia Canelón: https://silviacanelon.com/blog/2023-09-29-hello-quarto/#setting-up-redirects
+# who adapted from Tom Mock: https://github.com/jthomasmock/themockup-blog/blob/master/index.qmd#L27C1-L48C4
+# who adapted from Danielle Navarro: https://blog.djnavarro.net/porting-to-quarto/#netlify-redirects
+
+# function: obtain list of post paths
+list_paths <- function(folder) {
+  posts <-
+    list.dirs(
+    path = c(here::here(folder)),
+    full.names = FALSE,
+    recursive = FALSE
+    ) |> 
+    tibble::as_tibble_col(column_name = "path")  |>
+    dplyr::mutate(folder = folder)
+}
+
+# define post folders
+folders <- c("blog")
+
+# list post paths by folder
+posts <- purrr::map(folders, list_paths) |> purrr::list_rbind()
+
+# extract short paths and create redirects
+posts <- 
+  posts |> 
+  dplyr::mutate(
+    # extract the year-slugs
+    short_path = stringr::str_remove(path, "(?!\\d{4}-)\\d{2}-\\d{2}-(?!\\d)"),
+    # create short paths
+    short_path = paste0(folder, "/", short_path),
+    # create lines to insert to a netlify _redirect file
+    redirects = paste0("/", short_path, " ", "/", folder, "/", path)
+    )
+
+# extract redirects
+redirects <- posts$redirects
+
+# combine with manual redirects
+redirects_combined <- c(manual_redirects, redirects)
+
+# write the _redirect file
+writeLines(redirects_combined, here::here("_site", "_redirects"))
+```
