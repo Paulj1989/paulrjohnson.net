@@ -2,14 +2,14 @@
 title: "Paul Johnson"
 pagetitle: "Paul Johnson"
 subtitle: "Using Causal Inference & Machine Learning to Confirm My Priors"
-image: assets/img/paul/paul3.png
+image: assets/img/paul/paul.webp
 image-alt: "Me, Me, Me"
 
 twitter-card:
     title: Paul Johnson
     description: |
       A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
-    image: assets/img/paul/paul3.png
+    image: assets/img/paul/paul.webp
 
 about:
   template: solana

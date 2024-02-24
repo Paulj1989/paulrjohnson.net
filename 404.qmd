@@ -10,7 +10,7 @@ pagetitle: Page Not Found | Paul Johnson
 
 The page you have requested cannot be found<br>(perhaps it has been moved or renamed).
 
-![](assets/img/lost.jpg){fig-align="center" width=60%}
+![](assets/img/lost.webp){fig-align="center" width=60%}
 
 Please return from whence you came and try again.
 
