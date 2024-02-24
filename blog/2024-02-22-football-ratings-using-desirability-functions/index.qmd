@@ -591,9 +591,8 @@ offensive_rating |>
     panel.grid.major.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.y = element_text(
-      size = rel(1.2), hjust = 0.5, 
-      margin = margin(r = -15, l = -10), 
-      lineheight = .4
+      colour = "grey30", size = rel(1.15), hjust = 0.5, 
+      margin = margin(r = -15, l = -8), lineheight = .4
       )
     )
 ```
