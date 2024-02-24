@@ -64,6 +64,8 @@ knitr:
     dev: "ragg_png"
 
 execute: 
+  warning: false
+  error: false
   freeze: auto
 
 include-in-header: assets/umami.html
