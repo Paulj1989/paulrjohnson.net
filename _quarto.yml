@@ -7,7 +7,7 @@ website:
   title: "P(Johnson) > 0.05"
   site-url: https://paulrjohnson.net
   description: "A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors."
-  favicon: assets/img/favicon/apple-touch-icon.png
+  favicon: assets/img/favicon/favicon.ico
   search: false
   page-navigation: true
   back-to-top-navigation: false
@@ -15,7 +15,8 @@ website:
   comments: false
  
   navbar:
-    logo: assets/img/favicon/apple-touch-icon.png
+    logo: assets/img/favicon/favicon.ico
+    logo-alt: Purple Octopus
     tools:
     - icon: github
       href: https://www.github.com/paulj1989/paulrjohnson.net
@@ -64,8 +65,8 @@ knitr:
     dev: "ragg_png"
 
 execute: 
+  freeze: auto
   warning: false
   error: false
-  freeze: auto
 
 include-in-header: assets/umami.html
