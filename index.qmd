@@ -58,6 +58,7 @@ At heart, I want to understand how the world works, and I enjoy telling stories 
 
 ```{r}
 #| label: import-manual-redirects
+#| echo: false
 
 manual_redirects <-
   readr::read_table(here::here("static", "_manualredirects.txt"),
@@ -69,6 +70,7 @@ manual_redirects <- manual_redirects$redirect
 
 ```{r}
 #| label: write-redirects
+#| echo: false
 
 # adapted from Silvia Canelón: https://silviacanelon.com/blog/2023-09-29-hello-quarto/#setting-up-redirects
 # who adapted from Tom Mock: https://github.com/jthomasmock/themockup-blog/blob/master/index.qmd#L27C1-L48C4
