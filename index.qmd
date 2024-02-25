@@ -32,11 +32,11 @@ about:
       aria-label: Google Scholar
       href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en
 page-layout: full
-
-execute: 
-  freeze: false
-  echo: false
-  warning: false
+# 
+# execute: 
+#   freeze: false
+#   echo: false
+#   warning: false
 
 header-includes: >
   <link rel="stylesheet" href="assets/index.css">
