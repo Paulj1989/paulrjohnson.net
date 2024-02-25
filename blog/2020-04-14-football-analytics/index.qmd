@@ -4,6 +4,7 @@ subtitle: A short summary of some of the football analytics pieces I have writte
 author: Paul Johnson
 date: 2020-04-14
 image: football.webp
+image-alt: A goalkeeper dives to save a shot as the ball heads towards the top corner of the goal out of their reach 
 categories:
   - Football Analytics
   - R

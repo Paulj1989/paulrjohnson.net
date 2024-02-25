@@ -3,6 +3,7 @@ title: Setting up a Hugo Website with Quarto
 subtitle: "An extension of the Quarto documentation (that didn't work off the shelf for me) for getting a Hugo website working with Quarto seamlessly."
 author: Paul Johnson
 image: hugo.webp
+image-alt: The hugo logo on a dark blue background
 date: 2022-09-11
 categories:
   - Quarto

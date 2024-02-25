@@ -5,6 +5,7 @@ author: Paul Johnson
 date: 2022-09-17
 date-modified: 2024-02-19
 image: mermaid.webp
+image-alt: A woman in a mermaid costume lays in a bathtub that is filling up with water
 categories:
   - Quarto
   - Markdown

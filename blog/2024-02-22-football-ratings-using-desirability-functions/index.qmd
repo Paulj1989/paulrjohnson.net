@@ -4,6 +4,7 @@ subtitle: Ranking football players using `{desirability2}` and multivariate opti
 author: Paul Johnson
 date: 2024-02-22
 image: math.webp
+image-alt: A blackboard with a many diagrams and mathematical operations drawn on it
 categories:
   - Desirability Functions
   - Optimisation

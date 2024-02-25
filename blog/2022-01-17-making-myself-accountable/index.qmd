@@ -4,6 +4,7 @@ subtitle: Setting myself a goal to try and write one blog post a month for the w
 author: Paul Johnson
 date: 2022-01-17
 image: police.webp
+image-alt: A British police car drives down a busy street with people walking on either side of the car
 categories:
   - Me Me Me
   - Updates
