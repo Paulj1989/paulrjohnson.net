@@ -16,11 +16,11 @@ website:
  
   navbar:
     logo: assets/img/favicon/favicon.ico
-    logo-alt: Purple Octopus
+    logo-alt: "Purple Octopus"
     tools:
-    - icon: github
-      aria-label: "GitHub"
-      href: https://www.github.com/paulj1989/paulrjohnson.net
+      - icon: github
+        aria-label: "GitHub"
+        href: https://www.github.com/paulj1989/paulrjohnson.net
     right:
       - text: Blog
         aria-label: "Blog"
