@@ -17,19 +17,19 @@ about:
   id: hero-heading
   links:
     - icon: mastodon
-      aria-label: Mastodon
+      aria-label: "Mastodon"
       href: https://fosstodon.org/@paulj1989
     - icon: linkedin
-      aria-label: LinkedIn
+      aria-label: "LinkedIn"
       href: https://linkedin.com/in/paulj1989
     - icon: github
-      aria-label: GitHub
+      aria-label: "GitHub"
       href: https://github.com/paulj1989
     - text: "{{< iconify fa6-brands kaggle >}}"
-      aria-label: Kaggle
+      aria-label: "Kaggle"
       href: https://kaggle.com/paulrjohnson
     - text: "{{< iconify fa6-brands google-scholar >}}" 
-      aria-label: Google Scholar
+      aria-label: "Google Scholar"
       href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en
 page-layout: full
 # 

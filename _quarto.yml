@@ -19,6 +19,7 @@ website:
     logo-alt: Purple Octopus
     tools:
     - icon: github
+      aria-label: "GitHub"
       href: https://www.github.com/paulj1989/paulrjohnson.net
     right:
       - text: Blog
