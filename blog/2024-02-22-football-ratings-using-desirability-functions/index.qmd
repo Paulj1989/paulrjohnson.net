@@ -3,7 +3,7 @@ title: Developing Offensive Ratings Using Desirability Functions
 subtitle: Ranking football players using `{desirability2}` and multivariate optimisation
 author: Paul Johnson
 date: 2024-02-22
-image: math.jpg
+image: math.webp
 categories:
   - Desirability Functions
   - Optimisation

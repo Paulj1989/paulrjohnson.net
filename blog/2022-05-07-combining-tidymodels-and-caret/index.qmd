@@ -3,7 +3,7 @@ title: Combining Tidymodels & Caret for Machine Learning in R
 subtitle: How to combine the functionality from both the Tidymodels framework and Caret to build models that combine the best of both worlds.
 author: Paul Johnson
 date: 2022-05-07
-image: robot.jpg
+image: robot.webp
 categories:
   - Machine Learning
   - Data Science

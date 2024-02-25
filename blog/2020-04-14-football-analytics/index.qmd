@@ -3,7 +3,7 @@ title: Recent Football Analytics Articles
 subtitle: A short summary of some of the football analytics pieces I have written recently (as of 04/20)
 author: Paul Johnson
 date: 2020-04-14
-image: football.jpg
+image: football.webp
 categories:
   - Football Analytics
   - R

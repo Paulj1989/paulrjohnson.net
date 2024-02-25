@@ -3,7 +3,7 @@ title: Making Myself Accountable
 subtitle: Setting myself a goal to try and write one blog post a month for the whole of 2022, so that I can come back to it and assess just how much I missed my target by at the end of the year.
 author: Paul Johnson
 date: 2022-01-17
-image: police.jpg
+image: police.webp
 categories:
   - Me Me Me
   - Updates

@@ -3,7 +3,7 @@ title: Make More Packages!
 subtitle: How (and why) to learn basic package development in R, for data scientists.
 author: Paul Johnson
 date: 2022-02-19
-image: package.jpg
+image: package.webp
 categories:
   - R
   - Packages

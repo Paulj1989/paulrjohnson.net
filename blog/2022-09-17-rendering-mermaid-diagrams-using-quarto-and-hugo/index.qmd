@@ -4,7 +4,7 @@ summary: "How to get your mermaid diagrams to show up on your Hugo blog when usi
 author: Paul Johnson
 date: 2022-09-17
 date-modified: 2024-02-19
-image: mermaid.jpg
+image: mermaid.webp
 categories:
   - Quarto
   - Markdown
