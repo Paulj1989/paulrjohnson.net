@@ -12,6 +12,7 @@ website:
   page-navigation: true
   back-to-top-navigation: false
   twitter-card: true
+  open-graph: true
   comments: false
  
   navbar:

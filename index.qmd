@@ -4,6 +4,7 @@ pagetitle: "Paul Johnson"
 subtitle: "Using Causal Inference & Machine Learning to Confirm My Priors"
 image: assets/img/paul/paul.webp
 image-alt: "Me looking handsome as hell"
+description-meta: "A Data Scientist interested in applying my knowledge of causal inference, statistics, probabilistic thinking, and machine learning to problems of understanding human behaviour."
 
 twitter-card:
     title: Paul Johnson
