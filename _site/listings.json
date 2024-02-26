@@ -1,0 +1,16 @@
+[
+  {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/2024-02-22-football-ratings-using-desirability-functions/index.html",
+      "/blog/2022-11-01-multilevel-model-r-cheatsheet/index.html",
+      "/blog/2022-09-17-rendering-mermaid-diagrams-using-quarto-and-hugo/index.html",
+      "/blog/2022-09-11-setting-up-hugo-website-with-quarto/index.html",
+      "/blog/2022-05-10-learning-bayesian-statistics/index.html",
+      "/blog/2022-05-07-combining-tidymodels-and-caret/index.html",
+      "/blog/2022-02-19-make-more-packages/index.html",
+      "/blog/2022-01-17-making-myself-accountable/index.html",
+      "/blog/2020-04-14-football-analytics/index.html"
+    ]
+  }
+]
