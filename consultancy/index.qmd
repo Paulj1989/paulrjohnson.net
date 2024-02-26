@@ -18,7 +18,7 @@ resources:
 
 ::: {.g-col-5 #note}
 
-# Consultancy {{< fa feather-pointed >}}
+# Consultancy {{< fa robot >}}
 
 I have experience asking scientific questions, designing research, and implementing statistical methods, with a focus on actionable meaningful insights from data. I have the technical and communication skills to work effectively at every stage of the data science life cycle, using the tools required for the project.
 

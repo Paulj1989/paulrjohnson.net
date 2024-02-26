@@ -31,24 +31,24 @@ resources:
 
 ***NHS South, Central and West CSU*** [Nov 2021 --- Present]{.cvdate}
 
-- Providing technical expertise in analytics and research-focused projects across the organization, including experimental and observational analysis of healthcare interventions.
-- Building and deploying machine learning models that forecast the daily event counts in A&E and other Urgent and Emergency Care Services.
-- Leading the development of organisational expertise in data science,including demonstrating and training colleagues in statistics,machine learning, and programming.
-- Supporting the development of the organisation’s infrastructure for developing and deploying data science.
+- Providing technical expertise in analytics and research-focused projects across the organisation, including experimental and observational analysis of healthcare interventions.
+- Building and deploying machine learning models, such as a model forecasting the daily event counts in Urgent and Emergency Care Services and a clustering model identifying similar GP practices.
+- Leading the development of organisational expertise in data science, including training and mentoring colleagues in statistics, machine learning, and programming.
+- Supporting the development of the SCW's infrastructure for developing and deploying data science.
 
 ### Associate BI Consultant
 
 ***NHS South, Central and West CSU*** [April 2021 --- Nov 2021]{.cvdate}
 
-- Led research on the wider determinants of health inequalities and the role of deprivation in health outcomes.
-- Supported the Population Health Management team with research design, statistical modelling, and communication and visualization of findings.
+- Led research on wider determinants of health inequalities and the role of deprivation in health outcomes.
+- Supported the Population Health Analytics team with research design, statistical modelling, and the visualisation and communication of findings.
 
 ### Graduate Research/Teaching Assistant
 
 ***University of Houston*** [July 2017 --- Dec 2020]{.cvdate}
 
 - Built natural language processing models for research into political language in legal texts.
-- Supported the Political Party Database Project in the administering of the expert survey and maintenance of the project website.
+- Supported the Political Party Database Project in the administration of the expert survey and maintenance of the project website.
 - Courses: Intro to Comparative Politics, Mexican Politics, Comparative Elections, Media & Politics.
 
 ### Fundraising Manager: Product Innovation
@@ -62,7 +62,7 @@ resources:
 
 ***World Child Cancer*** [July 2015 --- April 2016]{.cvdate}
 
-- Developed, recruited, and managed the charity’s largest charity event to-date (Kilimanjaro trek) and various major events (Ride 100, Great North Run).
+- Developed, recruited, and managed the charity’s largest fundraising event to date (Kilimanjaro trek) and various major events (Ride 100, Great North Run).
 - Supported the Head of Corporate Fundraising in the successful corporate partnership with Deutsche Bank.
 
 ## Further Work Experience  {{< fa clock-rotate-left >}}
