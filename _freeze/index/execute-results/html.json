@@ -1,0 +1,15 @@
+{
+  "hash": "cd038f3bc68fc50160bb509798079655",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Paul Johnson\"\npagetitle: \"Paul Johnson\"\nsubtitle: \"Using Causal Inference & Machine Learning to Confirm My Priors\"\nimage: assets/img/paul/paul.webp\nimage-alt: \"Me looking handsome as hell\"\n\ntwitter-card:\n    title: Paul Johnson\n    description: |\n      A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.\n    image: assets/img/paul/paul.webp\n\nabout:\n  template: solana\n  image-width: 28em\n  id: hero-heading\n  links:\n    - icon: mastodon\n      aria-label: Mastodon\n      href: https://fosstodon.org/@paulj1989\n    - icon: linkedin\n      aria-label: \"LinkedIn\"\n      href: https://linkedin.com/in/paulj1989\n    - icon: github\n      aria-label: \"GitHub\"\n      href: https://github.com/paulj1989\n    - text: \"{{< iconify fa6-brands kaggle >}}\"\n      aria-label: \"Kaggle\"\n      href: https://kaggle.com/paulrjohnson\n    - text: \"{{< iconify fa6-brands google-scholar >}}\" \n      aria-label: \"Google Scholar\"\n      href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en\npage-layout: full\n# \n# execute: \n#   freeze: false\n#   echo: false\n#   warning: false\n\nheader-includes: >\n  <link rel=\"stylesheet\" href=\"assets/index.css\">\nresources:\n  - assets/index.css\ninclude-in-header: assets/umami.html\n---\n\n\n<br><br><br><br>\n\n\n::: {#hero-heading}\n\nI am a data scientist at NHS South, Central and West CSU. I am interested in applying my knowledge of causal inference, statistics, probabilistic thinking, and machine learning to problems of understanding human behaviour.\n\nAt heart, I want to understand how the world works, and I enjoy telling stories that help others do the same, leveraging data and my quantitative skill set in the process.\n\n:::\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
