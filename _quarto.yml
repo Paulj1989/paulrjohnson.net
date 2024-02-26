@@ -1,7 +1,7 @@
 project:
   type: website
   resources:
-    - CNAME
+    - "_redirects"
 
 website:
   title: "P(Johnson) > 0.05"

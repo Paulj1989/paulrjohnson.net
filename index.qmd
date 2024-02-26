@@ -32,11 +32,10 @@ about:
       aria-label: "Google Scholar"
       href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en
 page-layout: full
-# 
-# execute: 
-#   freeze: false
-#   echo: false
-#   warning: false
+
+execute:
+  echo: false
+  warning: false
 
 header-includes: >
   <link rel="stylesheet" href="assets/index.css">
@@ -110,5 +109,5 @@ redirects <- posts$redirects
 redirects_combined <- c(manual_redirects, redirects)
 
 # write the _redirect file
-writeLines(redirects_combined, here::here("_site", "_redirects"))
+writeLines(redirects_combined, here::here("_redirects"))
 ```

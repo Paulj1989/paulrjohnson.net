@@ -5639,7 +5639,7 @@ font-style: inherit;">true</span></span></code></pre></div>
 <p>When you’ve written your posts in a qmd file you have to remember to render them as and when you make changes that you want to deploy. I have already managed to forget to do that on a couple occasions, pushing changes that I haven’t rendered, resulting in qmd files that don’t line up with the md file, and therefore don’t show on the site. Think of all the funny things you might write that people won’t get to see, and it’s all your fault.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif#center" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1" title="Spend some time in the shame cube"><img src="https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif#center" class="img-fluid figure-img" alt="Spend some time in the shame cube"></a></p>
+<p><a href="https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif#center" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="Spend some time in the shame cube"><img src="https://media.giphy.com/media/3Mm6HZud4m2oU/giphy.gif#center" class="img-fluid figure-img" alt="Spend some time in the shame cube"></a></p>
 <figcaption>Spend some time in the shame cube</figcaption>
 </figure>
 </div>
