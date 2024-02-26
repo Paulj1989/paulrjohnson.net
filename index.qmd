@@ -34,9 +34,9 @@ about:
 page-layout: full
 
 execute: 
-  echo: false
-  output: true
   freeze: false
+  echo: false
+  warning: false
 
 header-includes: >
   <link rel="stylesheet" href="assets/index.css">
