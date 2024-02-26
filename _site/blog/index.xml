@@ -5056,7 +5056,7 @@ Notation
 <div id="fig-mlm" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-mlm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="mlm_example.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1"><img src="https://paulrjohnson.net/blog/2022-11-01-multilevel-model-r-cheatsheet/mlm_example.png" class="img-fluid figure-img"></a>
+<a href="mlm_example.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1"><img src="https://paulrjohnson.net/blog/2022-11-01-multilevel-model-r-cheatsheet/mlm_example.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mlm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Multilevel Data Structures (Source: <a href="http://www.stat.columbia.edu/~gelman/arm/">Gelman &amp; Hill (2006)</a>)
@@ -6510,7 +6510,7 @@ Johnson, Paul. 2022. <span>“Making Myself Accountable.”</span> January
 <p>For Bavarian Football Works, I analyzed goalkeeper peak age, and the performance of Bayern Munich’s great but ageing Manuel Neuer. I found that Neuer continues to be a very good goalkeeper, but that his performances are gradually declining, suggesting that the effects of age are starting to wear on him, and showing that even the greatest athletes ever can’t beat Father Time.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19654170/neuer_nubel.png" class="lightbox" data-glightbox="description: .lightbox-desc-1" data-gallery="quarto-lightbox-gallery-1" title="Neuer"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19654170/neuer_nubel.png" class="img-fluid figure-img" alt="Neuer"></a></p>
+<p><a href="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19654170/neuer_nubel.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" data-glightbox="description: .lightbox-desc-1" title="Neuer"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19654170/neuer_nubel.png" class="img-fluid figure-img" alt="Neuer"></a></p>
 <figcaption>Neuer</figcaption>
 </figure>
 </div>
@@ -6520,7 +6520,7 @@ Johnson, Paul. 2022. <span>“Making Myself Accountable.”</span> January
 <p>Before the 2019/20 season was interrupted by Covid-19, I carried out an analysis of the first half of the BVB season. I looked at team and individual performances, and identified some key areas of concern going forward.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19607138/playerxgxa.png" class="lightbox" data-glightbox="description: .lightbox-desc-2" data-gallery="quarto-lightbox-gallery-2" title="npxG+xA/90"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19607138/playerxgxa.png" class="img-fluid figure-img" alt="npxG+xA/90"></a></p>
+<p><a href="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19607138/playerxgxa.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" data-glightbox="description: .lightbox-desc-2" title="npxG+xA/90"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19607138/playerxgxa.png" class="img-fluid figure-img" alt="npxG+xA/90"></a></p>
 <figcaption>npxG+xA/90</figcaption>
 </figure>
 </div>
@@ -6530,7 +6530,7 @@ Johnson, Paul. 2022. <span>“Making Myself Accountable.”</span> January
 <p>Using data taken from the German football website, Wahre Tabelle, I studied referee errors and looked for evidence of bias for or against certain teams. Every fan base likes to believe they’re hard done by, but unfortunately I found little to suggest this is really the case.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19161141/corrected_goals.png" class="lightbox" data-glightbox="description: .lightbox-desc-3" data-gallery="quarto-lightbox-gallery-3" title="Corrections"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19161141/corrected_goals.png" class="img-fluid figure-img" alt="Corrections"></a></p>
+<p><a href="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19161141/corrected_goals.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" data-glightbox="description: .lightbox-desc-3" title="Corrections"><img src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/19161141/corrected_goals.png" class="img-fluid figure-img" alt="Corrections"></a></p>
 <figcaption>Corrections</figcaption>
 </figure>
 </div>
