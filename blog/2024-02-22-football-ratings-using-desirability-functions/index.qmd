@@ -1,7 +1,9 @@
 ---
 title: Developing Offensive Ratings Using Desirability Functions
 subtitle: Ranking football players using `{desirability2}` and multivariate optimisation
-description-meta: "A blog post exploring the use of desirability functions, a multivariate optimisation method, for creating rating systems, using offensive player data for the 2023/24 season."
+description-meta: |
+  A blog post exploring the use of desirability functions, a multivariate optimisation 
+  method, for creating rating systems, using offensive player data for the 2023/24 season.
 author: Paul Johnson
 date: 2024-02-22
 image: math.webp
@@ -343,6 +345,17 @@ Given that $s$ is the exponent, the scaling feature transforms the desirability 
 
 ```{r}
 #| label: scaling-shots
+#| fig-alt: |
+#|   A line plot illustrating the effects of scaling features on desirability 
+#|   functions, using shots per 90 as the example. The plot demonstrates that 
+#|   values greater than 1 make it harder for desirability functions to reach 
+#|   maximal desirability, illustrated using a scaling feature of 5, where lower
+#|   values are given much lower desirability scores and as values increase 
+#|   desirability increases exponentially. It also demonstrates that values lower 
+#|   than 1 make it easier for desirability functions to reach maximal desirability, 
+#|   illustrated using a scaling feature of 0.2, where lower values are given much 
+#|   higher desirability scores but as values increase desirability does not 
+#|   increase significantly.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -548,6 +561,16 @@ Nonetheless, I think the ratings look pretty reasonable, and when we split the t
 
 ```{r}
 #| label: offensive-components
+#| fig-alt: |
+#|   A bar plot showing the component desirability scores (goal threat, chance 
+#|   creation, and ball progression) for the ten best players according to the 
+#|   offensive ratings. The overall offensive ratings are calculated using a 
+#|   weighted average of desirability scores, with goal threat given 50% of the 
+#|   weight, and chance creation and ball progression given 25% each. As a result,
+#|   the majority of the top then players have particularly high scores for goal
+#|   threat, with only a few players with comparatively high chance creation scores
+#|   (Messi, Neymar, and Kevin De Bruyne), and no players having particularly large 
+#|   ball progression scores.
 #| fig-height: 9
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'

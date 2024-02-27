@@ -3,7 +3,7 @@ execute:
   freeze: true
 
 # Enable banner style title blocks
-title-block-banner: true
+title-block-banner: false
 
 # Default fields for citation
 citation: false
@@ -12,5 +12,3 @@ citation: false
 format: 
   html: 
     code-overflow: wrap
-    template-partials: 
-      - ../_partials/title-block-link-buttons/title-block.html
