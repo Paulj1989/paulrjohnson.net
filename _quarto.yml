@@ -1,39 +1,40 @@
 project:
   type: website
-  resources:
-    - "_redirects"
+  resources: _redirects
 
 website:
-  title: "P(Johnson) > 0.05"
+  title: P(Johnson) > 0.05
   site-url: https://paulrjohnson.net
-  description: "A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors."
+  description: A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
   favicon: assets/img/favicon/favicon.ico
   search: false
   page-navigation: true
   back-to-top-navigation: false
   twitter-card: true
   open-graph: true
+  image: assets/img/paul/paul.webp
+  image-alt: Me looking handsome as hell
   comments: false
  
   navbar:
     logo: assets/img/favicon/favicon.ico
-    logo-alt: "Purple Octopus"
+    logo-alt: Purple Octopus
     tools:
       - icon: github
-        aria-label: "GitHub"
+        aria-label: GitHub
         href: https://www.github.com/paulj1989/paulrjohnson.net
     right:
       - text: Blog
-        aria-label: "Blog"
+        aria-label: Blog
         href: blog/index.qmd
       - text: Projects
-        aria-label: "Project Portfolio"
+        aria-label: Project Portfolio
         href: projects/index.qmd
       - text: Consultancy
-        aria-label: "Consultancy Enquiries"
+        aria-label: Consultancy Enquiries
         href: consultancy/index.qmd
       - text: Curriculum Vitae
-        aria-label: "Curriculum Vitae"
+        aria-label: Curriculum Vitae
         href: cv/index.qmd
   
   page-footer:  
@@ -41,18 +42,18 @@ website:
      &#169; 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
 
     right: 
-      - text: "Contact"
-        aria-label: "Contact Form"
+      - text: Contact
+        aria-label: Contact Form
         href: contact.qmd
-      - text: "License"
-        aria-label: "License Details"
+      - text: License
+        aria-label: License Details
         href: license.qmd
 
 format: 
   html:
     theme: 
       - cosmo
-      - assets/paul-theme-light.scss
+      - assets/css/theme.scss
     highlight-style: github
     # set code-link to false until gh actions issues fixed
     code-link: false
@@ -64,7 +65,7 @@ format:
 
 knitr:
   opts_chunk: 
-    dev: "ragg_png"
+    dev: ragg_png
 
 execute: 
   freeze: auto

@@ -1,11 +1,8 @@
 ---
 title: Paul Johnson
 subtitle: Data Scientist with Experience Across Social Science & Healthcare
-pagetitle: "Curriculum Vitae | Paul Johnson"
-header-includes: >
-  <link rel="stylesheet" href="../assets/cv.css">
-resources:
-  - ../assets/cv.css
+pagetitle: Curriculum Vitae | Paul Johnson
+css: ../assets/css/cv.css
 ---
 
 ## Education  {{< fa graduation-cap >}}

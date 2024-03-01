@@ -1,22 +1,19 @@
 ---
-title: "Blog Posts"
+title: Blog Posts
+author: ""
 description: |
-  This is my blog where I share the stupid things I've done in the<br>
-  hope that you won't have to tread the same sorry path.<br>
-  [Subscribe via RSS](/blog/index.xml)
+  This is my blog where I share the stupid things I've done in the hope that you
+  won't have to tread the same sorry path.<br><br>[Subscribe via RSS](/blog/index.xml)
 listing: 
   contents: 
     - "**/index.qmd"
-    - "**/index.markdown"
     - "**/index.md"
-  sort: "date desc"
+  sort: date desc
   type: default
-  categories: false
-  sort-ui: false
-  filter-ui: false
-  fields: [title, author, categories, date, image]
-  image-placeholder: sidebar.jpg
-  image-align: right
+  categories: true
+  sort-ui: [title, date]
+  filter-ui: true
+  fields: [title, categories, date, image]
   page-size: 6
   feed: true
 citation: false
@@ -27,9 +24,5 @@ format:
     page-layout: full
 title-block-banner: "#FFFFFF"
 title-block-style: plain
-
-header-includes: >
-  <link rel="stylesheet" href="../assets/listing-default.css">
-resources:
-  - ../assets/listing-default.css 
+css: ../assets/css/listing-default.css 
 ---

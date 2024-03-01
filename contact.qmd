@@ -7,11 +7,7 @@ format:
     grid:
       margin-width: 0px
       sidebar-width: 0px
-
-header-includes: >
-  <link rel="stylesheet" href="/assets/contact.css">
-resources:
-  - /assets/contact.css
+css: assets/css/contact.css
 ---
 
 ::: {.grid}

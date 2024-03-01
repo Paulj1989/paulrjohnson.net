@@ -1,12 +1,13 @@
-https://paulrjohnson.net/2020/04/recent-football-analytics-articles/ https://paulrjohnson.net/blog/2020-04-14-football-analytics/ 301!
-https://paulrjohnson.net/2022/01/making-myself-accountable/ https://paulrjohnson.net/blog/2022-01-17-making-myself-accountable/ 301!
-https://paulrjohnson.net/2022/02/make-more-packages/ https://paulrjohnson.net/blog/2022-02-19-make-more-packages/ 301!
-https://paulrjohnson.net/2022/05/combining-tidymodels-and-caret-for-machinel-learning-in-r/ https://paulrjohnson.net/blog/2022-05-07-combining-tidymodels-and-caret/ 301!
-https://paulrjohnson.net/2022/05/resources-for-learning-bayesian-statistics/ https://paulrjohnson.net/blog/2022-05-10-learning-bayesian-statistics/ 301!
-https://paulrjohnson.net/2022/09/setting-up-a-hugo-website-with-quarto/ https://paulrjohnson.net/blog/2022-09-11-setting-up-hugo-website-with-quarto/ 301!
-https://paulrjohnson.net/2022/09/rendering-mermaid-diagrams-on-a-hugo-website-using-quarto/ https://paulrjohnson.net/blog/2022-09-17-rendering-mermaid-diagrams-using-quarto-and-hugo/ 301!
-https://paulrjohnson.net/2022/11/a-cheatsheet-for-building-mutilevel-models-in-r/ https://paulrjohnson.net/blog/2022-11-01-multilevel-model-r-cheatsheet/ 301!
-https://paulrjohnson.net/about https://paulrjohnson.net/ 301!
+/about /
+/research /projects
+/2020/04/recent-football-analytics-articles/ /blog/2020-04-14-football-analytics/
+/2022/01/making-myself-accountable/ /blog/2022-01-17-making-myself-accountable/
+/2022/02/make-more-packages/ /blog/2022-02-19-make-more-packages/
+/2022/05/combining-tidymodels-and-caret-for-machinel-learning-in-r/ /blog/2022-05-07-combining-tidymodels-and-caret/
+/2022/05/resources-for-learning-bayesian-statistics/ /blog/2022-05-10-learning-bayesian-statistics/
+/2022/09/setting-up-a-hugo-website-with-quarto/ /blog/2022-09-11-setting-up-hugo-website-with-quarto/
+/2022/09/rendering-mermaid-diagrams-on-a-hugo-website-using-quarto/ /blog/2022-09-17-rendering-mermaid-diagrams-using-quarto-and-hugo/
+/2022/11/a-cheatsheet-for-building-mutilevel-models-in-r/ /blog/2022-11-01-multilevel-model-r-cheatsheet/
 /blog/football-analytics /blog/2020-04-14-football-analytics
 /blog/making-myself-accountable /blog/2022-01-17-making-myself-accountable
 /blog/make-more-packages /blog/2022-02-19-make-more-packages
@@ -16,5 +17,24 @@ https://paulrjohnson.net/about https://paulrjohnson.net/ 301!
 /blog/rendering-mermaid-diagrams-using-quarto-and-hugo /blog/2022-09-17-rendering-mermaid-diagrams-using-quarto-and-hugo
 /blog/multilevel-model-r-cheatsheet /blog/2022-11-01-multilevel-model-r-cheatsheet
 /blog/football-ratings-using-desirability-functions /blog/2024-02-22-football-ratings-using-desirability-functions
-/blog/testing-assumptions-using-simulations /blog/2024-02-29-testing-assumptions-using-simulations
-/blog/parallelised-functional-programming-with-furrr /blog/2024-03-10-parallelised-functional-programming-with-furrr
+/blog/setting-up-netlify-redirects-with-quarto /blog/2024-03-01-setting-up-netlify-redirects-with-quarto
+/tags/football-analytics /blog/#category=Football%20Analytics
+/tags/r /blog/#category=R
+/tags/python /blog/#category=Python
+/tags/me-me-me /blog/#category=Me%20Me%20Me
+/tags/updates /blog/#category=Updates
+/tags/packages /blog/#category=Packages
+/tags/machine-learning /blog/#category=Machine%20Learning
+/tags/caret /blog/#category=Caret
+/tags/tidymodels /blog/#category=Tidymodels
+/tags/data-science /blog/#category=Data%20Science
+/tags/bayesian-statistics /blog/#category=Bayesian%20Statistics
+/tags/statistics /blog/#category=Statistics
+/tags/hugo /blog/#category=Hugo
+/tags/quarto /blog/#category=Quarto
+/tags/markdown /blog/#category=Markdown
+/tags/mermaid /blog/#category=Mermaid
+/tags/multilevel-regression /blog/#category=Multilevel%20Regression
+/tags/optimisation /blog/#category=Optimisation
+/tags/netlify /blog/#category=Netlify
+/tags/web-development /blog/#category=Web%20Development

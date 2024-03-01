@@ -1,13 +1,12 @@
-# Freeze computed outputs
-execute: 
-  freeze: true
+# Set author
+author: Paul Johnson
 
 # Enable banner style title blocks
 title-block-banner: "#FFFFFF"
 title-block-style: plain
 
 # Enable CC licence appendix
-license: "CC BY-SA"
+license: CC BY-SA
 
 # Default for table of contents
 toc: true
@@ -18,15 +17,7 @@ toc-location: right
 citation: true
 appendix-cite-as: display
 
-# Wrap overflow code
+# Scroll overflow code
 format: 
   html: 
-    code-overflow: wrap
-
-# Enable comments
-comments: false
-  # utterances:
-  #   repo: 
-  #   issue-term: title
-  #   theme: boxy-light
-  #   label: "comments :crystal_ball:"
+    code-overflow: scroll

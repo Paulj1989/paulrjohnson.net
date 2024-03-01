@@ -1,6 +1,6 @@
 ---
-date: "2024-02-12"
-title: "License"
+date: 2024-02-12
+title: License
 ---
 
 The [blog posts](/blog) on this website are all released under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/). Please feel free to use and share anything you find valuable in these posts, but please cite me too!
