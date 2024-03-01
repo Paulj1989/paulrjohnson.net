@@ -1,14 +1,14 @@
 ---
 title: Recent Football Analytics Articles
-subtitle: A short summary of some of the football analytics pieces I have written recently (as of 04/20)
-author: Paul Johnson
+subtitle: |
+  A short summary of some of the football analytics pieces I have written 
+  recently (as of 04/20).
 date: 2020-04-14
 image: football.webp
-image-alt: A goalkeeper dives to save a shot as the ball heads towards the top corner of the goal out of their reach 
-categories:
-  - Football Analytics
-  - R
-  - Python
+image-alt: |
+  A goalkeeper dives to save a shot as the ball heads towards the top corner of 
+  the goal out of their reach.
+categories: [Football Analytics, R, Python]
 ---
 
 As a side-project/hobby, I write about football. Some of my recent work (as of 04/20) can be found below:

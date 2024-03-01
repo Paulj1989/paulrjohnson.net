@@ -1,16 +1,16 @@
 ---
 title: Setting up a Hugo Website with Quarto
-subtitle: "An extension of the Quarto documentation (that didn't work off the shelf for me) for getting a Hugo website working with Quarto seamlessly."
-author: Paul Johnson
+subtitle: |
+  An extension of the Quarto documentation (that didn't work off the shelf for
+  me) for getting a Hugo website working with Quarto seamlessly.
 image: hugo.webp
-image-alt: The hugo logo on a dark blue background
+image-alt: The hugo logo on a dark blue background.
 date: 2022-09-11
-categories:
-  - Quarto
-  - Markdown
-  - Hugo
-  - R
+date-modified: 2024-03-01
+categories: [Hugo, Quarto, Markdown]
 ---
+
+**Note: Having ported my site over to Quarto in entirety, this blog post no longer applies to the site as is. This post should hopefully still work for anyone that is using Quarto with Hugo!**
 
 Like every other nerd that likes R and has used RMarkdown more than one time in their entire life, I am now in the process of transitioning to using Quarto, and I want to let the world know! I wanted to make good use of Quarto, including utilising the really nice job it does with rendering R, Python, Julia, and JavaScript (not that I'm writing a lot of Julia or JavaScript) and outputting it in a HTML document. However, I didn't want to give up this lovely website I had already put together using Hugo. What a conundrum... Well, it turns out it's relatively easy to use Quarto with a Hugo site. These folks really have thought of everything!
 

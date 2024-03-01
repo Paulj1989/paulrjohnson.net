@@ -1,15 +1,13 @@
 ---
 title: Rendering Mermaid Diagrams on a Hugo Website Using Quarto
-summary: "How to get your mermaid diagrams to show up on your Hugo blog when using Quarto, so that you don't have to go through the same trial and error nightmare that I did!"
-author: Paul Johnson
+subtitle: |
+  How to get your mermaid diagrams to show up on your Hugo blog when using Quarto, 
+  so that you don't have to go through the same trial and error nightmare that I did!
 date: 2022-09-17
 date-modified: 2024-02-19
 image: mermaid.webp
-image-alt: A woman in a mermaid costume lays in a bathtub that is filling up with water
-categories:
-  - Quarto
-  - Markdown
-  - Hugo
+image-alt: A woman in a mermaid costume lays in a bathtub that is filling up with water.
+categories: [Mermaid, Hugo, Quarto, Markdown]
 ---
 
 **Note: Having ported my site over to Quarto in entirety, this blog post no longer applies to the site as is. There are some inconsistencies with some of the issues it talks about and how the site looks now (for example, there is no longer an option to toggle a dark theme), but the advice in this post should hopefully still work for anyone that is using Quarto with Hugo!**

@@ -1,13 +1,15 @@
 ---
 title: Making Myself Accountable
-subtitle: Setting myself a goal to try and write one blog post a month for the whole of 2022, so that I can come back to it and assess just how much I missed my target by at the end of the year.
-author: Paul Johnson
+subtitle: |
+  Setting myself a goal to try and write one blog post a month for the whole of 
+  2022, so that I can come back to it and assess just how much I missed my target
+  by at the end of the year.
 date: 2022-01-17
 image: police.webp
-image-alt: A British police car drives down a busy street with people walking on either side of the car
-categories:
-  - Me Me Me
-  - Updates
+image-alt: |
+  A British police car drives down a busy street with people walking on either 
+  side of the car.
+categories: [Me Me Me, Updates]
 ---
 
 One of my goals when setting up this site was to use the blog section reasonably frequently to share some of my work and share anything particularly interesting that I've learned in my development as a data scientist. There hasn't been much sharing going on. I'd like to think that isn't because I haven't done or learned anything interesting (...), I just haven't found the time to share it.

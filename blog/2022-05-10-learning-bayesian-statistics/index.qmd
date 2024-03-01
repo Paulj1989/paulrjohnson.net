@@ -1,15 +1,13 @@
 ---
 title: Resources for Learning Bayesian Statistics
-subtitle: "Learning Bayesian statistics is hard enough already, so maybe I can help make that journey very slightly easier for someone else by pointing them to some of the best resources I've come across."
-author: Paul Johnson
+subtitle: |
+  Learning Bayesian statistics is hard enough already, so maybe I can help make 
+  that journey very slightly easier for someone else by pointing them to some of
+  the best resources I've come across.
 date: 2022-05-10
 image: bayes.webp
-image-alt: A hand-drawn portrait of Thomas Bayes
-categories:
-  - Bayesian Statistics
-  - Statistics
-  - Data Science
-  - Probability
+image-alt: A hand-drawn portrait of Thomas Bayes.
+categories: [Bayesian Statistics, Statistics, Data Science]
 ---
 
 As a social scientist turned data scientist, my graduate school training taught me a lot of frequentist statistics that has served me well in my career since. However, there's one thing that frequentist statistics can't solve, and that's my lack of a personality. For that, we've got Bayesian statistics, the perfect substitute.

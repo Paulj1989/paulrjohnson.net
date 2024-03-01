@@ -1,25 +1,18 @@
 ---
 title: Developing Offensive Ratings Using Desirability Functions
-subtitle: Ranking football players using `{desirability2}` and multivariate optimisation
+subtitle: Ranking football players using `{desirability2}` and multivariate optimisation.
 description-meta: |
   A blog post exploring the use of desirability functions, a multivariate optimisation 
   method, for creating rating systems, using offensive player data for the 2023/24 season.
-author: Paul Johnson
 date: 2024-02-22
 image: math.webp
-image-alt: A blackboard with a many diagrams and mathematical operations drawn on it
-categories:
-  - Desirability Functions
-  - Optimisation
-  - Football Analytics
-  - Data Science
-  - R
+image-alt: A blackboard with a many diagrams and mathematical operations drawn on it.
+categories: [Optimisation, Football Analytics, Data Science, R]
 bibliography: references.bib
 ---
 
 ```{r}
 #| label: setup
-#| cache: false
 #| output: false
 #| code-fold: true
 #| code-summary: 'Setup Code (Click to Expand)'
@@ -173,7 +166,6 @@ All {desirability2} functions can be a part of a typical [tidyverse](https://www
 
 ```{r}
 #| label: get-data
-#| cache: true
 #| output: false
 #| code-fold: true
 #| code-summary: 'Data Code (Click to Expand)'

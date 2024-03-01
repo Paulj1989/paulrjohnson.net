@@ -1,17 +1,11 @@
 ---
 title: Make More Packages!
 subtitle: How (and why) to learn basic package development in R, for data scientists.
-author: Paul Johnson
 date: 2022-02-19
 image: package.webp
-image-alt: A cat sat in a cardboard box with their head poking out of the top of the box
-categories:
-  - R
-  - Packages
-  - Software Development
-  - Data Science
-execute: 
-  eval: false
+image-alt: A cat sat in a cardboard box with their head poking out of the top of the box.
+categories: [Packages, R]
+eval: false
 ---
 
 Having learned R in an academic context, I wasn't exposed to programming in a linear path that taught me the basics of programming theory and application. I learned how to carry out statistical analysis using R, and my interaction with packages was that they would help me get the job done without having to do everything manually. As a result, package development has always intimidated me a little bit. It seemed like the responsibility of much smarter people that know what they're doing, and that can build packages that can help me figure out what I'm doing too.

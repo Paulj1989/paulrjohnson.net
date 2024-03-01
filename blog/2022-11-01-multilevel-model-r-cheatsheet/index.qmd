@@ -1,17 +1,14 @@
 ---
 title: A Cheatsheet for Building Multilevel Models in R
-subtitle: A short introduction to basic multilevel modelling syntax in R (using lme4, brms or rstanarm).
-author: Paul Johnson
+subtitle: |
+  A short introduction to basic multilevel modelling syntax in R (using lme4, 
+  brms or rstanarm).
 date: 2022-11-01
 image: hierarchy.webp
-image-alt: A photograph of a glass ceiling inside a building, taken from directly beneath 
-categories:
-  - Statistics
-  - Data Science
-  - Multilevel Models
-  - R
-execute: 
-  eval: false
+image-alt: |
+  A photograph of a glass ceiling inside a building, taken from directly beneath.
+categories: [Multilevel Regression, Statistics, Data Science, R]
+eval: false
 ---
 
 Multilevel models (MLMs) are hard. Some part of the difficulty is due to the fact that multilevel data structures add an extra layer of complexity conceptually and mathematically, and therefore the appropriate model structure for this kind of data is also more complex. However, there's plenty about them that just seems needlessly hard.
@@ -33,6 +30,10 @@ A common feature of many real-world questions that practitioners might study is 
 
 ```{mermaid}
 %%| label: fig-multilevel-data
+%%| fig-alt: |
+%%|   A diagram illustrating data with a hierarchical structure, showing three 
+%%|   different nodes (groups) each with three different nodes (units) branching 
+%%|   out from them.
 %%| fig-cap: Data With Hierarchical Grouping Structure
 %%| eval: true
 
@@ -100,7 +101,7 @@ Below are some examples of simple multilevel model structures, where `x` refers 
 
 ::: {#fig-mlm}
 
-![](mlm_example.png)
+![](mlm_example.png){fig-alt="An image of the differences between varying intercepts, varying slopes, and varying intercepts and slopes. The varying intercepts illustration is five parallel lines that have the same gradient (slopes) but different starting points (intercepts), while the varying slopes lines all start from the same point but the lines all have different gradients. Finally, the varying intercepts and slopes have different starting points and gradients."}
 
 Multilevel Data Structures (Source: [Gelman & Hill (2006)](http://www.stat.columbia.edu/~gelman/arm/))
 :::
