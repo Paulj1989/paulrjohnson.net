@@ -16,8 +16,10 @@
 /* text below page title */
 .description p {
   text-align: center; 
-  margin: 0 1em 3em 1em;
-  padding: 0 0 3em 0;
+  /* margin: 0 1em 3em 1em; */
+  margin: 0 auto;
+  padding: 1.5em 0 3em 0;
+  width: 600px;
 }
 
 .description a {
@@ -38,4 +40,13 @@
 
 .card-img {
     border-radius: 8px 8px 0px 0px;
+}
+
+/* Mobile */
+
+@media screen and (max-width: 991.98px) {
+  /* text below page title */
+  .description p {
+    width: 300px;
+  }
 }
