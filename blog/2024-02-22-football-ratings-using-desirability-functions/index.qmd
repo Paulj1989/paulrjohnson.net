@@ -1,6 +1,6 @@
 ---
 title: Developing Offensive Ratings Using Desirability Functions
-subtitle: Ranking football players using `{desirability2}` and multivariate optimisation.
+subtitle: Ranking football players using **desirability2** and multivariate optimisation.
 description-meta: |
   A blog post exploring the use of desirability functions, a multivariate optimisation 
   method, for creating rating systems, using offensive player data for the 2023/24 season.
@@ -102,7 +102,7 @@ As someone prone to seeing rabbit holes as a challenge, I have spent far too muc
 
 Desirability functions are a method for simultaneously optimising multiple variables [@kuhn2023; @harrington1965; @derringer1980]. If you have multiple variables, finding the optimal value of one may take you further away from the optimal value of the others. It is necessary to find an optimal combination of values instead, and desirability functions are a simple solution to this problem [@kuhn2023].
 
-Desirability functions are common in fields like genomics, and they are sometimes used in machine learning to optimise across multiple evaluation metrics or model parameters. The [`{desirability2}`](https://desirability2.tidymodels.org/) package is a part of the [tidymodels](https://www.tidymodels.org/) machine learning framework, but it is not limited to optimising evaluation metrics. While there are other ways of approaching this type of task, I like desirability functions for their relative simplicity. They are quick and easy, and they're pretty simple to explain to non-technical audiences. 
+Desirability functions are common in fields like genomics, and they are sometimes used in machine learning to optimise across multiple evaluation metrics or model parameters. The [**desirability2**](https://desirability2.tidymodels.org/) package is a part of the [**tidymodels**](https://www.tidymodels.org/) machine learning framework, but it is not limited to optimising evaluation metrics. While there are other ways of approaching this type of task, I like desirability functions for their relative simplicity. They are quick and easy, and they're pretty simple to explain to non-technical audiences. 
 
 ## How Desirability Works
 
@@ -154,13 +154,13 @@ Mapping each variable to a standard scale makes a direct comparison between vari
     is more robust when dealing with non-independent values, less responsive to outliers, and more 
     capable of handling skewed data.
 
-## The `{desirability2}` Package
+## The **desirability2** Package
 
-There are two main groups of functions in the [`{desirability2}`](https://desirability2.tidymodels.org/reference/index.html) package - the [transformation functions](https://desirability2.tidymodels.org/reference/inline_desirability.html) and the [overall desirability function](https://desirability2.tidymodels.org/reference/d_overall.html). 
+There are two main groups of functions in the [**desirability2**](https://desirability2.tidymodels.org/reference/index.html) package - the [transformation functions](https://desirability2.tidymodels.org/reference/inline_desirability.html) and the [overall desirability function](https://desirability2.tidymodels.org/reference/d_overall.html). 
 
 While the most commonly used transformation functions will be `d_max()` and `d_min()`, there are several other transformations (`d_target()`, `d_box()`, and `d_category()`). Where none of these functions are sufficient, `d_custom()` offers functionality for specifying a custom transformation. Finally, `d_overall()` calculates the overall desirability score.
 
-All {desirability2} functions can be a part of a typical [tidyverse](https://www.tidyverse.org/) pipeline.
+All **desirability2** functions can be a part of a typical [**tidyverse**](https://www.tidyverse.org/) pipeline.
 
 # A Rating System for Offensive Football Players 
 
@@ -264,7 +264,7 @@ big_five_stats <-
     )
 ```
 
-Using the excellent [`{worldfootballR}`](https://jaseziv.github.io/worldfootballR) package, I have pulled together player-level [FB Ref](https://fbref.com/) data for the 2022/23 season across the big five leagues, for a variety of different offensive measures. The data represents multiple elements of team offense, and in order to capture this, I have split the data into three components - goal threat, chance creation, and ball progression.
+Using the excellent [**worldfootballR**](https://jaseziv.github.io/worldfootballR) package, I have pulled together player-level [FB Ref](https://fbref.com/) data for the 2022/23 season across the big five leagues, for a variety of different offensive measures. The data represents multiple elements of team offense, and in order to capture this, I have split the data into three components - goal threat, chance creation, and ball progression.
 
 Goal threat is made up of four variables, non-penalty goals (npG), non-penalty expected goals (npxG), shots, and touches in the penalty area, while chance creation is comprised of just three - assists, expected assists (xA), and shot-creating actions (SCA). Finally, ball progression is also made up of three variables, progressive passes, carries, and receptions. Every variable in each desirability function is calculated per 90 minutes, to standardise variables by a player's playing time.
 

@@ -83,7 +83,7 @@ devtools::document()
 
 ```
 
-You can get a look at your documentation by calling _?function_ like you normally would. In this case, calling _?check_ returns the documentation for the **nice** check function.
+You can get a look at your documentation by calling `?function` like you normally would. In this case, calling `?check` returns the documentation for the **nice** check function.
 
 # Testing
 
@@ -110,7 +110,7 @@ test_that("check returns correct type of response", {
 
 ```
 
-This test is, as it describes, checking that _check_ is returning the right type of output when it runs. The test creates an object called _nice_ that contains the output from the _check_ function, when the input it receives is 69. The test expects the object to be of type character, and if that is so, then it will pass the test. If you want to build further tests for this particular function, you could check that the function correctly recognises whether the input is nice or not, and returns the correct response.
+This test is, as it describes, checking that `check()` is returning the right type of output when it runs. The test creates an object called `nice` that contains the output from the `check()` function, when the input it receives is 69. The test expects the object to be of type character, and if that is so, then it will pass the test. If you want to build further tests for this particular function, you could check that the function correctly recognises whether the input is nice or not, and returns the correct response.
 
 This would look as follows:
 

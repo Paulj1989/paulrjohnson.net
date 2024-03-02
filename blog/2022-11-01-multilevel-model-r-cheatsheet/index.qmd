@@ -1,8 +1,8 @@
 ---
 title: A Cheatsheet for Building Multilevel Models in R
 subtitle: |
-  A short introduction to basic multilevel modelling syntax in R (using lme4, 
-  brms or rstanarm).
+  A short introduction to basic multilevel modelling syntax in R (using **lme4**, 
+  **brms** or **rstanarm**).
 date: 2022-11-01
 image: hierarchy.webp
 image-alt: |
@@ -93,7 +93,7 @@ An example of a context where you might see a grouping structure that isn't hier
 
 # Multilevel Model Syntax in R
 
-The good thing about the R syntax I detail in this section is that it is the same for *lme4*, the main package for frequentist multilevel models, and the same for *brms* and *rstanarm*, two of the most popular packages for computing Bayesian multilevel models.
+The good thing about the R syntax I detail in this section is that it is the same for [**lme4**](https://github.com/lme4/lme4/), the main package for frequentist multilevel models, and the same for [**brms**](https://paul-buerkner.github.io/brms/) and [**rstanarm**](https://mc-stan.org/rstanarm/), two of the most popular packages for computing Bayesian multilevel models.
 
 The basic structure of multilevel models in R is very similar to typical `lm()` formulae, using `y ~ x1 + x2 ... + xn`, but in addition to this, the MLM syntax accounts for a grouping structure in the data using the pipe: \|.
 
@@ -255,7 +255,7 @@ Given how complex things can get with MLMs, this cheatsheet is obviously only sc
 -   [Shaw & Flake - Introduction to Multilevel Modelling](https://www.learn-mlms.com/)
 -   [Gelman & Hill - Data Analysis Using Regression and Multilevel/Hierarchical Models](http://www.stat.columbia.edu/~gelman/arm/)
 -   [Gelman et al. - Applied Regression and Multilevel Models](http://www.stat.columbia.edu/~gelman/armm/)[^6]
--   [{brms} Vignettes](https://paul-buerkner.github.io/brms/articles/index.html)
+-   [**brms** Vignettes](https://paul-buerkner.github.io/brms/articles/index.html)
 
 [^6]: ARMM hasn't been published (released?) yet, but it is billed as the updated and expanded second edition of Gelman & Hill's book. It's worth keeping an eye out for when this is released, because I'm sure it will be an excellent resource.
 
