@@ -1,6 +1,8 @@
 ---
 title: Setting up Netlify Redirects With Quarto
-subtitle: Configuring redirects for Netlify when building Quarto websites
+subtitle: |
+  Configuring Netlify redirects when building Quarto websites using continuous 
+  deployment.
 date: 2024-03-01
 image: netlify.webp
 image-alt: |
