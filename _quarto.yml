@@ -72,4 +72,6 @@ execute:
   warning: false
   error: false
 
-include-in-header: assets/umami.html
+include-in-header: 
+  - assets/umami.html
+  - assets/fonts.html
