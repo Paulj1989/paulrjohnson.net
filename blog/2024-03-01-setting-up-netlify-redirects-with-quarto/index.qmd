@@ -173,7 +173,7 @@ Given that I want to use continuous deployment, I don't want to check my `_site`
 
 My solution was to save the redirects file to the root and include it as a resource for the build process, by adding `resources: _redirects` to `_quarto.yml`, nested under `projects`. This ensures that when Netlify builds the site, it moves the redirects to your build directory, where Netlify can see it! I have also kept `freeze: auto` for the file containing the redirects code, to avoid Netlify trying to run it and deployment failing. That means that when Quarto renders the site it stores the results of running these code chunks in the `_freeze` folder, which needs to be checked into version control so that Netlify can use these outputs.
 
-This is an imperfect solution because freezing this code means that it won't run unless the source code of the file this code is in changes, which probably won't happen that often. My solution is to run `quarto render index.qmd` whenever the redirects need updating. This isn't ideal, and I'm sure this will result in me forgetting to update the redirects, but I've yet to think of a better alternative. If someone has any answers, I'd love to hear them.
+This is an imperfect solution because freezing this code means that it won't run unless the source code of the file this code is in changes, which probably won't happen that often. My solution is to run `quarto render index.qmd` whenever the redirects need updating. This isn't ideal, and I'm sure this will result in me forgetting to update the redirects, but I've yet to think of a better alternative^[If you have any suggestions, I'd love to hear them.].
 
 # Summary
 
