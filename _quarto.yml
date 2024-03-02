@@ -74,4 +74,4 @@ execute:
 
 include-in-header: 
   - assets/umami.html
-  - assets/fonts.html
+  # - assets/fonts.html
