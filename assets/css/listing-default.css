@@ -49,4 +49,12 @@
   .description p {
     width: 300px;
   }
+  
+  .quarto-listing-sort {
+    margin-right: 0.5rem;
+  }
+  
+  .quarto-listing-filter {
+    margin-left: 0.5rem;
+  }
 }
