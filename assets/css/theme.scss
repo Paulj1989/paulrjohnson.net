@@ -101,25 +101,14 @@ div.sourceCode {
 // Categories
 
 // posts
-// .quarto-category {
-//  background-color: $primary;
-//   color: white;
-//  border-color: $primary;
-//   &:hover {
-//     background-color: white;
-//    color: $primary;
-//   }
-// }
+.quarto-category {
+  color: #212529 !important;
+}
 
 // listings
-// .listing-category {
-//  color: $secondary !important;
-//  border-color: $secondary !important;
-//   &:hover {
-//  background-color: $secondary;
-//   color: white !important;
-//   }
-// }
+.listing-category {
+  color: #212529 !important;
+}
 
 div.quarto-post .thumbnail img {
     margin-top: -1em;
