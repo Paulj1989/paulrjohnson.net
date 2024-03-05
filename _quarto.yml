@@ -55,8 +55,7 @@ format:
       - cosmo
       - assets/css/theme.scss
     highlight-style: assets/github-plus.theme
-    # set code-link to false until gh actions issues fixed
-    code-link: false
+    code-link: true
     pagetitle: "{{< meta title >}} | Paul Johnson"
     fig-align: center
     lightbox: true
