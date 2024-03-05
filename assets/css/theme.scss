@@ -237,7 +237,7 @@ div.quarto-post .thumbnail img {
 }
 
 //tables
-.table-caption figcaption {
+.panel-caption, .figure-caption, .subfigure-caption, .table-caption, figcaption, caption {
   color: #43494D;
 }
 
