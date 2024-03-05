@@ -54,7 +54,7 @@ format:
     theme: 
       - cosmo
       - assets/css/theme.scss
-    highlight-style: github
+    highlight-style: assets/github-plus.theme
     # set code-link to false until gh actions issues fixed
     code-link: false
     pagetitle: "{{< meta title >}} | Paul Johnson"
@@ -74,4 +74,3 @@ execute:
 
 include-in-header: 
   - assets/umami.html
-  # - assets/fonts.html
