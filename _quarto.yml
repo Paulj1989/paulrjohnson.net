@@ -55,7 +55,6 @@ format:
       - cosmo
       - assets/css/theme.scss
     highlight-style: assets/github-plus.theme
-    code-link: true
     pagetitle: "{{< meta title >}} | Paul Johnson"
     fig-align: center
     lightbox: true
