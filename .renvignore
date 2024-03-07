@@ -1,0 +1,58 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# RStudio files
+.Rproj.user/
+
+# Git files
+.git/
+
+# Netlify files
+netlify.toml
+/package.json
+_redirects
+
+# Quarto folder
+.quarto/
+
+# Quarto cache & freeze folders
+*_cache/
+/cache/
+*_files/
+_freeze/
+
+# Site build folder
+_site/
+
+# Site assets folder
+assets/
+
+# Temporary files created by Quarto
+*.utf8.md
+*.knit.md
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# R Environment Variables
+.Renviron
+
+# RStudio Connect folder
+rsconnect/
+
+# README
+README.md
+
+# Blog post folders that contain R code that is not evaluated
+## Need to think of a programmatic way of handling this
+blog/2022-02-19-make-more-packages/
+blog/2022-11-01-multilevel-model-r-cheatsheet/
+blog/2024-03-01-setting-up-netlify-redirects-with-quarto/
