@@ -10,7 +10,7 @@ pagetitle: Page Not Found | Paul Johnson
 
 The page you have requested cannot be found<br>(perhaps it has been moved or renamed).
 
-![](assets/img/lost.webp){fig-align="center" width=60%}
+![](assets/img/lost.webp){fig-align="center" width=58% fig-alt="Cilla Black in a purple jacket, stood in front of a stone building, looking disgruntled."}
 
 Please return from whence you came and try again.
 

@@ -1,8 +1,11 @@
 ---
 title: Rendering Mermaid Diagrams on a Hugo Website Using Quarto
 subtitle: |
-  How to get your mermaid diagrams to show up on your Hugo blog when using Quarto, 
-  so that you don't have to go through the same trial and error nightmare that I did!
+  We all deserve to draw fancy-looking diagrams without suffering severe 
+  emotional trauma.
+description-meta: |
+  Finding a quick and painless fix for embedding clean, elegant Mermaid diagrams
+  on a Hugo website that uses Quarto to publish technical, code-driven blog posts.
 date: 2022-09-17
 date-modified: 2024-02-19
 image: mermaid.webp
@@ -18,7 +21,7 @@ The easiest, most intuitive way that I've come across is using a JavaScript libr
 
 One issue that I came across, however, is that Mermaid diagrams don't render when you're using Quarto to create Hugo Markdown files for a Hugo website. You do have some simple options to resolve this, such as setting the `mermaid-format` to PNG or SVG in the article front matter, but with just a little extra work, you can get Mermaid working perfectly on your Hugo website. 
 
-# Setting up Hugo to Support Mermaid
+## Setting up Hugo to Support Mermaid
 
 Steps for setting up Hugo to support Mermaid are detailed in the [Hugo documentation](https://gohugo.io/content-management/diagrams/), however that didn't seem to work for me (producing errors when Netlify tries to publish the site). Instead, I had to take a slightly different approach, which was inspired by Kevin Wu's [blog post](https://kvwu.io/posts/hugo-shortcode/) about using Mermaid with Hugo. This **should** work for others, but if it doesn't, please lets just assume that it is either Kevin's fault, or your fault, but definitely not my fault.
 
@@ -40,13 +43,13 @@ This can either be added to the existing theme partial, located in `themes/<them
 
 Now, you just have to add `mermaid: true` to the YAML frontmatter for any page that contains a Mermaid code block, and you're good to go!
 
-# Rendering Mermaid Using Quarto
+## Rendering Mermaid Using Quarto
 
 Once you've set Hugo up to handle Mermaid code blocks, you would think it should then render like other code chunks in Quarto, and you would be right. Mermaid is very good.
 
 I find that I sometimes have to render the Quarto document a couple times for Mermaid diagrams to show up, or for changes to render properly, but that's about the only issue that I've come up against.
 
-## Flowcharts 
+### Flowcharts 
 
 The diagram I will get the most use out of is flowcharts, and Mermaid makes them really easy.
 
@@ -54,6 +57,7 @@ The diagram I will get the most use out of is flowcharts, and Mermaid makes them
 %%| label: fig-mermaid-flowchart
 %%| echo: fenced
 %%| fig-cap: Wow look how it flows.
+%%| fig-alt: An example flowchart, drawn using Mermaid.
 
 graph LR
     A([Oooh]) --> B([Would You])
@@ -63,7 +67,7 @@ graph LR
     C --> F[Flowchart]
 ```
 
-## Gantt Charts
+### Gantt Charts
 
 If @fig-mermaid-flowchart isn't enough to convince you, how about some Gantt charts?
 
@@ -71,6 +75,7 @@ If @fig-mermaid-flowchart isn't enough to convince you, how about some Gantt cha
 %%| label: fig-mermaid-gantt
 %%| echo: fenced
 %%| fig-cap: Oh you real fancy huh?
+%%| fig-alt: An example Gantt chart, drawn using Mermaid.
 
 %%{init: {'theme': 'default', 'themeVariables': { 'textColor': '#798189'}}}%%
 gantt
@@ -86,9 +91,9 @@ gantt
 
 The dark and light theme my Hugo site uses doesn't handle the Gantt chart as well as the other Mermaid diagrams. If I use the neutral Mermaid theme, it doesn't show as clearly when using the dark Hugo theme, and vice versa with the dark Mermaid theme and light Hugo theme. This isn't ideal, but you can [customise the appearance](https://mermaid-js.github.io/mermaid/#/theming?id=theme-variables-reference-table) of your Mermaid diagrams too. 
 
-I've stuck with the neutral Mermaid theme for the rest of the site because it seems to be the best fit for flowcharts with the two different Hugo themes, and flowcharts are the diagrams I'm going to be using Mermaid for most often on this site. However, for this Gantt chart I've customised the appearance a little, using `%%init%%`, using the default theme and a grey text colour that works slightly better (though it's still not brilliant).
+I've stuck with the neutral Mermaid theme for the rest of the site because it seems to be the best fit for flowcharts with the two different Hugo themes, and flowcharts are the diagrams I'm going to be using Mermaid for most often on this site. However, for @fig-mermaid-gantt I've customised the appearance a little, using `%%init%%`, specifying the default theme and a grey text colour that works slightly better (though it's still not brilliant).
 
-## Git Graphs
+### Git Graphs
 
 So you've got @fig-mermaid-flowchart to wow people with your idea and @fig-mermaid-gantt to manage the project, but now you need some git graphs to show how you broke everything.
 
@@ -96,6 +101,7 @@ So you've got @fig-mermaid-flowchart to wow people with your idea and @fig-merma
 %%| label: fig-mermaid-git
 %%| echo: fenced
 %%| fig-cap: Git a load of this!
+%%| fig-alt: An example Git graph, drawn using Mermaid.
 
 gitGraph
   commit
@@ -110,10 +116,10 @@ gitGraph
   commit
 ```
 
-# Conclusion
+## Summary
 
 And that's about all you need to do. Think of all the amazing diagrams you're going to create and show the world? I, on the other hand, am going to continue to make minimal diagrams that are completely uninspiring. Have fun!
 
-# Acknowledgments {.appendix}
+## Acknowledgments {.appendix}
 
 Preview image by [Daniella Garcia](https://unsplash.com/@daniewizard) on [Unsplash](https://unsplash.com/photos/woman-in-black-and-white-bikini-lying-on-white-ceramic-bathtub-jJn9fVPtaNI).

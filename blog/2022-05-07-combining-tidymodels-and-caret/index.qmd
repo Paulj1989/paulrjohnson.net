@@ -1,8 +1,11 @@
 ---
 title: Combining Tidymodels & Caret for Machine Learning in R
 subtitle: |
-  How to combine the functionality from both the **tidymodels** framework and 
-  **caret** to build models that combine the best of both worlds.
+  Can you use **tidymodels** and **caret** together? Yes. But should you? Unclear.
+description-meta: |
+  Investigating the different ways {tidymodels} and {caret} can be combined when 
+  building machine learning models in R and whether bringing the two frameworks 
+  together is worthwhile. 
 date: 2022-05-07
 image: robot.webp
 image-alt: A light blue toy robot.
@@ -15,7 +18,7 @@ The process for prepping the data for a machine learning model seems to make a t
 
 Anyway, I recently discovered something that is probably entirely unremarkable to everyone else, and that probably shouldn't have taken me by surprise... You can just combine the two! You can split and preprocess your data using the **tidymodels** framework before defecting to **caret** for the next steps. What a time to be alive.
 
-# Training a Random Forest Model to Predict Diabetes
+## Predicting Diabetes Using Random Forest
 
 Because I'm not a savage, I won't leave you without a simple worked example. We'll use [Gary Hutson](https://hutsons-hacks.info/)'s really useful [**MLDataR**](https://cran.r-project.org/web/packages/MLDataR/vignettes/MLDataR.html) package to grab a toy diabetes dataset, cleaning the variable names using [**janitor**](http://sfirke.github.io/janitor/), and converting the target variable, *diabetic_class*, to a factor.
 
@@ -38,8 +41,9 @@ df <-
   diabetes_raw %>%
   janitor::clean_names() %>%
   mutate(diabetic_class = as.factor(diabetic_class))
-
 ```
+
+### Train/Test Splits
 
 Having done this, we can use **rsample** to split the data into a train and test set.
 
@@ -59,8 +63,9 @@ train_test_split <-
 # create train/test sets
 train_df <- rsample::training(train_test_split)
 test_df <- rsample::testing(train_test_split)
-
 ```
+
+### Data Preprocessing
 
 The next step is a little more involved, and is where I think **tidymodels** really excels. Using the **recipes** package, we can specify all the preprocessing steps needed for the dataset, such that the data will then be ready for training a machine learning model.
 
@@ -78,7 +83,6 @@ model_recipe <-
   step_normalize(all_numeric()) %>%
   # convert nominal variables to numeric binary variables
   step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE)
-
 ```
 
 You can check that all the preprocessing steps are working as expected by using *prep()* and *juice()*.
@@ -90,11 +94,12 @@ You can check that all the preprocessing steps are working as expected by using 
 model_recipe %>%
   prep() %>%
   juice() %>%
-  head()
-
+  glimpse()
 ```
 
 If everything looks alright, you can take the *model_recipe* object that you've created and use it as the model formula that you would otherwise have to specify in the **caret** *train()* function.
+
+### Model Training
 
 For the rest of the process, you can switch over to **caret**, first using the *trainControl()* function to specify the training parameters and then the *train()* function for the model training.
 
@@ -124,7 +129,6 @@ rf_mod <-
     trControl = ctrl,
     importance = TRUE
   )
-
 ```
 
 Having trained the random forest model, you can check the performance, and see what parameters were chosen in the tuning process.
@@ -134,10 +138,11 @@ Having trained the random forest model, you can check the performance, and see w
 
 # check results
 print(rf_mod)
-
 ```
 
 Not bad! The best performing model has an ROC of 0.995 and both the sensitivity and specificity are ~0.95. Pretty solid for a quick and easy model.
+
+### Test Predictions
 
 To really test the model's performance, we want to see how it copes with the test data that it hasn't seen.
 
@@ -154,7 +159,6 @@ preds <-
     Positive = round(Positive, digits = 2),
     Negative = round(Negative, digits = 2)
   )
-
 ```
 
 Finally, we can produce a confidence matrix for a more intuitive look at how the model is performing on the test set.
@@ -169,12 +173,11 @@ confusionMatrix(
     as.factor(cm_class$diabetic_class),
     positive = "Positive"
   )
-
 ```
 
 The results are pretty good for a very quick model. How exciting. Lets pretend that it's because I'm a brilliant data scientist rather than it being due to the very clean, balanced toy dataset we used.
 
-# Conclusion
+## Wrapping Up
 
 So there you have it, if you're in the same position as me and you're struggling to pick between **tidymodels** and **caret**, because both frameworks offer something you like, you can just combine the two and make Frankenstein's framework.
 
@@ -182,6 +185,6 @@ Ultimately, despite this blog post, I'm probably going to stick with **tidymodel
 
 But it's nice to know that I've got options.
 
-# Acknowledgments {.appendix}
+## Acknowledgments {.appendix}
 
 Preview image by [Rock'n Roll Monkey](https://unsplash.com/@rocknrollmonkey) on [Unsplash](https://unsplash.com/photos/blue-plastic-robot-toy-R4WCbazrD1g).

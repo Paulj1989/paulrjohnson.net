@@ -101,13 +101,13 @@ In this blog post, I will use a simple but often overlooked method for multivari
 
 As someone prone to seeing rabbit holes as a challenge, I have spent far too much time debating what factors should go into player ratings and how to maximise the performance of a rating system, but the focus of this post is on the demonstration of desirability functions. The result is a rating system with plenty of room for improvement, but hopefully, in the process, this post will serve as a brief introduction to desirability functions.
 
-# Desirability Functions
+## Desirability Functions
 
 Desirability functions are a method for simultaneously optimising multiple variables [@kuhn2023; @harrington1965; @derringer1980]. If you have multiple variables, finding the optimal value of one may take you further away from the optimal value of the others. It is necessary to find an optimal combination of values instead, and desirability functions are a simple solution to this problem [@kuhn2023].
 
 Desirability functions are common in fields like genomics, and they are sometimes used in machine learning to optimise across multiple evaluation metrics or model parameters. The [**desirability2**](https://desirability2.tidymodels.org/) package is a part of the [**tidymodels**](https://www.tidymodels.org/) machine learning framework, but it is not limited to optimising evaluation metrics. While there are other ways of approaching this type of task, I like desirability functions for their relative simplicity. They are quick and easy, and they're pretty simple to explain to non-technical audiences. 
 
-## How Desirability Works
+### How Desirability Works
 
 Desirability functions optimise across multiple variables by mapping each variable onto a standard scale from one (maximally desirable) to zero (unacceptable) using a transformation function[^transformation], before calculating the weighted combination of these individual scores using the arithmetic or geometric mean[^mean] and optimising this overall desirability score [@kuhn2016; @kuhn2019; @kuhn2023].
 
@@ -157,7 +157,7 @@ Mapping each variable to a standard scale makes a direct comparison between vari
     is more robust when dealing with non-independent values, less responsive to outliers, and more 
     capable of handling skewed data.
 
-## The **desirability2** Package
+### The **desirability2** Package
 
 There are two main groups of functions in the [**desirability2**](https://desirability2.tidymodels.org/reference/index.html) package - the [transformation functions](https://desirability2.tidymodels.org/reference/inline_desirability.html) and the [overall desirability function](https://desirability2.tidymodels.org/reference/d_overall.html). 
 
@@ -165,7 +165,7 @@ While the most commonly used transformation functions will be `d_max()` and `d_m
 
 All **desirability2** functions can be a part of a typical [**tidyverse**](https://www.tidyverse.org/) pipeline.
 
-# A Rating System for Offensive Football Players 
+## A Rating System for Offensive Football Players 
 
 ```{r}
 #| label: get-data
@@ -274,7 +274,7 @@ Goal threat is made up of four variables, non-penalty goals (npG), non-penalty e
 
 The variables that make up each offensive component, and even the components themselves, are far from exhaustive. There are lots of different variables that could (and probably should) be included, and other aspects of a football team's offense, like the defensive contributions made by offensive players higher up the pitch, would lead to a more precise rating system. However, the variables that make up the desirability functions here should do a reasonably effective job of capturing all three offensive components without overcomplicating things for the purpose of a blog post.
 
-## Goal Threat
+### Goal Threat
 
 Perhaps it is stating the obvious to even the most "I'm only here for the stats" folks reading this blog post, but scoring goals is a very important part of football. Goals are good. Teams love them. Everyone loves players that do them. So it makes sense to start the rating system with the goal threat component.
 
@@ -331,7 +331,7 @@ Erling Haaland, Kylian Mbappé, and Victor Osimhen leading the way in @tbl-goal-
 
 I was also a little surprised not to see Harry Kane making the top ten, and it turns out he is in 15th. This appears to be because his xG was lower than the players ahead of him, despite him scoring plenty of goals last season. I think Kane's lower rating raises questions about the decision to weight goals and expected goals equally. A more detailed rating system would need to make a decision about whether the goal is to describe a player's past performance or identify the best players, which is inherently about predicting future performance. If it is the former, goals should probably be weighted higher, but if it is the latter, then expected goals should probably be favoured.
 
-### Scaling Desirability Functions {#sec-scaling}
+#### Scaling Desirability Functions {#sec-scaling}
 
 Each individual desirability function can be easily adjusted using the scaling feature, $s$, which can be increased in order to make maximal desirability harder to reach, and decreased to make it easier. The default value is 1 because $s$ is an exponent and a 1 effectively cancels this out. We're having fun. 
 
@@ -401,7 +401,7 @@ It is important to realise that making maximal desirability harder in this non-l
 
 I think it is a little difficult to process the exponential effects of $s$ in this context. We are primarily interested in the highest values of each desirability function, given that the focus is on building a rating system, and increasing $s$ achieves our goals at the top-end of the ratings, but it obviously feels a little wonky to exponentially increase the value of a particular desirability function in order to downweight it in the overall desirability score! I think it is sensible to visualise the effects that your intended scaling will have, so as to help you think through the choices you're making.
 
-## Chance Creation
+### Chance Creation
 
 If doing goals is the most important part of an offense in football, then helping others do goals must be the next best thing. Which brings us to chance creation. The process for creating a rating system for chance creation is more or less the same as with goal scoring. I've selected three variables that will go into the chance creation ratings - assists, expected assists (xA), and shot-creating actions (SCA).
 
@@ -447,7 +447,7 @@ chance_creation |>
 
 Again, the names at the top of the @tbl-chance-creation ratings give me confidence, especially the three names at the very top - Neymar, Kevin De Bruyne, and Lionel Messi. I don't think there are any huge surprises in these ratings, perhaps with the exception of Rémy Cabella, who has some solid to very good creation numbers but wouldn't necessarily be a name you'd immediately think of when thinking about the ten best creative players in the world. This is once again a reminder that Ligue 1 is very silly but is wonderfully chaotic.
 
-## Ball Progression
+### Ball Progression
 
 The final component, and possibly the most interesting of the three, is ball progression. The three variables included in the ball progression desirability function are progressive carries, passes, and receptions. Just as is the case with the previous two components, I'm sure you could include other variables as measures of ball progression, but I'm still too lazy to do that and I think a lot of those other variables would risk double-counting where those actions are picked up by one of the progression metrics.
 
@@ -504,7 +504,7 @@ ball_progression |>
 
 The results are not shocking, but the marginal differences in progression by position are interesting. As expected, forwards are dominant in the receptions category, but the responsibilities for progressive carries are more evenly split, and forwards are third behind midfielders and defenders in progressive passing.
 
-## Overall Offensive Ratings
+### Overall Offensive Ratings
 
 Having created desirability scores for each offensive component, we could combine all three into an overall offensive rating using `d_overall()`. I think this would be a reasonable choice when the assumption is that each category is equally important in the overall score, but as discussed already, I don't think that's the case here. I think goal threat matters most, and chance creation and ball progression are, while important enough to be the two other categories in the overall ratings, a little less important than goals. 
 
@@ -618,18 +618,18 @@ offensive_rating |>
     )
 ```
 
-# Limitations
+## Limitations
 
 I think the appeal of desirability functions is their simplicity, but this is also a constraint. As the complexity of the multivariate optimisation problem increases, the solutions will need to scale similarly. While desirability functions are a quick and easy optimisation method that can perform well in many contexts, I don't think they're suitable when dealing with the most complex, multidimensional problems. Developing a precise, reliable rating system for offensive players would probably involve doing something more complicated than desirability functions!
 
 Scaling can improve the performance of desirability functions when dealing with complex optimisation problems, but deciding when and how to use them is difficult. It is more of an art than a science. Consequentially, scaling features risk encouraging searching for results that feel good. If you have theory-driven expectations of the weighted combination of a set of variables, you stand a better chance of avoiding results that confirm your biases but it is difficult to validate desirability functions outside of eyeballing the results and deciding whether they seem right.
 
-# Conclusion
+## Conclusion
 
 I am generally pretty sceptical of player rating systems in football. Capturing a multidimensional context like this is difficult using a single measure of player performance. And yet here I am, developing a player rating system that attempts to do exactly that! In my defense, I have at least limited these ratings to offense, which makes it slightly better^[Defensive event data does not reflect performance and is more of a measure of team and player style.], and it's a lot easier to rate players over an entire season than a single match. But I'd take these results with a big pinch of salt. I would include several caveats if I released these ratings into the wild, for the non-nerds (there is no chance anyone but nerds is reading this). These ratings are going to be pretty noisy! That said, I don't think the results are complete garbage, which meets the high standard I set for my work. 
 
 Hopefully, these ratings illustrate how desirability functions work and demonstrate that they could be appropriate in many situations. You don't see desirability functions used very often, but they are quick and easy, and they can be pretty effective.
 
-# Acknowledgments {.appendix}
+## Acknowledgments {.appendix}
 
 Preview image by [Dan Cristian Pădureț](https://unsplash.com/@dancristianpaduret) on [Unsplash](https://unsplash.com/photos/a-blackboard-with-a-bunch-of-diagrams-on-it-h3kuhYUCE9A).

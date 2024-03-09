@@ -21,7 +21,7 @@ It's pretty easy to add a `_redirects` file to your site if you manually publish
 
 There are a few resources out there that will help you figure this out, but my needs were a little different. I had to adapt these guides to fit what I was trying to do, so I thought I'd put a quick explainer together to help others in the same situation.
 
-# Standing on the Shoulders of Giants
+## Standing on the Shoulders of Giants
 
 Much of the process detailed in this blog post has been influenced by or borrowed from other online guides. Rather than try and pitch this as the product of my unique, beautiful mind^[Please understand that I definitely have a unique, beautiful mind though.], I want to give credit where it is due.
 
@@ -34,7 +34,7 @@ These were the resources I found most useful:
 
 These are much more detailed blog posts about creating a website with Quarto, and there's a lot more good information in these than just setting up redirects. This blog post will have a shorter, more specific focus, but my solution leans heavily on several of these guides, so I want to dish out the appropriate credit right away. I will also try to highlight throughout the post where my code is adapted from one of these resources.
 
-# Setting Up Manual Redirects
+## Setting Up Manual Redirects
 
 First, I created a `_manualredirects` file that I've added to the assets directory (following a similar process to Silvia Canelón). It contains all the blog posts I wrote a couple years ago because the old blog used a slightly different URL structure. I've also added a couple other pages that no longer exist, and they redirect to either the homepage or other pages that are successors.
 
@@ -51,7 +51,7 @@ Each line in a redirects file refers to a different redirect rule, with the orig
 
 There are quite a few ways you can customise the behaviour of a redirect rule, and for anything more complex I would recommend reading through the [Netlify documentation](https://docs.netlify.com/routing/redirects/).
 
-# Automating Redirects
+## Automating Redirects
 
 To automate the process of creating a redirects file you need to add some code somewhere that it can be run regularly. I've added these code chunks to the `index.qmd` file in the project root folder, and I've added `echo: false` to the YAML frontmatter so that the code doesn't appear on my homepage. This is more or less the same process that Danielle Navarro and Silvia Canelón follow, but the difference is that I am not setting `freeze: false` in the YAML frontmatter (for reasons explained in @sec-build).
 
@@ -64,7 +64,7 @@ There are multiple sources from which redirect rules will be derived, which requ
 manual_redirects <- readr::read_lines(here::here("assets", "_manualredirects"))
 ```
 
-## Redirecting Blog Posts
+### Redirecting Blog Posts
 
 Besides making sure no one gets lost in the ether using your old URLs, one of the benefits of redirects is creating shorter URLs that are easier to share. In my case, I'm really just removing the date slug from my blog posts, but this still looks a little neater and is easier to remember.
 
@@ -106,7 +106,7 @@ blog_redirects <-
   dplyr::pull(redirects)
 ```
 
-## Redirecting Categories
+### Redirecting Categories
 
 Another useful trick that is possible using a similar process is redirecting old tags or categories for blog posts. This probably isn't necessary for my site because I doubt I have written enough posts or drawn enough traffic to my blog posts that the old tags are being used that often, but it is nice to be thorough. This might be more useful to those of you who are a much bigger deal than me!
 
@@ -153,7 +153,7 @@ category_redirects <-
 
 The previous code chunks have compiled all the redirect rules for the site, and most of it uses an automated process. This saves time and limits my opportunities to be an idiot, which I always appreciate.
 
-## Bringing it All Together
+### Bringing it All Together
 
 Finally, we can combine everything into a single vector and save this as `_redirects` in the project root, for reasons that should become clear in just a moment.
 
@@ -169,7 +169,7 @@ readr::write_lines(
 
 We now have a `_redirects` file that contains all the redirect rules we want to use on our site, from manual redirects to automated blog posts and category redirects.
 
-# Including Redirects in Netlify Builds {#sec-build}
+## Including Redirects in Netlify Builds {#sec-build}
 
 The solutions I have used as a reference point all run this code every time the site renders, saving the `_redirects` file in the `_site` directory. This works in those cases because they don't appear to be using continuous deployment. They are pushing the `_site` directory to GitHub and using this to deploy their website via Netlify. There is nothing wrong with doing it this way, and if you want to save yourself some trouble I'd recommend taking this easier (and probably more sensible) route instead. However, I really like Netlify's build tools, and there are some Netlify plugins that I want to use.
 
@@ -179,7 +179,7 @@ My solution was to save the redirects file to the root and include it as a resou
 
 This is an imperfect solution because freezing this code means that it won't run unless the source code of the file this code is in changes, which probably won't happen that often. My solution is to run `quarto render index.qmd` whenever the redirects need updating. This isn't ideal, and I'm sure this will result in me forgetting to update the redirects, but I've yet to think of a better alternative^[If you have any suggestions, I'd love to hear them.].
 
-# Summary
+## Summary
 
 Netlify offers some valuable features. Netlify's build tools and redirect capabilities are great, but they don't necessarily play nice with Quarto, depending on how you want to combine them. 
 

@@ -1,15 +1,19 @@
 ---
 title: Making Myself Accountable
 subtitle: |
-  Setting myself a goal to try and write one blog post a month for the whole of 
-  2022, so that I can come back to it and assess just how much I missed my target
-  by at the end of the year.
+  An opportunity to make promises I won't keep so that strangers on the internet 
+  can judge my poor work ethic.
+description-meta: |
+  Setting myself the objective of writing one blog post per month in 2022 so 
+  that I can return to this post at the end of the year to see how far I was 
+  from achieving it.
 date: 2022-01-17
 image: police.webp
 image-alt: |
   A British police car drives down a busy street with people walking on either 
   side of the car.
 categories: [Me Me Me, Updates]
+toc: false
 ---
 
 One of my goals when setting up this site was to use the blog section reasonably frequently to share some of my work and share anything particularly interesting that I've learned in my development as a data scientist. There hasn't been much sharing going on. I'd like to think that isn't because I haven't done or learned anything interesting (...), I just haven't found the time to share it.
@@ -22,6 +26,6 @@ Over the course of the next 12 months, I'm going to try and average a blog post 
 
 Given that everything is posting and everyone is a poster, it's time I put some hours in at the content factory. New Year, New Me.
 
-# Acknowledgments {.appendix}
+## Acknowledgments {.appendix}
 
 Preview image by [Jack Lucas Smith](https://unsplash.com/@jacklucassmith) on [Unsplash](https://unsplash.com/photos/white-and-black-police-car-on-road-during-daytime-UqvSeGmFYBs).

@@ -1,23 +1,26 @@
 ---
 title: Project Portfolio
 subtitle: Selected Works from Data Science & Academia
+description-meta: |
+  Selected professional and hobby projects from my career as a social scientist 
+  turned data scientist, including machine learning models, web apps, and academic 
+  research.
 ---
 
 ## Data Science  {{< fa code-fork >}}
 
 - Data Science Guides [[R](https://r-data-science-guides.netlify.app/)|[Python](https://python-data-science-guides.netlify.app/)] - Guides for common data science tasks, in R & Python.
-- [{scwplot}](https://nhs-south-central-and-west.github.io/scwplot/) - An R package for creating consistent SCW-style ggplot figures.
 - [CAIP App](https://rconnect-public.scwcsu.nhs.uk/caip/) - The PCN Capacity and Access Improvement Payment (CAIP) App.
 - [Expected Kills](https://github.com/Paulj1989/expected-kills) - Predicting kills in volleyball using XGBoost.
 - [Player Similarities](https://github.com/Paulj1989/player-similarities) - Using clustering methods to measure player similarity within positions.
-- [{nice}](https://github.com/Paulj1989/nice) - The stupidest R package ever created.
 - [Football Analytics](https://github.com/Paulj1989/football-analytics) - A repository of past football analytics work.
 
-## Research Publications  {{< fa brain >}}
+## Packages {{< fa box-open >}}
 
-- Johnson, P., & Cantu, F. (2020) ["The Nationalization of Mexican Parties"](https://www.dropbox.com/s/hziiab4k4u8im6p/Johnson%20%26%20Cantu%20%282020%29%20-%20The%20Nationalization%20of%20Mexican%20Parties.pdf?dl=0). *Política y Gobierno* 27 (2)
+- [{scwplot}](https://nhs-south-central-and-west.github.io/scwplot/) - An R package for creating consistent SCW-style ggplot figures.
+- [{nice}](https://github.com/Paulj1989/nice) - The stupidest R package ever created.
 
-## Working Papers  {{< fa flask >}}
+## Research  {{< fa brain >}}
 
-- [Hypothesis Testing for Reliability Statistics: A Permutation Approach](https://www.dropbox.com/s/d7eqv5hxl2ycne6/Johnson%20%26%20Kirkland%20-%20Hypothesis%20Testing%20for%20Reliability%20Statistics.pdf?dl=0) (with Justin Kirkland)
-
+- Johnson, P., & Cantu, F. (2020) ["The Nationalization of Mexican Parties"](https://www.dropbox.com/s/hziiab4k4u8im6p/Johnson%20%26%20Cantu%20%282020%29%20-%20The%20Nationalization%20of%20Mexican%20Parties.pdf?dl=0). _Política y Gobierno_ 27 (2)
+- Johnson, P., & Kirkland, J (2020) ["Hypothesis Testing for Reliability Statistics: A Permutation Approach"](https://www.dropbox.com/s/d7eqv5hxl2ycne6/Johnson%20%26%20Kirkland%20-%20Hypothesis%20Testing%20for%20Reliability%20Statistics.pdf?dl=0). _Working Paper_
