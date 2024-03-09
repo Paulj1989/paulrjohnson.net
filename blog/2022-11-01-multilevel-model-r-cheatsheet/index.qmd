@@ -3,6 +3,10 @@ title: A Cheatsheet for Building Multilevel Models in R
 subtitle: |
   A short introduction to basic multilevel modelling syntax in R (using **lme4**, 
   **brms** or **rstanarm**).
+description-meta: |
+  Demystifying multilevel regression using consistent and clear R syntax and 
+  model terminology, making this method more accessible to analysts interested 
+  in modelling multilevel data.
 date: 2022-11-01
 image: hierarchy.webp
 image-alt: |
