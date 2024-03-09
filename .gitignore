@@ -53,3 +53,5 @@ rsconnect/
 
 # Site build folder
 _site/
+
+/.quarto/
