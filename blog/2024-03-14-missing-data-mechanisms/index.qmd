@@ -497,9 +497,39 @@ missing_data |>
   )
 ```
 
-While the income distribution indicated that employee tenure might contain missing values that are not MCAR, the above scatter plots provide strong evidence we're dealing with MCAR data. The scatter plots show that missing values are limited to the $15-20k monthly income range, except when job satisfaction is low, where missingness exists across all incomes. If we observed something like this in the wild, we would confidently conclude that tenure missingness is strongly associated with monthly income and job satisfaction and is, therefore, **not** MCAR.
+While the income distribution indicated that employee tenure might contain missing values that are not MCAR, the above scatter plots provide strong evidence we're dealing with MAR data. The scatter plots show that missing values are limited to the $15-20k monthly income range, except when job satisfaction is low, where missingness exists across all incomes. The fact that missing values group around specific ranges of observed values indicates that employee tenure's missing values are not randomly distributed and suggests a relationship between these missing values and monthly income and job satisfaction. These results provide strong evidence that the missingness in the employee tenure variable is **not** MCAR.
 
-It is also possible to compute statistical tests of the association between missing values and the observed values in the data. One option is to model missing values using logistic regression, treating missingness as the binary outcome (using `naniar::shadow_bind()` as before) and the rest of the dataset as explanatory variables. Another option is to use **naniar**'s `mcar_test()` to calculate @little1988's test statistic for MCAR data^[@little1988's MCAR test tests for mean differences on all variables in the dataset, split by subgroups that share the same missing data pattern. Subgroup observed means are compared against expected means, calculated using the expectation-maximisation algorithm, and this difference forms the basis of the test. The null hypothesis is that the data is MCAR, and the computed test statistic is a chi-squared value.]. @tbl-mcar-test shows the results of running Little's MCAR test on our dataset.
+It is also possible to compute statistical tests of the association between missing values and the observed values in the data. One option is to model missing values using logistic regression, treating missingness as the binary outcome (using `naniar::bind_shadow()` as before) and the rest of the dataset as explanatory variables. @tbl-regression shows the outputs from a regression on employee tenure's missing values. I have rescaled monthly income (and monthly rate) using `arm::rescale()`^[This rescale function standardises variables by centring and dividing their values by two standard deviations [@gelman2008].] because it is on a significantly larger scale than other variables, and this makes it difficult to interpret the effect size.
+
+```{r}
+#| label: tbl-regression
+#| tbl-cap: |
+#|    Logistic Regression of Years at Company's Missing Values
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+missing_data |> 
+  naniar::bind_shadow() |> 
+  select(years_at_company_NA | !years_at_company & !ends_with("NA")) |> 
+  mutate(
+    across(where(is.factor) & !years_at_company_NA, as.numeric),
+    monthly_income = arm::rescale(monthly_income),
+    monthly_rate = arm::rescale(monthly_rate)) |> 
+  glm(years_at_company_NA ~ ., family = "binomial", data = _) |> 
+  list("Years at Company Missingness" = _) |> 
+  modelsummary::modelsummary(
+    coef_rename = modelsummary::coef_rename, 
+    coef_omit = c(-7, -16, -18, -19, -26),
+    gof_omit =  "IC|Log", exponentiate = TRUE, 
+    stars = TRUE, output = "gt"
+  ) |> 
+  gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
+  gt::tab_options(table.width = gt::pct(100), table.font.names = "Poppins")
+```
+
+I have only included statistically significant variables^[I used `coef_omit = c(-7, -16, -18, -19, -26)` in [**modelsummary**](https://modelsummary.com/) to do this because I couldn't figure out a programmatic way of omitting by significance. If anyone has any idea of a non-manual way to achieve this, I'd love to hear it! I promise I won't do it on proper regression models.]. While this is generally a bad practice, regression tables with 31 variables look like a mess in the middle of a blog post. A narrow focus on p-values is a bad idea in any regression model because effect size tells us a lot more than significance, but in this case, we're taking some shortcuts. The extremely small p-values for monthly income and job satisfaction indicate that the probability of observing an effect size at least as extreme as our model coefficients if the data was MCAR is small^[The other significant coefficients will be an artefact of those variables' association with monthly income and job satisfaction.]. These results support our assumption that the data is MAR.
+
+Another option is to use **naniar**'s `mcar_test()` to calculate @little1988's test statistic for MCAR data^[@little1988's MCAR test tests for mean differences on all variables in the dataset, split by subgroups that share the same missing data pattern. Subgroup observed means are compared against expected means, calculated using the expectation-maximisation algorithm, and this difference forms the basis of the test. The null hypothesis is that the data is MCAR, and the computed test statistic is a chi-squared value.]. @tbl-mcar-test shows the results of running Little's MCAR test on our dataset.
 
 ```{css}
 #| label: rm-striping 
@@ -530,14 +560,14 @@ missing_data |>
   gt::gt() |> 
   gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
   gt::cols_align(align = "center", columns = 1:4) |>
-  gt::tab_options(table.width = gt::pct(80))
+  gt::tab_options(table.width = gt::pct(80), table.font.names = "Poppins")
 ```
 
-A high test statistic value and a p-value of zero means we reject the null hypothesis. If the data is MCAR, the probability of observing mean differences as or more extreme than this is very low, suggesting the missing data is either MNAR or MAR. Taken together with our exploratory analysis, we can conclude that the data is MAR.
+A high test statistic value and a p-value of zero means we reject the null hypothesis. If the data is MCAR, the probability of observing mean differences as or more extreme than this is very low, suggesting the missing data is either MNAR or MAR. However, there are several limitations to Little's MCAR test. First, it tests all missing data across the entire dataset instead of testing specific missing patterns. Running logistic regressions on specific missingness is a lot more granular and can be more informative. Second, Little's MCAR test relies on a slightly backwards approach to hypothesis testing. The null hypothesis is that the data is MCAR. Failing to reject the null is not the same as being able to conclude that the null is true, so it isn't a test for MCAR data as much as it is a test to reject the hypothesis that the data is MCAR. I'd argue this is fine because the starting assumption is that data is MAR. Little's MCAR test provides a broad summary of the data. A high p-value suggests further investigation is needed because data might not be MAR, and a low p-value is evidence to support the assumption that the data is MAR. However, I think logistic regressions are more informative, robust, and equally easy to compute, so I would recommend this approach instead.
 
-However, there are some limitations with Little's MCAR test. It relies on a slightly backwards approach to hypothesis testing. The null hypothesis is that the data is MCAR. Failing to reject the null is not the same as being able to conclude that the null is true, so it isn't really a test for MCAR data as much as it is a test to reject MCAR data. 
+Finally, another approach to identifying associations between missingness and observed values, which makes fewer assumptions of the data than either modelling approach, is calculating the mean difference of variables conditional on the missingness of the variable in question. 
 
-I think this is fine because the starting assumption is that data is MAR. Little's MCAR data provides a broad summary of the data. A high p-value suggests further investigation is needed because data might not be MAR, and a low p-value is evidence to support the assumption that the data is MAR. Another alternative to Little's MCAR test, which makes fewer assumptions of the data, is calculating the mean difference of variables conditional on the missingness of the variable in question. However, there are no shortcuts in this process. A detailed exploratory analysis combined with domain expertise is the only way to understand how the data may have come to be missing.
+Ultimately, there are no shortcuts in this process. Whichever approach you take, it can only provide supporting evidence, not confirmation. A detailed exploratory analysis combined with domain expertise is the only way to understand how the data may have come to be missing. 
 
 ## Well, What Now?
 
