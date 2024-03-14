@@ -11,7 +11,3 @@ While plenty of work went into making the site my own, I used Silvia Canelón's 
 I also learned a great deal from Jadey Ryan's [guide to publishing Quarto websites with GitHub & Netlify](https://jadeyryan.com/blog/2023-11-19_publish-quarto-website/) and Danielle Navaro's blog post about [porting Distill blogs to Quarto](https://blog.djnavarro.net/posts/2022-04-20_porting-to-quarto/), and both helped me customise the site and get everything setup as it is now.
 
 The CV is adapted from the template put together by [Cynthia Huang](https://www.cynthiahqy.com/posts/cv-html-pdf/).
-
-<div style="text-align: center">
-<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="paulj1989" data-color="#ffffff" data-emoji="🍺"  data-font="Inter" data-text="Buy me a tasty frothy boi" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#FFDD00" ></script>
-</div>
