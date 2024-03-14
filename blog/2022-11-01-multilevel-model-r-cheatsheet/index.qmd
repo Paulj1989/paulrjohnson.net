@@ -11,7 +11,7 @@ date: 2022-11-01
 image: hierarchy.webp
 image-alt: |
   A photograph of a glass ceiling inside a building, taken from directly beneath.
-categories: [Multilevel Regression, Statistics, Data Science, R]
+categories: [Multilevel Regression, Statistics, R]
 eval: false
 ---
 
@@ -269,3 +269,7 @@ Given how complex things can get with MLMs, this cheatsheet is obviously only sc
 ## Acknowledgments {.appendix}
 
 Preview image by [Patrick Baum](https://unsplash.com/@gecko81de) on [Unsplash](https://unsplash.com/photos/bottom-view-of-glass-building-EOzW3UVBKSI).
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

@@ -10,7 +10,7 @@ date: 2024-02-22
 image: math.webp
 image-alt: |
   A blackboard with a many diagrams and mathematical operations drawn on it.
-categories: [Optimisation, Football Analytics, Data Science, R]
+categories: [Optimisation, Football Analytics, R]
 bibliography: references.bib
 ---
 
@@ -633,3 +633,7 @@ Hopefully, these ratings illustrate how desirability functions work and demonstr
 ## Acknowledgments {.appendix}
 
 Preview image by [Dan Cristian Pădureț](https://unsplash.com/@dancristianpaduret) on [Unsplash](https://unsplash.com/photos/a-blackboard-with-a-bunch-of-diagrams-on-it-h3kuhYUCE9A).
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

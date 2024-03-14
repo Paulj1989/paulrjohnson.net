@@ -9,7 +9,7 @@ description-meta: |
 date: 2022-05-07
 image: robot.webp
 image-alt: A light blue toy robot.
-categories: [Machine Learning, Caret, Tidymodels, Data Science, R]
+categories: [Machine Learning, Caret, Tidymodels, R]
 ---
 
 The two main approaches to building machine learning models in R are [**caret**](https://github.com/topepo/caret/) and [**tidymodels**](https://www.tidymodels.org/). Having tried both, I found that I struggled to pick my favorite. There's elements of both that made more intuitive sense to me than the other. I think it's a product of having become very familiar with the **tidyverse**, particularly **dplyr**, for data wrangling, but still using a lot of Base R functions for statistical modeling.
@@ -188,3 +188,7 @@ But it's nice to know that I've got options.
 ## Acknowledgments {.appendix}
 
 Preview image by [Rock'n Roll Monkey](https://unsplash.com/@rocknrollmonkey) on [Unsplash](https://unsplash.com/photos/blue-plastic-robot-toy-R4WCbazrD1g).
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

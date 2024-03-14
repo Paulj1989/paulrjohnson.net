@@ -10,7 +10,7 @@ description-meta: |
 date: 2022-05-10
 image: bayes.webp
 image-alt: A hand-drawn portrait of Thomas Bayes.
-categories: [Bayesian Statistics, Statistics, Data Science]
+categories: [Bayesian Statistics, Statistics]
 ---
 
 As a social scientist turned data scientist, my graduate school training taught me a lot of frequentist statistics that has served me well in my career since. However, there's one thing that frequentist statistics can't solve, and that's my lack of a personality. For that, we've got Bayesian statistics, the perfect substitute.
@@ -86,3 +86,7 @@ It's not specifically a Bayesian machine learning book, but probabilistic machin
 ## Conclusion
 
 I think that having a good understanding of Bayes rule is really important for anyone working in or around statistics, because it helps inform the way you reason about statistics, and it helps you interrogate your approach to analysis in a more thorough manner. Getting a good intuition for Bayesian thinking is relatively simple, but if you're looking to go a little further, it does require a bit of work. I think there are tons of really good resources out there to take those next steps, but I don't think they're as easy to track down as they could be. Hopefully this list will bridge that gap for a few people.
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

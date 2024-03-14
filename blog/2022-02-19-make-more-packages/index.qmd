@@ -141,3 +141,7 @@ The starting point, as is often the case, is Hadley Wickham. Hadley Wickham and 
 ## Acknowledgments {.appendix}
 
 Preview image by [Jiawei Zhao](https://unsplash.com/@jiaweizhao) on [Unsplash](https://unsplash.com/photos/tuxedo-cat-in-brown-cardboard-box-W-ypTC6R7_k).
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

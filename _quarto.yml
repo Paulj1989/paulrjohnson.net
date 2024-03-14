@@ -23,6 +23,9 @@ website:
       - icon: github
         aria-label: GitHub
         href: https://www.github.com/paulj1989/paulrjohnson.net
+      - icon: cup-hot-fill
+        aria-label: Buy Me a Coffee
+        href: https://www.buymeacoffee.com/paulj1989
     right:
       - text: Blog
         aria-label: Blog

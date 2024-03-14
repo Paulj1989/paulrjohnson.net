@@ -13,7 +13,11 @@ image-alt: A woman in a mermaid costume lays in a bathtub that is filling up wit
 categories: [Mermaid, Hugo, Quarto, Markdown]
 ---
 
-**Note: Having ported my site over to Quarto in entirety, this blog post no longer applies to the site as is. There are some inconsistencies with some of the issues it talks about and how the site looks now (for example, there is no longer an option to toggle a dark theme), but the advice in this post should hopefully still work for anyone that is using Quarto with Hugo!**
+::: {.callout-note}
+
+Having ported my site over to Quarto in entirety, this blog post no longer applies to the site as is. There are some inconsistencies with some of the issues it talks about and how the site looks now (for example, there is no longer an option to toggle a dark theme), but the advice in this post should hopefully still work for anyone that is using Quarto with Hugo!
+
+:::
 
 I find a lot of the methods for drawing diagrams and flow charts using code to be a bit of a nightmare. I'm not sure what it is, perhaps I'm just a bit stupid, but they always seem a little more convoluted than I can handle. It's possible that the design is actually of some value when it comes to drawing diagrams that are much larger and more complicated than I am generally dealing with, but in my case, it always seems to be a lot of work for what little I'm trying to do.
 
@@ -123,3 +127,7 @@ And that's about all you need to do. Think of all the amazing diagrams you're go
 ## Acknowledgments {.appendix}
 
 Preview image by [Daniella Garcia](https://unsplash.com/@daniewizard) on [Unsplash](https://unsplash.com/photos/woman-in-black-and-white-bikini-lying-on-white-ceramic-bathtub-jJn9fVPtaNI).
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

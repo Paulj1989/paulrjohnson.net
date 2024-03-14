@@ -186,3 +186,7 @@ Netlify offers some valuable features. Netlify's build tools and redirect capabi
 There are guides available online for getting redirects working with Quarto, but things get a little trickier if you want to use continuous deployment with Netlify's build tools. This post sought to build on the good work others have done and explain how I got redirects working for my particular use case. I suspect there are better ways to approach this. My solution is very much cobbled together. However, it addresses a slightly different problem than the resources I've found about setting up Netlify's redirects with Quarto. 
 
 If you have come up with a better way of doing this than me, please let me know!
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 

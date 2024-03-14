@@ -29,3 +29,7 @@ Given that everything is posting and everyone is a poster, it's time I put some 
 ## Acknowledgments {.appendix}
 
 Preview image by [Jack Lucas Smith](https://unsplash.com/@jacklucassmith) on [Unsplash](https://unsplash.com/photos/white-and-black-police-car-on-road-during-daytime-UqvSeGmFYBs).
+
+## Support {.appendix}
+
+If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
