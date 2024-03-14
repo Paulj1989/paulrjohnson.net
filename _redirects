@@ -18,7 +18,8 @@
 /blog/multilevel-model-r-cheatsheet /blog/2022-11-01-multilevel-model-r-cheatsheet
 /blog/football-ratings-using-desirability-functions /blog/2024-02-22-football-ratings-using-desirability-functions
 /blog/setting-up-netlify-redirects-with-quarto /blog/2024-03-01-setting-up-netlify-redirects-with-quarto
-/blog/dealing-with-missing-data /blog/2024-03-08-dealing-with-missing-data
+/blog/missing-data-mechanisms /blog/2024-03-14-missing-data-mechanisms
+/blog/missing-data-solutions /blog/2024-03-20-missing-data-solutions
 /blog/testing-assumptions-using-simulations /blog/2024-04-19-testing-assumptions-using-simulations
 /tags/me-me-me /blog/#category=Me%20Me%20Me
 /tags/updates /blog/#category=Updates
@@ -27,7 +28,6 @@
 /tags/machine-learning /blog/#category=Machine%20Learning
 /tags/caret /blog/#category=Caret
 /tags/tidymodels /blog/#category=Tidymodels
-/tags/data-science /blog/#category=Data%20Science
 /tags/bayesian-statistics /blog/#category=Bayesian%20Statistics
 /tags/statistics /blog/#category=Statistics
 /tags/hugo /blog/#category=Hugo
@@ -42,3 +42,4 @@
 /tags/missing-data /blog/#category=Missing%20Data
 /tags/simulations /blog/#category=Simulations
 /tags/statistical-power /blog/#category=Statistical%20Power
+/tags/data-science /blog/#category=Data%20Science
