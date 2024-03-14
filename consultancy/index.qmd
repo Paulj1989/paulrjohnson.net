@@ -28,11 +28,11 @@ If you want to hire me, here is a short list of some of my areas of expertise:
 
 Please use this form for all enquiries about consultancy, collaborations, or speaking engagements.
 
-<a class="link-dark me-1" href="https://fosstodon.org/@paulj1989" title="mastodon" target="_blank" rel="noopener">{{< fa brands mastodon >}}</a>
-<a class="link-dark me-1" href="https://linkedin.com/in/paulj1989" title="LinkedIn" target="_blank"rel="noopener">{{< fa brands linkedin >}}</a>
-<a class="link-dark me-1" href="https://github.com/paulj1989" title="github" target="_blank"rel="noopener">{{< fa brands github >}}</a>
-<a class="link-dark me-1" href="https://kaggle.com/paulrjohnson" title="github" target="_blank"rel="noopener">{{< fa brands kaggle >}}</a>
-<a class="link-dark me-1" href="https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en" title="Google Scholar" target="_blank"rel="noopener">{{< iconify fa6-brands google-scholar >}}</a>
+<!-- <a class="link-dark me-1" href="https://fosstodon.org/@paulj1989" title="mastodon" target="_blank" rel="noopener">{{< fa brands mastodon >}}</a> -->
+<!-- <a class="link-dark me-1" href="https://linkedin.com/in/paulj1989" title="LinkedIn" target="_blank"rel="noopener">{{< fa brands linkedin >}}</a> -->
+<!-- <a class="link-dark me-1" href="https://github.com/paulj1989" title="github" target="_blank"rel="noopener">{{< fa brands github >}}</a> -->
+<!-- <a class="link-dark me-1" href="https://kaggle.com/paulrjohnson" title="github" target="_blank"rel="noopener">{{< fa brands kaggle >}}</a> -->
+<!-- <a class="link-dark me-1" href="https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en" title="Google Scholar" target="_blank"rel="noopener">{{< iconify fa6-brands google-scholar >}}</a> -->
 
 :::
 <!-- source: https://github.com/mccarthy-m-g/tidytales/blob/main/about/index.qmd#L24-L46 -->

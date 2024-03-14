@@ -34,6 +34,9 @@ about:
     - text: "{{< iconify fa6-brands google-scholar >}}" 
       aria-label: Google Scholar
       href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en
+    - icon: cup-hot-fill
+      aria-label: Buy Me a Coffee
+      href: https://www.buymeacoffee.com/paulj1989
 
 page-layout: full
 
