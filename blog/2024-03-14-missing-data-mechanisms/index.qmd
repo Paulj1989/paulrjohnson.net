@@ -21,6 +21,12 @@ categories: [Missing Data, Statistics, R]
 bibliography: references.bib
 ---
 
+::: {.callout-note}
+
+This is the first post in the Missing Data Matters series. The second post, about missing data solutions, can be found [here](/blog/missing-data-solutions).
+
+:::
+
 ```{r}
 #| label: setup
 #| cache: false
@@ -121,7 +127,7 @@ Missing data is the drawer in your fridge filled with soggy vegetables you hope 
 
 - Missing Not at Random (MNAR) -- the probability of an observation being missing is not random, and the mechanism that underpins missing values is unknown. Missing values follow a pattern, but that pattern is a function of unobserved data, whether it be the variable's values themselves (for example, values over a certain threshold are all missing) or an unobserved variable.
 
-For a more detailed explanation of the differences between MCAR, MAR, and MNAR data, I'd recommend the [_Concepts of MCAR, MAR and MNAR_](https://stefvanbuuren.name/fimd/sec-MCAR.html) section of @vanbuuren2018's book to help make sense of the differences^[I would also recommend the [_Concepts in Incomplete Data_](https://stefvanbuuren.name/fimd/sec-idconcepts.html) section of his book if you are looking for more precise definitions of MCAR, MAR, and MNAR data.]. 
+For a more detailed explanation of the differences between MCAR, MAR, and MNAR data, I'd recommend the ["Concepts of MCAR, MAR and MNAR"](https://stefvanbuuren.name/fimd/sec-MCAR.html) section of @vanbuuren2018's _Flexible Imputation of Missing Data_ to help make sense of the differences^[I would also recommend the ["Concepts in Incomplete Data"](https://stefvanbuuren.name/fimd/sec-idconcepts.html) section of his book if you are looking for more precise definitions of MCAR, MAR, and MNAR data.]. 
 
 The plots below illustrate how the different missing data mechanisms might impact a variable's distribution.
 
@@ -297,8 +303,7 @@ To make matters worse, it is not possible to conclusively define the missing dat
 
 ### Exploring Missing Data
 
-There are lots of good resources for learning how to effectively diagnose the missing data mechanism, so in the interest of not turning this blog post into a tome, I won't go into incredible detail about this process. @tierney2022's [_The Missing Book_](https://tmb.njtierney.com/) is fantastic for learning about the missing data exploratory analysis workflow using the R package [**naniar**](https://naniar.njtierney.com/)^[The [_Getting Started with **naniar**_](https://naniar.njtierney.com/articles/getting-started-w-naniar.html) and [_Gallery of Missing Data Visualisations_](https://naniar.njtierney.com/articles/naniar-visualisation.html) vignettes also detail various approaches to exploring missing data.]. The [**mice**](https://amices.org/mice/) and [**ggmice**](https://amices.org/ggmice/) R packages offer additional functionality for investigating missingess^[**mice**'s [_Missingness Inspection_](https://www.gerkovink.com/miceVignettes/Missingness_inspection/Missingness_inspection.html) vignette details an example analysis of missing data.]. Instead of detailing an entire exploratory workflow, I will give a brief overview, with example plots^[Some plots didn't use the listed packages but can be easily reproduced using functions from those packages. They won't be as aesthetically pleasing, but that doesn't matter for exploratory purposes (it only matters for my silly little blog).].
-While not exhaustive, it will hopefully serve as inspiration to get you started.
+There are lots of good resources for learning how to effectively diagnose the missing data mechanism, so in the interest of not turning this blog post into a tome, I won't go into incredible detail about this process. @tierney2022's [_The Missing Book_](https://tmb.njtierney.com/) is fantastic for learning about the missing data exploratory analysis workflow using the R package [**naniar**](https://naniar.njtierney.com/)^[The ["Getting Started with **naniar**"](https://naniar.njtierney.com/articles/getting-started-w-naniar.html) and ["Gallery of Missing Data Visualisations"](https://naniar.njtierney.com/articles/naniar-visualisation.html) vignettes also detail various approaches to exploring missing data.]. The [**mice**](https://amices.org/mice/) and [**ggmice**](https://amices.org/ggmice/) R packages offer additional functionality for investigating missingess^[**mice**'s ["Missingness Inspection"](https://www.gerkovink.com/miceVignettes/Missingness_inspection/Missingness_inspection.html) vignette details an example analysis of missing data.]. Instead of detailing an entire exploratory workflow, I will give a brief overview, with example plots^[Some plots didn't use the listed packages but can be easily reproduced using functions from those packages. They won't be as aesthetically pleasing, but that doesn't matter for exploratory purposes (it only matters for my silly little blog).]. While not exhaustive, it will hopefully serve as inspiration to get you started.
 
 I've transformed the attrition dataset to include missing data spread across multiple variables. Most missing data is MCAR, but the years an employee has spent at the company is MAR. Missing values for employee tenure are associated with low job satisfaction and high monthly income (greater than $15k per month).
 
@@ -309,7 +314,7 @@ I've transformed the attrition dataset to include missing data spread across mul
 
 set.seed(123)
 
-missing_data <-
+missing_years <-
   attrition |>
   mutate(
     across(starts_with("job") & !job_satisfaction, 
@@ -339,7 +344,7 @@ The starting point in any exploratory analysis of missing data is to get some id
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
-missing_data |> 
+missing_years |> 
   summarise(across(everything(), ~ sum(is.na(.x))/n()) ) |> 
   tidyr::pivot_longer(
     cols = everything(), names_to = "variable", values_to = "value"
@@ -406,8 +411,7 @@ It is more plausible that the data is either MAR or MNAR [@nahhas2024]. However,
 
 In practice, identifying the type of missingness you're dealing with requires exploratory analysis, domain expertise, and good judgment. Testing the assumption that your data is not MNAR involves exploring missing values and looking for evidence that missingness may not be random. For example, observed values may be constrained at a value lower than your expertise suggests should be the maximum, indicating some censoring of the variable. Simple summary functions and plotting distributions can uncover evidence that missing values are non-random. However, concluding that data is MNAR requires domain expertise and a good understanding of your data. 
 
-It is a little easier to test the assumption data is not MCAR because any association between observed and missing values acts as evidence data is MAR.
-One way to look for associations is to create a binary variable that represents a variable's missingness using `naniar::bind_shadow()` and plotting the distribution of other variables conditional on missingness. Spikes in the distribution of missing values, relative to the distribution of observed values, indicate a correlation between that variable and the missing values.
+It is a little easier to test the assumption data is not MCAR because any association between observed and missing values acts as evidence data is MAR. One way to look for associations is to create a binary variable that represents a variable's missingness using `naniar::bind_shadow()` and plotting the distribution of other variables conditional on missingness. Spikes in the distribution of missing values, relative to the distribution of observed values, indicate a correlation between that variable and the missing values.
 
 The plot below visualises the monthly income distribution, conditional on employee tenure's missingness. A thorough analysis would require digging to find associations, but I'm cheating and already know where to look. 
 
@@ -424,7 +428,7 @@ The plot below visualises the monthly income distribution, conditional on employ
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)' 
 
-missing_data |> 
+missing_years |> 
   naniar::bind_shadow() |> 
   ggplot(aes(x = monthly_income, fill = forcats::fct_rev(years_at_company_NA))) + 
   geom_histogram(position = "dodge", colour = "grey20") +
@@ -471,7 +475,7 @@ We can also use `naniar::geom_miss_point()` to plot the association between empl
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
   
-missing_data |>  
+missing_years |>  
   ggplot(aes(x = years_at_company, y = monthly_income)) +
   naniar::geom_miss_point(size = 1, alpha = 0.8) + 
   facet_wrap(vars(job_satisfaction)) +
@@ -508,7 +512,7 @@ It is also possible to compute statistical tests of the association between miss
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-missing_data |> 
+missing_years |> 
   naniar::bind_shadow() |> 
   select(years_at_company_NA | !years_at_company & !ends_with("NA")) |> 
   mutate(
@@ -548,7 +552,7 @@ Another option is to use **naniar**'s `mcar_test()` to calculate @little1988's t
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-missing_data |>  
+missing_years |>  
   naniar::mcar_test() |> 
   mutate(across(everything(), ~ round(.x))) |> 
   rename(
@@ -581,4 +585,4 @@ Preview image generated using StabilityAI's [DreamStudio](https://beta.dreamstud
 
 ## Support {.appendix}
 
-If you've enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
