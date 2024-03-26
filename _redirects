@@ -19,7 +19,7 @@
 /blog/football-ratings-using-desirability-functions /blog/2024-02-22-football-ratings-using-desirability-functions
 /blog/setting-up-netlify-redirects-with-quarto /blog/2024-03-01-setting-up-netlify-redirects-with-quarto
 /blog/missing-data-mechanisms /blog/2024-03-14-missing-data-mechanisms
-/blog/missing-data-solutions /blog/2024-03-20-missing-data-solutions
+/blog/missing-data-solutions /blog/2024-03-26-missing-data-solutions
 /blog/testing-assumptions-using-simulations /blog/2024-04-19-testing-assumptions-using-simulations
 /tags/me-me-me /blog/#category=Me%20Me%20Me
 /tags/updates /blog/#category=Updates
@@ -40,6 +40,7 @@
 /tags/netlify /blog/#category=Netlify
 /tags/web-development /blog/#category=Web%20Development
 /tags/missing-data /blog/#category=Missing%20Data
+/tags/imputation /blog/#category=Imputation
 /tags/simulations /blog/#category=Simulations
 /tags/statistical-power /blog/#category=Statistical%20Power
 /tags/data-science /blog/#category=Data%20Science
