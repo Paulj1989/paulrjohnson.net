@@ -146,7 +146,7 @@ Listwise deletion, sometimes called complete case analysis, is the most common. 
 
 Pairwise deletion, or available case analysis, is less common. It involves removing any missing values but not the entire row. Instead, the available observations for each variable are used to calculate their means and covariances, which can be used to build statistical models [@vanbuuren2018]. This process is a little more involved and cannot be applied to as many use cases, so you should see pairwise deletion far less often in the wild.
 
-Deletion-based methods can be robust under the right conditions. When data is MCAR and volumes of missing data are not vast, deletion methods may be suitable. However, things can start to unravel when data is MAR, and deletion methods will likely cause many problems when data is MNAR. Nonetheless, deletion methods prevail because they are the default approach.
+Deletion-based methods can be robust under the right conditions. When data is MCAR and volumes of missing data are not vast, deletion methods may be suitable. However, things can start to unravel when data is MAR, and deletion methods will likely cause many problems when data is MNAR. Deleting values when data is MNAR (and to a slightly lesser extent MAR) creates selection bias. The sample that remains after deletion is a function of the missing data mechanism, which cannot be accounted for in a model if the data has been deleted. Nonetheless, deletion methods prevail because they are the default approach.
 
 ## Imputation Methods
 
@@ -322,7 +322,7 @@ This points to the inherent flaw with single imputation that none of these metho
 
 We cannot account for the uncertainty in imputing missing values using single imputation because we are plugging in a single value in place of the missing value and treating it with the same confidence as the observed values. There are ways to add more uncertainty to single imputation methods, such as stochastic regression imputation, but ultimately, these are papering over the cracks. Single imputation always offers a false sense of certainty because it imputes a single value in place of each missing value.
 
-### Multiple Imputation
+### Multiple Imputation {#sec-multiple-imputation}
 
 Multiple imputation attempts to address the fundamental flaw in single imputation methods, acknowledging the uncertainty in imputed values and baking that uncertainty into the process. Multiple imputation involves generating multiple datasets, performing analysis on each, and pooling the results. The multiple imputation process yields parameter estimates that "average over a number of plausible replacement values" [@enders2022, p.189] instead of the one that single imputation does. Multiple imputation can be appropriate for missing data that is not MAR, as long as the response mechanism has been explicitly modelled or other identifying assumptions have been made [@murray2018].
 
@@ -338,7 +338,7 @@ Here, we will use multiple imputation by chained equations (MICE). MICE imputes 
 
 Effective multiple imputation requires as much information as possible, including variables associated with the missingness itself and with the observed values of that variable (which are, therefore, likely to be associated with the missing values). Thus, @murray2018 argues that imputation models should include as many variables as possible.
 
-The plot below shows the results of the imputation phase of the multiple imputation process, with the pooling carried out manually, but it is important to note that the results are not a perfect implementation of multiple imputation. Instead, each of the five completed datasets has been stacked together, and the median value of each row across those five datasets has been calculated. The results plotted below do not perfectly demonstrate what multiple imputation looks like, but they are at least an approximation.
+The plot below shows the results of the imputation phase of the multiple imputation process, with the pooling carried out manually, but it is important to note that the results are not a perfect implementation of multiple imputation. Instead, each of the five completed datasets has been stacked together, and the mean value of each row^[The mean value has been rounded to the integer value so as to not mask what predictive mean matching is doing.] across those five datasets has been calculated. The results plotted below do not perfectly demonstrate what multiple imputation looks like, but they are at least an approximation.
 
 ```{r}
 #| label: multiple-imputation
@@ -356,7 +356,7 @@ missing_years |>
   mice::mice(method = "pmm", print = FALSE, seed = 123) |>
   mice::complete(action = "long") |> 
   summarise(
-    across(c(total_working_years, monthly_income), median), 
+    across(c(total_working_years, monthly_income), ~ round(mean(.x), 0)), 
     .by = c(.id, missingness)
     ) |> 
   plot_regression() +
@@ -373,7 +373,7 @@ missing_years |>
     )
 ```
 
-The confidence intervals don't capture the baked-in uncertainty, a significant advantage of multiple imputation, because the plot only sees the final median values calculated from the five imputed datasets. However, the multiple imputation process results here look more like the original plot. This is pretty promising. This is primarily due to the method used to carry out the multiple imputation, predictive mean matching.
+The confidence intervals don't capture the baked-in uncertainty, a significant advantage of multiple imputation. The plot only shows the final mean values calculated from the five imputed datasets. However, the multiple imputation process results follow a similar distribution to the original data, which should reduce the risk of imputations producing biased parameter estimates. Further, the imputed values appear to be structured similarly to the observed data, making the multiple imputation plot look very similar to the original data plot. This is generally a good sign because the closer you are to replicating the data-generating process, the better your chance of making accurate inferences. The structural similarities are primarily due to the method used to carry out the multiple imputation, predictive mean matching.
 
 [^pooling]:
   
@@ -481,6 +481,8 @@ multiple_imputation <-
 
 More can be done to tailor and tighten up **mice**'s imputations, but the intention here is only to demonstrate how different missing data methods perform out of the box. 
 
+While the imputations visualised in @sec-multiple-imputation are only an approximation of the process, the outputs displayed in @tbl-regression below fully demonstrate the multiple imputation method.
+
 ```{r}
 #| label: tbl-regression
 #| tbl-cap: |
@@ -519,6 +521,8 @@ Of course, if you want to show everyone what a wise old sage you are, consider m
 This blog post only scratches the surface of missing data methods. As tempting as it might be to summarise an entire research field, I'd also have to read about 2,000 Donald Rubin papers before I could even get started on what anyone else has to say on this topic. Various methods, such as likelihood methods and multilevel imputation, haven't been covered here, and I haven't discussed the [evaluation of imputation results](stefvanbuuren.name/fimd/sec-evaluation.html). All of this stuff is important! But this blog post is already longer than I originally planned, and if I'm not careful it'll soon end up being so large that tech companies will start using it as a corpus to train their large language models. Hopefully, this brief introduction will inspire you to continue learning about missing data methods.
 
 ## Acknowledgments {.appendix}
+
+Many thanks to Camilo Alvarez (of the great Trivote Discord fame) for his kind but constructive feedback during the development of this series of blog posts. I greatly appreciate anyone who helps me be just a little less stupid.
 
 The preview image was generated using StabilityAI's [DreamStudio](https://beta.dreamstudio.ai/), using the prompt "An eerie-looking image of a boy lost in a field, with a sign behind him saying 'Missing Data - Please Return At Earliest Convenience'".
 
