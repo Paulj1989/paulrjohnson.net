@@ -581,6 +581,8 @@ Missing data can have multiple causes, and the mechanism driving missingness can
 
 ## Acknowledegments {.appendix}
 
+Many thanks to Camilo Alvarez (of the great Trivote Discord fame) for his kind but constructive feedback during the development of this series of blog posts. I greatly appreciate anyone who helps me be just a little less stupid.
+
 Preview image generated using StabilityAI's [DreamStudio](https://beta.dreamstudio.ai/), using the prompt "A red milk carton with a missing persons advert on the side of the carton, but instead of a person it is data that is missing".
 
 ## Support {.appendix}
