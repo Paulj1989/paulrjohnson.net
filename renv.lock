@@ -809,6 +809,25 @@
       "Repository": "RSPM",
       "Hash": "f7736a18de97dea803bde0a2daaafb27"
     },
+    "fitba": {
+      "Package": "fitba",
+      "Version": "0.0.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteUsername": "Paulj1989",
+      "RemoteRepo": "fitba",
+      "RemoteRef": "main",
+      "RemoteSha": "0dec8b775a176e33e9a9caaff1e19827f7eebb89",
+      "RemoteHost": "api.github.com",
+      "Requirements": [
+        "dplyr",
+        "janitor",
+        "rlang",
+        "stringr",
+        "tidyr"
+      ],
+      "Hash": "c9070e542b1542460513cec96d97ec24"
+    },
     "fontawesome": {
       "Package": "fontawesome",
       "Version": "0.5.2",
