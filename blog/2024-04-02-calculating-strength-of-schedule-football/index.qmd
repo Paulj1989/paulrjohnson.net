@@ -455,7 +455,7 @@ opponent_opponent_ratings <-
 ```{r}
 #| label: tbl-opponent-ratings
 #| tbl-cap: |
-#|    Mean Average Team OR & OOR
+#|    Team Opponents' & Opponents' Oppponents Ratings
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
@@ -466,8 +466,8 @@ remaining_games |>
   left_join(opponent_opponent_ratings, by = join_by(team)) |> 
   rename(
     "Team" = team,
-    "OR" = opponent_rating,
-    "OOR" = opponent_opponent_rating,
+    "Opponents' Rating" = opponent_rating,
+    "Opponents' Oppponents Rating" = opponent_opponent_rating,
   ) |> 
   gt() |> 
   tbl_theme(type = "num")
@@ -516,7 +516,7 @@ strength_of_schedule |>
   tbl_theme(type = "num")
 ```
 
-As discussed in @sec-sos-methodology, z-scores are interpreted as the standard deviation from the mean. A z-score of -1.12 means that Liverpool's schedule is 1.09 standard deviations lower than the mean league schedule.
+As discussed in @sec-sos-methodology, z-scores are a measure of standard deviation from the mean. A z-score of -1.12 means that Liverpool's schedule is 1.12 standard deviations lower than the mean league schedule.
 
 All three teams' schedules are easier than the league average, which is unsurprising because they have played each other, and many teams still have to play them. However, there is plenty of variance in schedule strength between the three title contenders. Arsenal's schedule is very close to the league average, while Liverpool's remaining schedule is one of the easiest in the Premier League.
 
