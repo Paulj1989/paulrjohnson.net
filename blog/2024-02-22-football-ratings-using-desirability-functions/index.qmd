@@ -4,7 +4,7 @@ subtitle: |
   Ranking football players using **desirability2** and multivariate optimisation.
 description-meta: |
   Exploring a multivariate optimisation method called desirability functions for
-  creating rating systems, using FB Ref player data for the 2023/24 season in 
+  creating rating systems, using FBref player data for the 2023/24 season in 
   Europe's big five leagues.
 date: 2024-02-22
 image: math.webp
@@ -85,7 +85,7 @@ format_table <-
         align = "center",
         columns = cols
       ) |>
-      tab_source_note(source_note = "Source: FB Ref Via {worldfootballR}") |>
+      tab_source_note(source_note = "Source: FBref Via {worldfootballR}") |>
       tab_options(
         table.width = pct(100),
         table.font.names = "Poppins"
@@ -268,7 +268,7 @@ big_five_stats <-
     )
 ```
 
-Using the excellent [**worldfootballR**](https://jaseziv.github.io/worldfootballR) package, I have pulled together player-level [FB Ref](https://fbref.com/) data for the 2022/23 season across the big five leagues, for a variety of different offensive measures. The data represents multiple elements of team offense, and in order to capture this, I have split the data into three components - goal threat, chance creation, and ball progression.
+Using the excellent [**worldfootballR**](https://jaseziv.github.io/worldfootballR) package, I have pulled together player-level [FBref](https://fbref.com/) data for the 2022/23 season across the big five leagues, for a variety of different offensive measures. The data represents multiple elements of team offense, and in order to capture this, I have split the data into three components - goal threat, chance creation, and ball progression.
 
 Goal threat is made up of four variables, non-penalty goals (npG), non-penalty expected goals (npxG), shots, and touches in the penalty area, while chance creation is comprised of just three - assists, expected assists (xA), and shot-creating actions (SCA). Finally, ball progression is also made up of three variables, progressive passes, carries, and receptions. Every variable in each desirability function is calculated per 90 minutes, to standardise variables by a player's playing time.
 
@@ -391,7 +391,7 @@ big_five_stats |>
       ),
     x = "Shots/90", y = "Desirability",
     caption = 
-      "Visualisation: Paul Johnson  |  Data: FB Ref Via {worldfootballR}"
+      "Visualisation: Paul Johnson  |  Data: FBref Via {worldfootballR}"
     )
 ```
 
@@ -606,7 +606,7 @@ offensive_rating |>
       ),
     x = NULL, y = "Desirability",
     caption = 
-      "Visualisation: Paul Johnson  |  Data: FB Ref Via {worldfootballR}"
+      "Visualisation: Paul Johnson  |  Data: FBref Via {worldfootballR}"
     ) +
   theme(
     panel.grid.major.y = element_blank(),
