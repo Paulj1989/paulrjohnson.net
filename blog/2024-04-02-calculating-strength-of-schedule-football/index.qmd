@@ -516,7 +516,7 @@ strength_of_schedule |>
   tbl_theme(type = "num")
 ```
 
-As discussed in @sec-sos-methodology, z-scores are interpreted as the standard deviation from the mean. A z-score of -1.09 means that Liverpool's schedule is 1.09 standard deviations lower than the mean league schedule.
+As discussed in @sec-sos-methodology, z-scores are interpreted as the standard deviation from the mean. A z-score of -1.12 means that Liverpool's schedule is 1.09 standard deviations lower than the mean league schedule.
 
 All three teams' schedules are easier than the league average, which is unsurprising because they have played each other, and many teams still have to play them. However, there is plenty of variance in schedule strength between the three title contenders. Arsenal's schedule is very close to the league average, while Liverpool's remaining schedule is one of the easiest in the Premier League.
 
@@ -642,7 +642,7 @@ champ_sos |>
   tbl_theme(type = "num")
 ```
 
-If the now slim [probability of automatic promotion](https://analytic-fpl.streamlit.app/) wasn't enough, Saints also face the most challenging schedule, playing both Leeds and Leicester before the end of the season, both away from home, in addition to Coventry and Preston, who are still in the hunt for the final playoff spot. Southampton are the toughest team any of the others will face, though Leeds and Ipswich still have to face several playoff chasers, and Leicester are up against multiple relegation candidates. 
+If the now slim [probability of automatic promotion](https://analytic-fpl.streamlit.app/) wasn't enough, Saints also face one of the most challenging schedules, only beaten by Leeds. Saint have to play Leeds and Leicester before the end of the season, both away from home, in addition to Coventry and Preston, who are still in the hunt for the final playoff spot. Southampton are the toughest team any of the others will face, though Leeds and Ipswich still have to face several playoff chasers, and Leicester are up against multiple relegation candidates. 
 
 Things don't look much better when compared to the rest of the league.
 
