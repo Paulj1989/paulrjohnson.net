@@ -18,7 +18,8 @@ description-meta: |
 ## Packages {{< fa box-open >}}
 
 - [{scwplot}](https://nhs-south-central-and-west.github.io/scwplot/) - An R package for creating consistent SCW-style ggplot figures.
-- [{nice}](https://github.com/Paulj1989/nice) - The stupidest R package ever created.
+- [{nice}](https://paulj1989.github.io/nice/) - The stupidest R package ever created.
+- [{fitba}](https://paulj1989.github.io/fitba/) - **F**unctions In**T**ended for foot**B**all **A**nalytics.
 
 ## Research  {{< fa brain >}}
 
