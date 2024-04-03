@@ -33,9 +33,9 @@ css: ../assets/css/cv.css
 ***NHS South, Central and West CSU*** [Nov 2021 --- Present]{.cvdate}
 
 - Providing technical expertise in analytics and research-focused projects across the organisation, including experimental and observational analysis of healthcare interventions.
-- Building and deploying machine learning models, such as a model forecasting the daily event counts in Urgent and Emergency Care Services and a clustering model identifying similar GP practices.
+- Developing and deploying machine learning models, such as forecasting daily event counts in Urgent and Emergency Care Services and a clustering model identifying similar GP practices.
 - Leading the development of organisational expertise in data science, including training and mentoring colleagues in statistics, machine learning, and programming.
-- Supporting the development of the SCW's infrastructure for developing and deploying data science.
+- Supporting the development of SCW's infrastructure for developing and deploying data science.
 
 ### Associate BI Consultant
 
@@ -50,21 +50,21 @@ css: ../assets/css/cv.css
 
 - Built natural language processing models for research into political language in legal texts.
 - Supported the Political Party Database Project in the administration of the expert survey and maintenance of the project website.
-- Courses: Intro to Comparative Politics, Mexican Politics, Comparative Elections, Media & Politics.
+- Assisted in teaching courses, including Intro to Comparative Politics, Mexican Politics, Comparative Elections, and Media & Politics.
 
 ### Fundraising Manager: Product Innovation
 
 ***Marie Curie*** [Aug 2016 --- July 2017]{.cvdate}
 
-- Managed Marie Curie’s biggest regular fundraising campaign (Fundraising My Way).
-- Assisted the development of new fundraising products and the innovation of existing campaigns.
+- Managed Marie Curie’s largest regular fundraising campaign (Fundraising My Way), resulting in a significant increase in donations compared to the previous year.
+- Assisted in the development of new fundraising products and the innovation of existing campaigns.
 
 ### Events & Corporate Fundraiser
 
 ***World Child Cancer*** [July 2015 --- April 2016]{.cvdate}
 
-- Developed, recruited, and managed the charity’s largest fundraising event to date (Kilimanjaro trek) and various major events (Ride 100, Great North Run).
-- Supported the Head of Corporate Fundraising in the successful corporate partnership with Deutsche Bank.
+- Developed, recruited, and managed the charity’s largest fundraising event to date (Kilimanjaro trek) and various major events (Ride 100, Great North Run), significantly contributing to fundraising efforts.
+- Supported the Head of Corporate Fundraising in successful corporate partnerships, enhancing the charity's fundraising initiatives.
 
 ## Further Work Experience  {{< fa clock-rotate-left >}}
 
