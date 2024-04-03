@@ -525,6 +525,13 @@ Finally, we can plot the Strength of Schedule Z-Scores for all Premier League te
 ```{r}
 #| label: sos-plot
 #| fig-height: 7
+#| fig-alt: |
+#|    A barplot visualising the strength of remaining schedules for every team 
+#|    in the Premier League. Positive scores indicate harder than league average
+#|    schedules, and negative scores indicate easier than league average scores.
+#|    The hardest remaining schedules are Aston Villa (2.42), Luton (1.27), and
+#|    Crystal Palace (0.91), while the easiest schedules are Newcastle (-1.76), 
+#|    Brentford (-1.32), and Liverpool (-1.12).
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -649,6 +656,13 @@ Things don't look much better when compared to the rest of the league.
 ```{r}
 #| label: championship-sos-plot
 #| fig-height: 7
+#| fig-alt: |
+#|    A barplot visualising the strength of remaining schedules for every team 
+#|    in the Championship. Positive scores indicate harder than league average
+#|    schedules, and negative scores indicate easier than league average scores.
+#|    The hardest remaining schedules are Blackburn (1.92), Watford (1.58), and
+#|    Coventry (1.25), while the easiest schedules are Rotherham (-1.61), 
+#|    Swansea (-1.46), and Bristol City (-1.33). 
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
