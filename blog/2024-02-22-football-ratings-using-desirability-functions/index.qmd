@@ -115,38 +115,35 @@ Mapping each variable to a standard scale makes a direct comparison between vari
 
 [^transformation]: 
 
-    With $\boldsymbol{R}$ variables being simultaneously optimised, denoted $f_{r}(\boldsymbol{X}) 
-    (r = 1 ... R)$, each must be individually optimised using a desirability function that approaches 
-    1 when $f_{r}(\boldsymbol{X})$ is optimal and approaches 0 when $f_{r}(\boldsymbol{X})$ is 
-    unacceptable. The optimisation function for minimising $f_{r}(\boldsymbol{X})$ [@kuhn2016] is: 
+    With each variable $X_i$ being simultaneously optimised, where $i$ represents each individual variable, each must 
+    be individually optimised using a desirability function that approaches 1 when $X_i$ is optimal and approaches 0 
+    when $X_i$ is unacceptable. The optimisation function for minimising $X_i$ [@kuhn2016] is given by:
 
     $$
-    \begin{equation}
-      d_{r}^{min}=\begin{cases}
-      0 & \text{if $f_r(\boldsymbol{X}) > B$}\\
-      (\frac{f_{r}(\boldsymbol{X})-B}{A-B})^{s} & \text{if $A \leq f_{r}(\boldsymbol{X}) \leq B$}\\
-      1 & \text{if $f_r(\boldsymbol{X}) < A$}
-      \end{cases}
-    \end{equation}
+    D_{X_i}^{min} = 
+    \begin{cases}
+      0 & \text{if } X_i > B_i \\
+      \left(\frac{B_i - X_i}{B_i - A_i}\right)^{s_i} & \text{if } A_i \leq X_i \leq B_i \\
+      1 & \text{if } X_i < A_i
+    \end{cases}
     $$
     
-    where $A$ and $B$ specify the minimum and maximum value that $f_{r}(\boldsymbol{X})$ can reach,
-    and $s$ is a scaling feature that makes it easier ($s > 1$) or harder ($s < 1$) to achieve maximal
+    where $A_i$ and $B_i$ specify the minimum and maximum value that each variable $X_i$ can reach, and $s_i$ is a 
+    scaling feature that makes it easier ($s > 1$) or harder ($s < 1$) for each variable $X_i$ to achieve maximal 
     desirability.
-    
-    The optimisation function for maximising $f_{r}(\boldsymbol{X})$ [@kuhn2016] is:
 
-    $$
-    \begin{equation}
-      d_{r}^{max}=\begin{cases}
-      0 & \text{if $f_r(\boldsymbol{X}) < A$}\\
-      (\frac{f_{r}(\boldsymbol{X})-A}{B-A})^{s} & \text{if $A \leq f_{r}(\boldsymbol{X}) \leq B$}\\
-      1 & \text{if $f_r(\boldsymbol{X}) > B$}
-      \end{cases}
-    \end{equation}
+    Similarly, the optimisation function for maximising variable $X_i$ [@kuhn2016] is:
+
+    $$ 
+    D_{X_i}^{max} = 
+    \begin{cases}
+      0 & \text{if } X_i < A_i \\
+      \left(\frac{X_i - A_i}{B_i - A_i}\right)^{s_i} & \text{if } A_i \leq X_i \leq B_i \\
+      1 & \text{if } X_i > B_i
+    \end{cases}
     $$
     
-    where $A$, $B$, and $s$ are again the minimum and maximum values and the scaling feature.
+    where $A_i$, $B_i$, and $s_i$ are again the minimum and maximum values and the scaling feature.
 
 [^mean]: 
 
