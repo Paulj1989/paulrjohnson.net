@@ -442,7 +442,7 @@ chance_creation |>
   format_table(cols = 5:8)
 ```
 
-Again, the names at the top of the @tbl-chance-creation ratings give me confidence, especially the three names at the very top - Neymar, Kevin De Bruyne, and Lionel Messi. I don't think there are any huge surprises in these ratings, perhaps with the exception of Rémy Cabella, who has some solid to very good creation numbers but wouldn't necessarily be a name you'd immediately think of when thinking about the ten best creative players in the world. This is once again a reminder that Ligue 1 is very silly but is wonderfully chaotic.
+Again, the names at the top of the @tbl-chance-creation ratings give me confidence, especially the three names at the very top - Kevin De Bruyne, Neymar, and Lionel Messi. I don't think there are any huge surprises in these ratings, perhaps with the exception of Rémy Cabella, who has some solid to very good creation numbers but wouldn't necessarily be a name you'd immediately think of when thinking about the ten best creative players in the world. This is once again a reminder that Ligue 1 is very silly but is wonderfully chaotic.
 
 ### Ball Progression
 
