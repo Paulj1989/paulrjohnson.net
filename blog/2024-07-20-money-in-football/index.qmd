@@ -1,0 +1,713 @@
+---
+title: Analysing the Effect of Money in Football Using Multilevel Regression
+subtitle: |
+  Analysing football club resources and league performance using MLMs
+description-meta: |
+  Bayesian multilevel model measuring the effect of football (soccer) club 
+  resources on total league points across seven European leagues and ten seasons.
+date: 2024-07-20
+image: money.webp
+image-alt: |
+  A photograph of many €100 bank notes layered on top of each other.
+categories: [Multilevel Regression, Statistics, R]
+---
+
+```{r}
+#| label: setup
+#| output: false
+#| code-fold: true
+#| code-summary: 'Setup Code (Click to Expand)'
+
+# import packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(lme4)
+  library(lmerTest)
+  library(gt)
+  library(ggplot2)
+})
+
+# setup fonts
+sysfonts::font_add_google("Poppins")
+sysfonts::font_add_google("Lora")
+showtext::showtext_auto()
+
+# set plot theme
+# inspired by https://github.com/z3tt/TidyTuesday/blob/main/R/2020_31_PalmerPenguins.Rmd
+theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
+  theme_update(
+    panel.grid.major = element_line(color = "grey90", linewidth = .4),
+    panel.grid.minor = element_blank(),
+    panel.spacing.x = unit(.65, units = "cm"),
+    panel.spacing.y = unit(.3, units = "cm"),
+    axis.title.x = element_text(
+      color = "grey30", margin = margin(t = 5), size = rel(1.05)
+      ),
+    axis.title.y = element_text(
+      color = "grey30", margin = margin(r = 5), size = rel(1.05)
+      ),
+    axis.text = element_text(color = "grey50", size = rel(1)),
+    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75),
+    axis.ticks = element_line(color = "grey90", linewidth = .4),
+    axis.ticks.length = unit(.2, "lines"),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = rel(.9)),
+    legend.box.margin = margin(0, 0, -10, 0),
+    legend.key.width = unit(1, units = "cm"),
+    plot.title = element_text(
+      hjust = 0, color = "black", family = "Lora",
+      size = rel(1.5), margin = margin(t = 5, b = 5)
+    ),
+    plot.subtitle = element_text(
+      hjust = 0, color = "grey30", family = "Lora",
+      lineheight = 0.5, size = rel(1.1), 
+      margin = margin(5, 0, 5, 0)
+    ),
+    plot.title.position = "plot",
+    plot.caption = element_text(
+      color = "grey50", size = rel(0.8), hjust = 1,
+      margin = margin(10, 0, 0, 0)
+    ),
+    plot.caption.position = "plot",
+    plot.margin = margin(rep(10, 4)),
+    strip.text = element_text(size = rel(1), margin = margin(0, 0, 5, 0)),
+    strip.clip = "off"
+  )
+
+# set table theme
+tbl_theme <-
+  function(data, width = 100, align = "center") {
+    data |>
+      tab_source_note(
+        source_note = "Source: FBref & Transfermarkt Via {worldfootballR}"
+        ) |>
+      tab_options(
+        table.width = pct(width), 
+        table.align = align,
+        table.font.names = "Poppins"
+        )
+  }
+
+# load data
+club_resources <- 
+  readr::read_rds(
+    here::here("blog", "2024-07-20-money-in-football", "data", "club_resources.rds")
+  )
+```
+
+```{css}
+#| label: rm-striping 
+#| echo: false
+
+.rm-striping .gt_table tr.odd {
+  --bs-table-striped-bg: transparent;
+}
+```
+
+I have a habit of trying to answer all data problems (and some non-data problems) with multilevel regression. No matter the puzzle, no matter the question, multilevel regression is just what you need. I'm at risk of developing a really weird brand at work. Maybe even ostracising myself from loved ones that just want me to answer their normal questions in normal ways. It's not that I'm wrong, as such. I'm just the boxer with little to no skills or fighting nous but exactly one good punch that just keeps working. I can't keep getting away with it^[I can and will keep getting away with it.].
+
+![](oprah.jpg){fig-align="center" width=60%}
+
+The problem that everyone at the intervention will have is that so much of the data that we encounter in the real world contains hierarchies, levels, or grouping structures. Multilevel regression is perfect for handling data that includes significant grouping, where observations that typical regression methods would generally assume are independent are actually clustered based on some grouping variable, and where sample sizes within each group are small enough that treating each group completely separately places significant constraints on the analysis.
+
+That's why, when I sought out to better understand how financial resources impact outcomes in football, it seemed obvious that multilevel regression was the right way to go^[Look, I've already told you that it's excessive even if it's also right. Here we are.]. I'm interested in understanding just how much of an impact money has on football, and whether it really all comes down to just spending your way to the top of the table. I have leveraged Transfermarkt's squad values as a proxy for a club's financial powers and used outcomes in Europe's big five leagues, from 2012/13 to 2023/24, to estimate the effect that resources have on league performance. It probably goes without saying that the results suggest that having money is good and that teams with lots of money tend to be better at football, but there's some relatively interesting nuance in there too, so this blog post wasn't a complete waste of time. 
+
+I'm still unsure if this blog post is really more about multilevel regression or about money in football, but the beauty of running your own silly little blog is that you can write posts that meander aimlessly and if someone has the misfortune to read it all, that's on them. You want a refund? Fight me. Anyway, lets find out where this one heads.
+
+## The Multilevel Structure of Football Data
+
+My first exposure to multilevel regressions, and the reason I am convinced they are the one model to rule them all, came when studying a PhD in Political Science. I was a comparativist, which is the field you pick when you don't want to know anything about any particular country's politics and just want to interject with your annoying little opinions when any politics comes up. I was particularly interested in parties and party systems. Being able to say anything meaningful about political parties that can be generalised across a wide range of contexts requires studying parties in lots of different countries. But it turns out every country is a special snowflake and there's lots of details that make them unique, so finding the golden nuggets of generalisable insight required controlling for those differences. 
+
+This is a good example of data that is structured in multiple levels, or hierarchies in this case. Political parties are nested in countries, and countries are nested in regions or continents. Depending on the the nature of the question being studied, you might have further hierarchies in the data, like party families that group parties across Europe, or you might have other types of grouping structures in the data that are not hierarchical, like electoral outcomes grouping by year. There are lots of ways data can cluster. It is not always necessary to deal with grouping structures in the data when modelling it, but it's definitely something you should always consider!
+
+Much like comparative politics data, football has some very obvious hierarchical levels. The pro/rel system^[Promotion/Relegation, for those of you that have not been exposed to the 100 years war that is US soccer's debate about how to structure their domestic game.] explicitly organises teams hierarchically! I'm only looking at outcomes in the top divisions, but I am also looking at leagues in five different countries, which, as we know, is going to be a source of some clustering in the data. Since I am looking at outcomes over 12 seasons, the teams themselves will also be a huge source of clustering too, because inevitably certain teams will do more with their money than others and will regularly outperform others in the league.
+
+The clustering of observations caused by teams and leagues will bias any regression that doesn't properly account for this. A key assumption of linear regression is that observations will vary independent of each other. For example, not accounting for league differences would likely lead to Bayern Munich's dominance in the Bundesliga not being given enough weight and therefore the regression would undervalue the effect of financial resources. While Bayern are certainly one of the richest clubs in the world, there are plenty of teams across the big five leagues with at least comparable resources, and in the Premier League there are multiple teams with a lot more money. However, compared against the rest of the Bundesliga, Bayern have untold riches, and this has been a major contributing factor in their decade-long run of title-winning seasons. It is necessary to account for league effects, among other factors, to make sure details like this are not missed by the regression model.
+
+This becomes more obvious when we plot the median squad market values in the big five leagues over time, as shown below. The massive resource advantage that the likes of Bayern Munich, Juventus, PSG, Real Madrid, and Barcelona hold over their league compatriots would potentially be masked by the huge amount of money in the Premier League. 
+
+```{r}
+#| label: values
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+club_resources |> 
+  group_by(league, season) |> 
+  summarise(squad_value = median(squad_value)) |> 
+  ggplot(aes(forcats::as_factor(season), squad_value, group = league, fill = league)) +
+  geom_col(position = "dodge", colour = "#343a40") +
+  geom_hline(yintercept = 0, colour = "#343a40") +
+  scale_fill_manual(values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")) +
+  scale_y_continuous(
+    labels = 
+      scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
+    ) +
+  labs(
+    x = NULL, y = "Squad Market Value",
+    caption = 
+      "Visualisation: Paul Johnson  |  Data: Transfermarkt Via {worldfootballR}"
+    ) +
+  theme(legend.key.width = unit(.8, units = "cm"))
+```
+
+Plenty of Premier League teams have astronomical amounts of money when compared even against the rest of the big five leagues despite not coming close to mixing with the very richest teams in England. It's important to account for league differences so that those teams are being compared against their league competition, where their gigantic vault of gold is only a moderately-sized pot of gold. This disparity has only grown larger as time goes on. The Premier League really has far too much money.
+
+Of course, just being rich isn't enough. What do rich clubs do with all that money? Well, besides Manchester United, they spend it on good players! We should expect that, on average, rich teams will build squads that are more valuable, and that teams that are valued higher by Transfermarkt will be more successful in the league. The plot below visualises how our three outcomes (points, goal difference, and expected goals (xG) difference) vary by squad market value, all split by league.
+
+```{r}
+#| label: outcomes
+#| fig-height: 7
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+club_resources |> 
+  tidyr::pivot_longer(
+    cols = c(pts, xgd, gd),
+    names_to = "outcome",
+    values_to = "value"
+  ) |> 
+  mutate(
+    outcome =
+      factor(
+        case_when(
+          outcome == "pts" ~ "League Points",
+          outcome == "xgd" ~ "xG Difference",
+          outcome == "gd" ~ "Goal Difference",
+          .default = outcome
+          ),
+        levels = c("League Points", "Goal Difference", "xG Difference")
+      )
+  ) |> 
+  ggplot(aes(squad_value, value)) +
+  geom_point(alpha = .4, size = .8, colour = "#343a40") +
+  geom_smooth(
+    method = lm, formula = y ~ log(x), colour = "#026E99",
+    se = FALSE, linewidth = 1.2
+  ) +
+  
+  facet_grid(rows = vars(outcome), cols = vars(league), scales = "free_y") +
+  scale_x_continuous(
+    labels = 
+      scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
+    ) +
+  labs(
+    x = "Squad Market Value", y = NULL,
+    caption = 
+      "Visualisation: Paul Johnson  |  Data: Transfermarkt Via {worldfootballR}"
+    ) +
+  theme(
+    panel.spacing.x = unit(.3, units = "cm"),
+    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75)
+    )
+```
+
+It's clear that the value of a team's squad has a positive effect on all three outcomes, though that relationship is non-linear. It appears that increases in squad market value at the lower end of the range of values have a huge impact on each outcome but that this effect tails off, to varying degrees by outcome and league, as squad market value approaches the higher end of it's range. That sounds an awful lot like a logarithm function! The regression line fit to the data is done so using a log-transformed squad market value, and while it's not perfect, it does seem to do a reasonably good job of fitting the data, and it captures the apparent diminishing returns as squad market values get way out in front of the rest of the league.
+
+It is also worth noting that while the relationship between squad value and the outcomes is similar across all five leagues, there is some variance, and this is most obvious up around the upper quartile of squad values for each league. The highest squad values are much larger in some leagues than others, as are the highest total values of each outcome (especially the league points, since these are constrained by a maximum number of points that any team could win, which varies by league). This illustrates how not accounting for league differences could bias a regression of market value's effects on league performance. 
+
+```{r}
+#| label: value-function
+#| code-fold: true
+#| code-summary: 'Helper Function Code (Click to Expand)'
+#| include: false
+
+plot_pts_lm <-
+  function(data, league_name) {
+    data |> 
+      filter(league == league_name) |>
+      ggplot(aes(squad_value, pts, colour = season)) +
+      geom_point(alpha = .6, size = 1.2) +
+      geom_smooth(
+        method = lm, formula = y ~ log(x), se = FALSE, linewidth = 1, alpha = .6
+        ) +
+      scale_colour_manual(
+        values = 
+            c(
+              "#026E99", "#10799E", "#2183A4", "#338DA9", "#4497AF", "#56A1B4",
+              "#69ABBA", "#7CB4C0", "#8FBDC6", "#A3C6CC", "#B8CED3", "#CDD6D9"
+            ),
+        guide = FALSE
+        ) +
+      scale_x_continuous(
+        labels =
+          scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
+        ) +
+      labs(
+        title = 
+          glue::glue(
+            "Relationship Between Market Values & {league_name} Points"
+          ),
+        x = "Squad Market Value", y = "League Points",
+        caption = 
+          glue::glue(
+            "Visualisation: Paul Johnson  |  ",
+            "Data: Transfermarkt Via {{worldfootballR}}"
+          )
+      )
+  }
+```
+
+<!-- ::: {.panel-tabset} -->
+
+<!-- ##### Premier League -->
+
+```{r}
+#| label: prem-lm
+#| fig-alt: |
+#|    A scatter plot visualising the association between squad market values and
+#|     league points per season in the Premier League.
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+#| include: false
+
+club_resources |> 
+  plot_pts_lm(league_name = "Premier League")
+```
+
+<!-- ::: -->
+
+## Multilevel Regression
+
+- Talk about MLMs a bit (link to resources)
+- Discuss basic structure of the models
+- Discuss the variables used, including those I've engineered myself and how anything has been transformed
+- Talk through concerns with the data, particularly regarding the use of relatively noisy proxies for "financial resources".
+
+We can see that there are multiple grouping structures in this data, and it is necessary 
+
+Multilevel regression models are like magic tricks - they seem impossible when you don't know how they work and they are only practised by terrible losers^[My apologies to all magicians reading this. I am only using you as a cheap prop for my joke.].
+
+The regression models fit to the three outcomes all have the same basic structure, with squad market value and time as the population-level predictor variables, club nested in league as grouping variables, and a separate crossed grouping variable for season.
+
+The data is imperfect. Squad market value serves as a noisy proxy for a club's financial resources.
+
+```{r}
+#| label: regression-data
+#| code-fold: true
+#| code-summary: 'Data Code (Click to Expand)'
+
+regression_data <-
+  club_resources |>
+  tidyr::pivot_longer(
+    cols = c(pts, xgd, gd),
+    names_to = "outcome",
+    values_to = "value"
+  ) |>
+  mutate(
+    squad_value = datawizard::centre(log(squad_value)),
+    time = as.numeric(season) - 1,
+    outcome =
+      case_when(
+        outcome == "pts" ~ "Points",
+        outcome == "gd" ~ "Goal Difference",
+        outcome == "xgd" ~ "xG Difference",
+        .default = outcome
+      )
+  ) |>
+  tidyr::nest(.by = c(outcome))
+```
+
+```{r}
+#| label: tbl-null-models
+#| classes: rm-striping
+#| tbl-cap: |
+#|  ICC for Null Models Fit to League Outcomes & Performance
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+#| include: false
+
+get_null_icc <-
+  function(data) {
+    lmer(value ~ 1 + (1 | squad), data = data) |>
+      performance::icc()
+  }
+
+regression_data |> 
+  mutate(
+    icc = purrr::map(data, ~ get_null_icc(.x))
+    ) |>
+  tidyr::unnest(c(icc)) |> 
+  select(outcome, ICC_unadjusted) |> 
+  gt() |> 
+  fmt_number(columns = ICC_unadjusted, decimals = 2) |> 
+  cols_label(
+    outcome ~ "Outcome",
+    ICC_unadjusted ~ "Intraclass Correlation Coefficient (ICC)"
+  ) |> 
+  tbl_theme()
+```
+
+- The null model suggests that there is plenty of variance that can be explained by the grouping variables.
+- The next step is to get a good sense of the way that the grouping structure should impact the outcome.
+- We can compare the performance of varying intercepts and varying intercepts & slopes models on each outcome, to see if there is an obvious winner.
+- I think the EDA we've done certainly points to varying intercepts, at a minimum, with some evidence that varying slopes would also be worth including in the model. 
+
+```{r}
+#| label: tbl-compare-models
+#| classes: rm-striping
+#| tbl-cap: |
+#|   Comparison of Multilevel Regression Model Performance Indices
+#| code-fold: true
+#| code-summary: 'Model & Table Code (Click to Expand)'
+#| include: false
+
+fit_varying_intercepts <- 
+  function(data) {
+    lmer(
+      value ~ 1 + squad_value + time + (1 | league/squad) + (1 | season), 
+      data = data, REML = TRUE,
+      control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 200000))
+      )
+  }
+
+fit_varying_slopes <- 
+  function(data) {
+    lmer(
+      value ~ 1 + squad_value + time + (1 | league/squad) + 
+        (0 + squad_value | league/squad) + (1 | season), 
+      data = data, REML = TRUE,
+      control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 200000))
+      )
+  }
+
+regression_data |> 
+  mutate(
+    varying_intercepts = purrr::map(data, fit_varying_intercepts),
+    varying_slopes = purrr::map(data, fit_varying_slopes),
+    compare_performance = 
+      purrr::map2(
+        .x = varying_intercepts, .y = varying_slopes, 
+        ~ performance::compare_performance(
+          .x, .y, metrics = c("AIC", "BIC", "RMSE"), 
+          rank = TRUE, estimator = "REML"
+          )
+        )
+  ) |> 
+  tidyr::unnest(compare_performance) |> 
+  mutate(
+    model = 
+      case_when(
+        Name == ".x" ~ "Varying Intercepts",
+        Name == ".y" ~ "Varying Intercepts & Slopes"
+      )
+  ) |> 
+  select(outcome, model, AIC_wt, BIC_wt, RMSE, Performance_Score) |> 
+  arrange(model) |> 
+  gt(groupname_col = "outcome", rowname_col = "model") |> 
+  cols_label(
+    AIC_wt ~ "AIC (Weights)",
+    BIC_wt ~ "BIC (Weights)",
+    Performance_Score ~ "Score"
+  ) |> 
+  fmt_number(columns = is.numeric, decimals = 2, drop_trailing_zeros = TRUE) |> 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_row_groups()
+  ) |> 
+  tbl_theme()
+```
+
+```{r}
+#| label: mlm-function
+#| code-fold: true
+#| code-summary: 'Helper Function Code (Click to Expand)'
+
+fit_mlms <- 
+  function(data) {
+    lmer(
+      value ~ 1 + squad_value + time + (1 | league/squad) + 
+        (0 + squad_value | league/squad) + (1 | season), 
+      data = data, REML = TRUE,
+      control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 200000))
+      )
+  }
+```
+
+- Had to fit slightly simpler model with no correlation between slopes and intercepts.
+- Explain inclusion of both time and season. Time included to control for the effect that time itself has, season included to control for the fact that each season is (more or less) independent of each other and outcomes within a season are correlated.
+
+- The results show that a varying intercepts & slopes model is generally better (and at a minimum is no worse), so we will stick to this.
+
+```{r}
+#| label: fit-models
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+
+models <-
+  regression_data |> 
+  mutate(
+    model = purrr::map(data, fit_mlms),
+    summary = purrr::map(model, broom.mixed::glance),
+    coefs = purrr::map(model, ~ broom.mixed::tidy(.x, conf.int = TRUE)),
+    preds = purrr::map(model, ~ predict(.x))
+  )
+```
+
+```{r}
+#| label: tbl-model-summary
+#| tbl-cap: |
+#|    Multilevel Regressions of Club Resources' Effect on League Outcomes & Performance
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+cm <-
+  c(
+    "(Intercept)" = "(Intercept)",
+    "squad_value" = "Squad Value",
+    "time" = "Time (Seasons)",
+    "SD (Intercept squadleague)" = "_Club_: Intercept Variance",
+    "SD (squad_value squad.league)" = "_Club_: Slope Variance",
+    # "Cor (Intercept~squad_value squadleague)" = 
+    #   "_Club_: Intercept/Slope Correlation",
+    "SD (Intercept league)" = "_League_: Intercept Variance",
+    "SD (squad_value league)" = "_League_: Slope Variance",
+    # "Cor (Intercept~squad_value league)" = 
+    #   "_League_: Intercept/Slope Correlation",
+    "SD (Intercept season)" = "_Season_: Intercept Variance",
+    "SD (Observations)" = "Residual Variance"
+  )
+
+models |> 
+  pull(model, name = outcome) |>
+  modelsummary::msummary(
+    statistic = 'conf.int', gof_omit = "AIC|BIC", coef_map = cm, 
+    fmt = 2, stars = TRUE, output = "gt"
+    ) |> 
+  tab_row_group(
+    label = md("**Group (Random) Effects**"),
+    rows = 7:11
+  ) |>
+  tab_row_group(
+    label = md("**Population-Level (Fixed) Effects**"),
+    rows = 1:6
+  ) |>
+  tab_footnote(
+    footnote =
+      md(
+        glue::glue(
+          "Time represented as integer values 0-11 where 2012/13 = 0 and ",
+          "2022/23 = 11."
+          )
+        ),
+    locations =
+      cells_body(
+        columns = 1,
+        rows = 5
+      )
+  ) |>
+  tab_footnote(
+    footnote = "Market value log-transformed and centred around grand mean.",
+    locations =
+      cells_body(
+        columns = 1,
+        rows = 3
+      )
+    ) |>
+  fmt_markdown(columns = 1, rows = 7:11) |>
+  tab_style(
+    style = cell_text(size = "medium"),
+    locations = cells_body(
+      columns = 2:4,
+      rows = c(2, 4, 6)
+    )
+  ) |>
+  tbl_theme()
+```
+
+## Evaluating Team Performance Using Model Predictions
+
+```{r}
+#| label: top-six
+#| fig-height: 9
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+models |>
+  filter(outcome == "Points") |> 
+  tidyr::unnest(c(data, preds)) |> 
+  mutate(preds = round(preds)) |> 
+  tidyr::pivot_longer(
+    cols = c(value, preds), names_to = "type", values_to = "points"
+    ) |> 
+  mutate(
+    type = 
+      case_when(
+        type == "value" ~ "Total Points",
+        type == "preds" ~ "Predicted Points",
+        .default = type
+      )
+    # season = stringr::str_sub(season, 3, -1)
+    ) |> 
+  filter(
+    squad %in% c(
+      "Manchester City", "Manchester Utd", "Liverpool", 
+      "Arsenal", "Chelsea", "Tottenham"
+      )
+    ) |>
+  ggplot(aes(season, points, group = type, linetype = type)) +
+  geom_smooth(
+    method = lm, formula = y ~ splines::ns(x, 3), 
+    linewidth = 0.5, se = FALSE, colour = "#343a40"
+    ) +
+  geom_point(aes(fill = type), shape = 21, size = 1.2, stroke = 1) +
+  guides(fill = guide_legend(override.aes = list(size = 2))) + 
+  scale_fill_manual(values = c("white", "#343a40")) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  scale_x_discrete(
+    expand = c(0.05, 0.05), 
+    breaks = c("2013/14", "2015/16", "2017/18", "2019/20", "2021/22", "2023/24")
+    ) +
+  facet_wrap(facets = vars(squad), nrow = 3) +
+  labs(
+    title = "Premier League Top Six Performance Above/Below Expectations",
+    subtitle = 
+      stringr::str_wrap(
+        glue::glue(
+          "Comparing Arsenal, Chelsea, Liverpool, Man City, Man Utd, & Spurs' total ",
+          "and predicted points in the Premier League from 2012/23 to 2023/24, ",
+          "conditional on each club's total market value and net spend per season."
+          ),
+        width = 95
+      ),
+    x = NULL, y = NULL,
+    caption = 
+      "Visualisation: Paul Johnson  |  Data: Transfermarkt Via {worldfootballR}"
+    )
+```
+
+```{r}
+#| label: challengers
+#| fig-height: 7
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+models |>
+  filter(outcome == "Points") |> 
+  tidyr::unnest(c(data, preds)) |> 
+  mutate(preds = round(preds)) |> 
+  tidyr::pivot_longer(
+    cols = c(value, preds), names_to = "type", values_to = "points"
+    ) |> 
+  mutate(
+    type = 
+      case_when(
+        type == "value" ~ "Total Points",
+        type == "preds" ~ "Predicted Points",
+        .default = type
+      )
+    # season = stringr::str_sub(season, 3, -1)
+    ) |> 
+  filter(
+    squad %in% c(
+      "Brighton", "Leicester City", "Southampton", "West Ham"
+      )
+    ) |>
+  ggplot(aes(season, points, group = type, linetype = type)) +
+  geom_smooth(
+    method = lm, formula = y ~ splines::ns(x, 3), 
+    linewidth = 0.5, se = FALSE, colour = "#343a40"
+    ) +
+  geom_point(aes(fill = type), shape = 21, size = 1.2, stroke = 1) +
+  guides(fill = guide_legend(override.aes = list(size = 2))) + 
+  scale_fill_manual(values = c("white", "#343a40")) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  scale_x_discrete(
+    expand = c(0.05, 0.05),
+    #limits = club_resources$season,
+    breaks = c("2013/14", "2015/16", "2017/18", "2019/20", "2021/22", "2023/24")
+    ) +
+  facet_wrap(facets = vars(squad), nrow = 2, scales = "free_x") +
+  labs(
+    title = "Premier League Challengers' Performance Above/Below Expectations",
+    subtitle = 
+      stringr::str_wrap(
+        glue::glue(
+          "Comparing Brighton, Leicester, Southapmton, & West Ham's  total ",
+          "and predicted points in the Premier League from 2012/23 to 2023/24, ",
+          "conditional on each club's total market value and net spend per season."
+          ),
+        width = 95
+      ),
+    x = NULL, y = NULL,
+    caption = 
+      "Visualisation: Paul Johnson  |  Data: Transfermarkt Via {worldfootballR}"
+    )
+```
+
+### Identifying the Biggest Winners & Losers
+
+- There are lots of different routes you can take things with this because there are so many different ways to measure over/underperformance that are interesting, and both extremes are potentially worth exploring too.
+- The reason there are so many ways to approach this is because evaluating team performance could be done so many ways. Is a team that is overperforming massively in one season but is otherwise in-line with their predicted performance better off than a team that experiences small gains every single season?
+
+Some examples of potentially interesting ways to chop up this data and investigate further:
+
+- Looking at the largest single-season over/underperformers, using percentage over/underperformance.
+- Finding the teams with the most seasons of over/underperformance by counting total seasons with plus and minus performance, and considering whether this is evidence that a team has a consistently good front office.
+- Building the predicted standings for each season and seeing which teams have over/underperformed in terms of league position.
+- We could also look at total performance across all seasons, using all three outcomes (points, goals, xG).
+
+```{r}
+#| label: fun-tbl
+#| code-fold: true
+#| code-summary: 'Function Code (Click to Expand)'
+
+performance_table <-
+  function(min_max) {
+    models |>
+      filter(outcome == "Points") |>
+      tidyr::unnest(c(data, preds)) |>
+      filter(n() > 3, .by = squad) |>
+      summarise(
+        total_pts = sum(value),
+        predicted_pts = sum(preds),
+        pct_diff = (total_pts / predicted_pts) - 1,
+        .by = c(squad, league)
+      ) |>
+      min_max(order_by = pct_diff, n = 3, by = league) |>
+      select(squad, league, pct_diff) |>
+      gt(groupname_col = "league", rowname_col = "squad") |>
+      cols_label(pct_diff ~ "% Over/Under") |>
+      fmt_percent(columns = 3) |>
+      cols_align(align = "right", columns = 3) |>
+      tab_style(
+        style = cell_text(weight = "bold"),
+        locations = cells_row_groups()
+      ) |>
+      tbl_theme()
+  }
+```
+
+::: {.panel-tabset}
+
+#### Overperformers
+
+```{r}
+#| label: tbl-overperformers
+#| tbl-cap: The Biggest Overperformers in the Big Five Leagues
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+performance_table(slice_max)
+```
+
+#### Underperformers
+
+```{r}
+#| label: tbl-underperformers
+#| tbl-cap: The Biggest Underperformers in the Big Five Leagues
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+performance_table(slice_min)
+```
+
+:::
+
+## Acknowledgments {.appendix}
+
+Preview image by [Robert Anasch](https://unsplash.com/@diesektion) on [Unsplash](https://unsplash.com/photos/100-banknote-lot-Wnp7qnhHtyw).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
