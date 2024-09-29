@@ -217,7 +217,7 @@ squad_values <-
 
 readr::write_csv(
   squad_values, 
-  here::here("blog", "2024-05-01-money-in-football", "data", "squad_values.csv")
+  here::here("blog", "2024-07-20-money-in-football", "data", "squad_values.csv")
 )
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -331,10 +331,6 @@ num_players <-
 tm_combined <-
   dplyr::full_join(squad_values, transfer_balances)
 
-# tm_combined <- 
-#   dplyr::left_join(tm_combined, injuries) |>
-#   dplyr::mutate(days_injured = tidyr::replace_na(injury_days, 0))
-
 fb_combined <-
   dplyr::full_join(league_tables, num_players)
 
@@ -348,6 +344,7 @@ club_resources <-
         )
       )
   )
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Save Final Dataset ----
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -355,6 +352,6 @@ club_resources <-
 readr::write_rds(
   club_resources, 
   file = here::here(
-    "blog", "2024-05-01-money-in-football", "data", "club_resources.rds"
+    "blog", "2024-07-20-money-in-football", "data", "club_resources.rds"
     )
   )
