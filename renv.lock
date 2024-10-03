@@ -911,6 +911,20 @@
       ],
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86"
     },
+    "ggeffects": {
+      "Package": "ggeffects",
+      "Version": "1.7.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "insight",
+        "stats",
+        "utils"
+      ],
+      "Hash": "16caf33f38238c1e88f3436bee01d7af"
+    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.5.1",
