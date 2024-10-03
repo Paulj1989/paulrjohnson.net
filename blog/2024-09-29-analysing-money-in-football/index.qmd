@@ -26,6 +26,7 @@ suppressPackageStartupMessages({
   library(lme4)
   library(gt)
   library(ggplot2)
+  library(marginaleffects)
 })
 
 # setup fonts
@@ -84,6 +85,9 @@ tbl_theme <-
         source_note = "Source: FBref & Transfermarkt Via {worldfootballR}"
         ) |>
       tab_options(
+        footnotes.marks = "standard",
+        footnotes.spec_ref = "^xb", 
+        footnotes.spec_ftr = "(x)",
         table.width = pct(width), 
         table.align = alignment,
         table.font.names = "Poppins"
@@ -379,7 +383,7 @@ There is a clear shift over time, with the earliest seasons seeing the greatest 
 
 The previous section highlights multiple grouping structures that need to be accounted for in the data, which is fortunate because I've already spent a lot of time talking about multilevel models here, and that would have been a real waste of time. This exploratory work also identified that squad values appear to have a non-linear relationship with the three outcomes. The other detail that we can see from the variation within and between groups across the range of squad values is that not only does the mean value vary by league, but also the magnitude of squad value's effect on the three outcomes varies. Multilevel models can handle both of these types of variation quite easily. When the mean difference is allowed to vary between groups this is a varying intercepts model, and allowing the magnitude of the effect to vary by group is called a varying slopes model. When your model allows both, it is a varying intercepts & slopes model[^MLMs], and this is the kind of model we will use here. Both the slope and intercept differences were relatively small, but this was only at the league level[^Null]. The biggest differences will occur at club-level, but this would have been a mess to visualise. 
 
-The regression models fit to the three outcomes - league points, goal difference, and xG difference - all have the same basic structure. All three outcomes have been transformed to a "Per Game" value, in order to account for the shortened season in Ligue 1 during Covid. Squad market value and time, a continuous variable with a minimum value of 0 (the 2012/13 season) and a maximum value of 12 (the 2023/24 season), are included in the model as population-level predictor variables. Squad values have been log-transformed and centred. The log-transformation was carried out to account for the decreasing marginal gains as squad values increase and the squad values were centred around a mean of zero in order to make the intercept value more meaningful. The time variable has been included  as a continuous variable to help account for changes in the distribution of outcomes over time (for example increasing disparities in outcomes between the best and worst teams). The grouping structures include team nested in league and a separate crossed grouping variable for season[^Structures]. 
+The regression models fit to the three outcomes - league points, goal difference, and xG difference - all have the same basic structure. All three outcomes have been transformed to a "Per Game" value, in order to account for the shortened season in Ligue 1 during the COVID-19 pandemic. There are three population-level explanatory variables included in the model; squad value, club mean value, and time. Squad market value has been decomposed into two variables - group-mean centered squad value[^Centering], using clubs as the groups, and the club mean squad value, to effectively capture the within and between effects, respectively [@bafumi2007; @bell2019; @enders2007]. Both squad values variables have been log-transformed to account for the decreasing gains in league outcomes as squad values increase. An additional variable for time, a continuous variable with a minimum value of 0 (the 2012/13 season) and a maximum value of 11 (the 2023/24 season), is included. The time variable has been included to account for changes in the distribution of outcomes over time (for example increasing disparities in outcomes between the best and worst teams). The grouping structures include team nested in league and a separate crossed grouping variable for season[^Grouping]. 
 
 While the model intercepts are allowed to vary according to each of these grouping structures, the squad value slopes are specified to vary by the nested league/team grouping. This means that the magnitude of the effect squad values have on outcomes is allowed to vary by league and team. We could have allowed the squad value effects to vary by season as well, given that there did appear to be some flattening of the curve of squad values association with league points over time, however, the differences were small and allowing the intercepts to vary should be sufficient, without inviting unnecessary complexity. The season grouping structure, in contrast to the population-level time variable (which is intended to capture trends), mostly serves to capture the fact that outcomes are not independent of each other in a given season. There are a finite number of points in a season, so if Man City win them all, there's none left for anyone else. Similarly, if Man City score 1000 goals, everyone else's goal difference will be much worse. Finally, the model is specified with no covariance between the league/team intercepts and slopes, because there were some issues with singularity[^Singularity].
 
@@ -391,8 +395,8 @@ While the model intercepts are allowed to vary according to each of these groupi
 fit_mlms <- 
   function(data) {
     lmer(
-      value ~ 1 + squad_value + time + (1 | league/squad) +
-        (0 + squad_value | league/squad) + (1 | season),
+      value ~ 1 + demean_squad_value + club_mean_value + time + 
+        (1 + demean_squad_value | league/squad) + (1 | season),
       data = data, REML = TRUE,
       control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 200000))
       )
@@ -406,6 +410,12 @@ fit_mlms <-
 
 models <-
   club_resources |>
+  mutate(
+    squad_value = log(squad_value),
+    club_mean_value = mean(squad_value),
+    demean_squad_value = squad_value - club_mean_value,
+    .by = squad
+  ) |> 
   tidyr::pivot_longer(
     cols = c(pts, xgd, gd),
     names_to = "outcome",
@@ -413,7 +423,6 @@ models <-
   ) |>
   mutate(
     value = value/mp,
-    squad_value = datawizard::centre(log(squad_value)),
     time = as.numeric(season) - 1,
     outcome =
       case_when(
@@ -444,14 +453,17 @@ I've used a function that fits the same model across the three outcomes, and the
 cm <-
   c(
     "(Intercept)" = "(Intercept)",
-    "squad_value" = "Squad Value",
+    "demean_squad_value" = "Squad Value",
+    "club_mean_value" = "Club Mean Value",
     "time" = "Time (Seasons)",
     "SD (Intercept squadleague)" = "_Club_: Intercept Variance",
-    "SD (squad_value squad.league)" = "_Club_: Slope Variance",
-    # "Cor (Intercept~squad_value squadleague)" = "_Club_: Intercept/Slope Covariance",
+    "SD (demean_squad_value squadleague)" = "_Club_: Slope Variance",
+    "Cor (Intercept~demean_squad_value squadleague)" = 
+      "_Club_: Intercept-Slope Covariance",
     "SD (Intercept league)" = "_League_: Intercept Variance",
-    "SD (squad_value league)" = "_League_: Slope Variance",
-    # "Cor (Intercept~squad_value league)" = "_League_: Intercept/Slope Covariance",
+    "SD (demean_squad_value league)" = "_League_: Slope Variance",
+    "Cor (Intercept~demean_squad_value league)" = 
+      "_League_: Intercept-Slope Covariance",
     "SD (Intercept season)" = "_Season_: Intercept Variance",
     "SD (Observations)" = "Residual Variance"
   )
@@ -464,43 +476,58 @@ models |>
     ) |> 
   tab_row_group(
     label = md("**Group Effects**"),
-    rows = 7:11
+    rows = 9:16
   ) |>
   tab_row_group(
     label = md("**Population-Level Effects**"),
-    rows = 1:6
-  ) |>
+    rows = 1:8
+  ) |> 
   tab_footnote(
-    footnote = "Time represented as integers 0-11 where 2012/13 = 0 and 2022/23 = 11.",
+    footnote =
+      "Integers 0-11 (2012/13 = 0; 2022/23 = 11)",
     locations =
       cells_body(
         columns = 1,
-        rows = 5
+        rows = 7
       )
-  ) |>
+  ) |> 
   tab_footnote(
-    footnote = "Market value log-transformed and centred around grand mean.",
+    footnote = "Log-transformed",
+    locations =
+      cells_body(
+        columns = 1,
+        rows = c(3, 5)
+      )
+    ) |>
+  tab_footnote(
+    footnote = "Group-mean centered",
     locations =
       cells_body(
         columns = 1,
         rows = 3
       )
-    ) |>
+    ) |> 
   tab_spanner(columns = 2:4, label = "Outcomes (Per Game)") |> 
-  fmt_markdown(columns = 1, rows = 7:11) |>
+  fmt_markdown(columns = 1, rows = 9:16) |> 
   tab_style(
-    style = cell_text(size = "medium"),
+    style = cell_text(size = "small"),
     locations = cells_body(
       columns = 2:4,
-      rows = c(2, 4, 6)
+      rows = c(2, 4, 6, 8)
     )
-  ) |> 
+  ) |>
   tbl_theme()
 ```
 
-As squad value has been log-transformed (and centred), the coefficients aren't easy to interpret, besides the direction of the effect. A log-transformed explanatory variable that has been fit to an outcome that has not been transformed is interpreted as every additional 1% increase in the squad value leads to a x/100 increase in the outcome, and in this case multiplied by 38 to capture the estimated increase over an entire Premier League season. 
+As squad value has been log-transformed, the coefficients aren't immediately interpretable, besides the direction of the effect. A log-transformed explanatory variable that has been fit to a raw outcome is interpreted as every additional 1% increase in the squad value leads to a x/100 increase in the outcome, and in this case multiplied by 38 to capture the estimated increase over an entire Premier League season. 
 
-Every 1% increase in squad value (which is an increase of ~€2.37m) leads to a 0.19 increase in points in a season, 0.2 increase in xG difference, and 0.29 increase in goal difference. For further context, every 10% increase in squad value (which is an increase of ~€23.7m) leads to a 1.9 increase in points, a 2.0 increase in xG difference, and a 2.9 increase in goal difference. These differences are relatively small, but if a €25m player can add around two points to a team's points total, that could be the difference between a relegation candidate staying up or not!
+The intercept values are meaningless here because Club Mean Value has no meaningful zero. I would have liked to resolve this, but I'm not sure it's possible?
+
+A 1% increase in squad value within a club leads to a ~0.15 increase in points in a season, a ~0.16 increase in xG difference, and a ~0.24 increase in goal difference.
+
+A 1% increase in the club's average squad value (so the value of their squad, on average, over the entire 12-season period), is worth around ~0.2 additional points each season, a ~0.22 increase in xG difference, and a ~0.31 increase in goal difference.
+
+<!-- Every 1% increase in squad value (which is an increase of ~€2.37m) on the mean squad value (~€237m) leads to a 0.19 increase in points in a season, 0.2 increase in xG difference, and 0.29 increase in goal difference. For further context, every 10% increase in squad value (which is an increase of ~€23.7m) leads to a 1.9 increase in points, a 2.0 increase in xG difference, and a 2.9 increase in goal difference. These differences are relatively small, but this is  if a €25m player can add around two points to a team's points total, that could be the difference between a relegation candidate staying up or not! -->
 
 [^MLMs]:
 
@@ -516,7 +543,13 @@ Every 1% increase in squad value (which is an increase of ~€2.37m) leads to a 
     could easily get away with fitting a model only using the teams as the grouping structure, however, given that we know that these other levels exist and will naturally 
     constrain the outcomes, I think it makes sense to include them nonetheless.
 
-[^Structures]:
+[^Centering]:
+
+    Group-mean centering takes the average value of the variable for each group at the relevant level (in this case clubs) and subtracts this value from the population 
+    values, to "center" them around the group mean. In this instance, heterogeneity bias should be sufficiently negated by group-mean centering using the clubs, because 
+    this is the primary source of the variance in squad values at the group-level.
+
+[^Grouping]:
 
     Nested and crossed grouping structures are another example of the flexibility and complexity that can be specified in a multilevel model. They describe the way that 
     grouping structures relate to each other when there are three or more hierarchical levels in the data. Grouping structures are nested when a lower level grouping is 
@@ -542,36 +575,101 @@ While transforming the coefficients gives us more information than the raw coeff
 
 We can start by computing marginal predicted league points as squad values increase. The season (and time) is held at 2023/24, so that the predictions are based on the most current data. Marginal predictions calculate the average predictions across all groups (leagues and teams).
 
-
 ```{r}
 #| label: overall-preds
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
+# overall_preds <- 
+#   function(data) {
+#     ggeffects::predict_response(
+#       data,
+#       terms = c("squad_value_within[n=100]", "squad_value_between[n=100]"),
+#       condition = c(season = "2023/24", time = 11),
+#       type = "simulate"
+#     )
+#   }
+# 
+# models |>
+#   filter(outcome == "Points") |> 
+#   select(model) |> 
+#   rowwise() |> 
+#   mutate(preds = list(overall_preds(model))) |> 
+#   tidyr::unnest(preds) |> 
+#   mutate(
+#     group = as.numeric(as.character(group)),
+#     x = exp(x + group),
+#     # x = exp(x + mean(log(club_resources$squad_value))),
+#     across(c(predicted, std.error, conf.low, conf.high), ~ .x * 38)
+#     ) |> 
+#   ggplot(aes(x, predicted)) +
+#   geom_point(alpha = 0.3, size = 1) + 
+#   geom_smooth(
+#     method = lm, formula = y ~ log(x), 
+#     se = FALSE, linewidth = 1.2, colour = "#343a40"
+#     ) + 
+#   geom_smooth(
+#     aes(y = conf.low), method = lm, formula = y ~ log(x), se = FALSE, 
+#     linewidth = 0.8, colour = "#343a40", linetype = "dashed"
+#     ) + 
+#   geom_smooth(
+#     aes(y = conf.high), method = lm, formula = y ~ log(x), se = FALSE, 
+#     linewidth = 0.8, colour = "#343a40", linetype = "dashed"
+#     ) + 
+#   # geom_line(linewidth = 1.2) +
+#   # geom_line(aes(y = conf.low), linewidth = 0.8, linetype = 2) +
+#   # geom_line(aes(y = conf.high), linewidth = 0.8, linetype = 2) +
+#   scale_x_continuous(
+#     labels = 
+#       scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
+#     ) +
+#   labs(
+#     title = "Marginal Predicted Points by Squad Value",
+#     x = "Squad Value", y = "Predicted Points",
+#     caption =
+#       "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+#     )
+
+
 overall_preds <- 
   function(data) {
-    ggeffects::predict_response(
+    predictions(
       data,
-      terms = c("squad_value[n=250]"),
-      condition = c(season = "2023/24", time = 11),
-      margin = "empirical"
-    )
+      re.form = NA, 
+      newdata =
+        datagrid(
+          squad = NA,
+          league = NA,
+          time = 11, season = "2023/24",
+          grid_type = "counterfactual"
+          )
+      ) 
   }
 
 models |>
   filter(outcome == "Points") |> 
-  select(outcome, data, model) |> 
+  select(model) |> 
   rowwise() |> 
   mutate(preds = list(overall_preds(model))) |> 
   tidyr::unnest(preds) |> 
   mutate(
-    x = exp(x + mean(log(club_resources$squad_value))),
-    across(c(predicted, std.error, conf.low, conf.high), ~ .x * 38)
+    squad_value = exp(demean_squad_value + club_mean_value),
+    across(c(estimate, conf.low, conf.high), ~ .x * 38)
     ) |> 
-  ggplot(aes(x, predicted)) +
-  geom_line(linewidth = 1.2) + # colour = "#026E99"
-  geom_line(aes(y = conf.low), linewidth = 0.8, linetype = 2) +
-  geom_line(aes(y = conf.high), linewidth = 0.8, linetype = 2) +
+  ggplot(aes(squad_value, estimate)) +
+  geom_point(alpha = 0.2, size = 1.2) + 
+  geom_smooth(
+    method = lm, formula = y ~ log(x), 
+    se = FALSE, linewidth = 1, colour = "#343a40"
+    ) + 
+  geom_smooth(
+    aes(y = conf.low), method = lm, formula = y ~ log(x), se = FALSE, 
+    linewidth = 0.6, colour = "#343a40", linetype = "dashed"
+    ) + 
+  geom_smooth(
+    aes(y = conf.high), method = lm, formula = y ~ log(x), se = FALSE, 
+    linewidth = 0.6, colour = "#343a40", linetype = "dashed"
+    ) + 
   scale_x_continuous(
     labels = 
       scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
@@ -593,15 +691,70 @@ We can also compare how increases in squad value change the total predicted poin
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
+# league_preds <- 
+#   function(data) {
+#     ggeffects::predict_response(
+#       data,
+#       terms = c("squad_value_within[n=100]", "squad_value_between[n=100]", "league"),
+#       condition = c(season = "2023/24", time = 11),
+#       type = "simulate"
+#     )
+#   }
+# 
+# models |>
+#   filter(outcome == "Points") |> 
+#   select(data, model) |> 
+#   rowwise() |> 
+#   mutate(preds = list(league_preds(model))) |> 
+#   tidyr::unnest(preds) |> 
+#   tibble() |> 
+#   # full_join(
+#   #   club_resources |>
+#   #     filter(season == "2023/24") |>
+#   #     summarise(
+#   #       squad_value_gm = mean(squad_value),
+#   #       .by = league
+#   #       ),
+#   #   by = join_by(group == league)
+#   # ) |>
+#   mutate(
+#     group = as.numeric(as.character(group)),
+#     x = exp(x + group),
+#     # x = exp(x + mean(log(club_resources$squad_value))),
+#     across(
+#       c(predicted, std.error, conf.low, conf.high),
+#       ~ case_when(
+#         facet %in% c("Bundesliga", "Ligue 1") ~ .x * 34,
+#         facet %in% c("Premier League", "La Liga", "Serie A") ~ .x * 38
+#         )
+#       )
+#     ) |> 
+#   ggplot(aes(x, predicted, colour = facet)) +
+#   geom_point(alpha = 0.4, size = 1) + 
+#   geom_smooth(
+#     method = lm, formula = y ~ log(x), se = FALSE, alpha = .8, linewidth = 1.2
+#     ) +
+#   scale_colour_manual(values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")) +
+#   scale_x_continuous(
+#     labels = 
+#       scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
+#     ) +
+#   labs(
+#     title = "Conditional Predicted Points by Squad Value in the Top Five Leagues",
+#     x = "Squad Value", y = "Predicted Points",
+#     caption =
+#       "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+#     )
+
 league_preds <- 
   function(data) {
-    ggeffects::predict_response(
-      data,
-      terms = c("squad_value[n=250]", "league"),
-      condition = c(season = "2023/24", time = 11),
-      type = "random"
-    )
-  }
+    predictions(
+      data, type = "response",
+      by = c("demean_squad_value", "club_mean_value", "league"),
+      newdata = 
+        datagrid(time = 11, season = "2023/24", grid_type = "counterfactual")
+      )
+    }
 
 models |>
   filter(outcome == "Points") |> 
@@ -609,20 +762,18 @@ models |>
   rowwise() |> 
   mutate(preds = list(league_preds(model))) |> 
   tidyr::unnest(preds) |> 
-  tibble() |> 
   mutate(
-    x = exp(x + mean(log(club_resources$squad_value))),
-    across(
-      c(predicted, std.error, conf.low, conf.high),
-      ~ case_when(
-        group %in% c("Bundesliga", "Ligue 1") ~ .x * 34,
-        group %in% c("Premier League", "La Liga", "Serie A") ~ .x * 38
+    squad_value = exp(demean_squad_value + club_mean_value),
+    estimate = case_when(
+        league %in% c("Bundesliga", "Ligue 1") ~ estimate * 34,
+        league %in% c("Premier League", "La Liga", "Serie A") ~ estimate * 38
         )
-      )
-    ) |> 
-  ggplot(aes(x, predicted, colour = group)) +
+  ) |> 
+  summarise(estimate = mean(estimate), .by = c("league", "squad_value")) |> 
+  ggplot(aes(squad_value, estimate, colour = league)) +
+  geom_point(alpha = 0.4, size = 1.2) + 
   geom_smooth(
-    method = lm, formula = y ~ log(x), se = FALSE, alpha = .8, linewidth = 1.2
+    method = lm, formula = y ~ log(x), se = FALSE, alpha = .8, linewidth = 1
     ) +
   scale_colour_manual(values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")) +
   scale_x_continuous(
