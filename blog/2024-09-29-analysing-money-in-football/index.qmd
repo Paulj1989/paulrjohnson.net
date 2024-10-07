@@ -117,26 +117,17 @@ club_resources <-
 }
 ```
 
-Building a brand is an important step in any career that involves any public-facing or portfolio-based work. When we finally decide to gig economy all the jobs in an attempt to finally achieve the goal of implementing a perfectly awful capitalist hellscape, the first to go will be the folks that were too busy "being with their family", "seeing the world", or "living a rich and fulfilling life" to build their **brand**. While some people are blessed with names like [Adam L. Ozer](https://adamlozer.github.io)[^Loser], those of us who were given names so generic and not remotely funny that we are never more than ten metres away from a namesake have to work a little harder to distinguish ourselves. I could wear a hat, I suppose, but that seems like an awful lot of upkeep. I'd have to buy the hat, and then I'd have to wear it, and I assume I'd have to wash it sometimes too[^Hats]. No. That won't do. I'd much rather build a brand around having One Neat Trick. Like Daron Acemoglu with instrumental variables, except without any of the high-quality research and none of the prolific work-rate.
+Building a brand is essential in many professional fields. When we finally decide to gig economy all the jobs in an attempt to finally achieve the goal of implementing a perfectly awful capitalist hellscape, the first to go will be the folks that were too busy "being with their family", "seeing the world", or "living a rich and fulfilling life" to build their **brand**. While some people are blessed with names like [Adam L. Ozer](https://adamlozer.github.io)[^Loser], those of us who were given names so generic and not remotely funny that we are never more than ten metres away from a namesake have to work a little harder to distinguish ourselves. I could wear a hat, but that is a lot of upkeep. I'd have to buy the hat, then I'd have to wear it, and I assume I'd have to wash it sometimes, too. 
 
-Luckily, I already know what my One Neat Trick is. It's multilevel models[^Innovation]. I really like multilevel regression models. I recommend them for most problems, usually long before I'm sure they are necessary. I assume that most problems will eventually reveal some multilevel data that justifies the use of a multilevel model, and once you've convinced yourself that this particular hammer does actually turn everything into a nail, it's hard to roll that back. I'm fortunate that in this case I'm not far from the truth. It's good that I didn't pick Tobit regression[^Tobits]. 
+No. That won't do. Building a brand around One Neat Trick is much easier. My One Neat Trick is multilevel models. I recommend them for most problems, usually long before I'm sure they are necessary. I assume that most problems will eventually reveal some multilevel data that justifies using a multilevel model. Once you've convinced yourself that this particular hammer _does_ turn everything into a nail, it's hard to roll that back. I'm fortunate that, in this case, I'm not far from the truth. It's good that I didn't pick Tobit regression[^Tobits]. 
 
-So when I was inspired to take a deeper look at the effect that financial resources have on outcomes in football, because a [tweet](https://x.com/SBienkowski/status/1561464135279329280) had me mad on the Internet[^Tweet], I assumed it was probably going to be a multilevel model. I'm interested in understanding just how much of an impact money has on football, and whether it really all comes down to just spending your way to the top of the table. I have leveraged Transfermarkt's squad values as a proxy for a club's financial powers and used outcomes in Europe's big five leagues, from 2012/13 to 2023/24, to estimate the effect that resources have on league performance. It probably goes without saying that the results suggest that having money is good and that teams with lots of money tend to be better at football, but there's some relatively interesting nuance in there too, so this blog post wasn't a complete waste of time. 
+So when I was inspired to take a deeper look at the effect that financial resources have on outcomes in football because a [tweet](https://x.com/SBienkowski/status/1561464135279329280) had me mad on the Internet[^Tweet], I assumed it was probably going to be a multilevel model. I'm interested in understanding how much money impacts football and whether it all comes down to spending your way to the top. I have leveraged Transfermarkt's squad values as a proxy for a club's financial powers and used outcomes in Europe's big five leagues from 2012/13 to 2023/24 to estimate the effects of resources on league performance. The results suggest that having money is good and that teams with lots of money tend to be better at football (breathtaking insight); there's some relatively interesting nuance in there, too, so this blog post wasn't a complete waste of time. 
 
-I'm still unsure if this blog post is really more about multilevel regression or about money in football, but the beauty of running your own silly little blog is that you can write posts that meander aimlessly and if someone has the misfortune to read it all, that's on them. Anyway, lets find out where this one heads.
+I'm still unsure if this blog post is more about multilevel regression or the money in football, but the beauty of running your own silly little blog is that you can write posts that meander aimlessly, and if someone has the misfortune to read it all, that's on them. Anyway, let's find out where this one heads.
 
 [^Loser]:
     
     His name is Adam **LOSER**.
-
-[^Hats]:
-
-    Yes I know you have to wash hats.
-
-[^Innovation]:
-
-    Which, to be clear, is a method I have had no hand in the development or innovation in its use, nor have I inspired an entire methodological hype cycle around its use 
-    because of my work. I just like them.
     
 [^Tobits]:
 
@@ -154,10 +145,9 @@ Multilevel models address problems caused by clustered (or multilevel) data in s
 
 The independence assumption is a central tenet of regression modelling that states that all residuals in a model should be independent. When data is clustered, observations within clusters will be correlated, leading to residuals that are also correlated (and therefore not independent). Clustered data effectively inflates the sample size[^Dependence], and a model that fails to account for this will underestimate the standard errors of parameter estimates. These smaller standard errors give the appearance of certainty where certainty does not exist.
 
-Multilevel models handle clustered data and the correlation between observations within clusters by explicitly modelling the grouping structures in the data. By modelling the grouping structures, this allows us to fit models at the population level while accounting for the unexplained variance among the groups [@gelman2006], which produces more appropriate standard errors. 
+Multilevel models handle clustered data and the correlation between observations within clusters by explicitly modelling the grouping structures in the data. Modelling the grouping structures allows us to fit models at the population level while accounting for the unexplained variance among the groups [@gelman2006], which produces more appropriate standard errors. 
 
-So when you encounter multilevel data, there's a multilevel model for it!
-
+So, when you encounter multilevel data, you need a multilevel model!
 
 [^Dependence]:
 
@@ -166,26 +156,21 @@ So when you encounter multilevel data, there's a multilevel model for it!
 
 ### The Prevalence of Multilevel Data
 
-My first exposure to multilevel data came during my studies for a Political Science PhD. My primary field was comparative politics[^Comparative], and I was particularly interested in political parties and party systems. Being able to say anything meaningful about political parties that can be generalised across a wide range of contexts requires studying parties in lots of different countries. But it turns out every country is a special snowflake and there's lots of details that make them unique, so finding the golden nuggets of generalisable insight required controlling for those differences. This is a good example of data that is structured in multiple levels, or hierarchies in this case. Political parties are nested in countries, and countries are nested in regions or continents. Depending on the the nature of the question being studied, you might have further hierarchies in the data, like party families that group parties across Europe, or you might have other types of grouping structures in the data that are not hierarchical, like electoral outcomes grouping by year.
+My first exposure to multilevel data came during my studies for a Political Science PhD. My primary field was comparative politics, and I was particularly interested in political parties and party systems. Being able to say anything meaningful about political parties that can be generalised across various contexts requires studying parties in many countries. But it turns out every country is a special snowflake, and many details make them unique, so finding the golden nuggets of generalisable insight required controlling for those differences and accounting for the multilevel structure of the data. Political parties are nested in countries, and countries are nested in regions or continents. Depending on the the nature of the question being studied, you might have further hierarchies in the data, like party families that group parties across Europe, or you might have other types of grouping structures in the data that are not hierarchical, like electoral outcomes grouping by year.
 
-Multilevel data can come in a variety of forms, but whenever you find clustering or groups in your data, this is a sign you're working with multilevel data. If you think that your data could be organised into groups for which observations within-group will be more similar to each other than they are to the rest of the observations, you should be thinking about the problems that arise from clustered data and how you might account for the grouping structures in your data. That doesn't necessarily have to mean a multilevel model, but multilevel models are certainly one of the best solutions.
+Multilevel data can come in various forms, but whenever you find clustering or groups in your data, this is a sign you're working with multilevel data. If you think that your data could be organised into groups for which observations within-group will be more similar to each other than they are to the rest of the observations, you should be thinking about the problems that arise from clustered data and how you might account for the grouping structures in your data. That doesn't necessarily have to mean a multilevel model, but multilevel models are certainly one of the best solutions.
 
-Clustering is not just a quirk that you occasionally observe in the real-world, though. It is extremely common to observe multilevel data, because it turns out that lots of things we might be interested in studying can be organised in all manner of groups. The prevalence of multilevel data in the real-world is so great that @mcelreath2017 argues that our starting assumption should be that any data has grouping structures that need to be accounted and that multilevel regression should be our default model. Whether or not you think this stance is too aggressive, I think Richard is absolutely right to point out how common multilevel data is. Once you've learned about multilevel data it's impossible to look at any data and not see it. It's everywhere. Which is why multilevel regression is such a useful addition to the data science toolbox.
-
-[^Comparative]:
-
-    The field you pick when you don't want to know anything about any particular country's politics and just want to interject with your annoying little opinions when any 
-    politics comes up.
+Clustering is not just a quirk you occasionally observe in the real world. Multilevel data is ubiquitous because many things we might be interested in studying can be organised into groups. Multilevel data in the real world is so widespread that @mcelreath2017 argues that our starting assumption should be that any data has grouping structures that need to be accounted for and that multilevel regression should be our default model. Once you've learned about multilevel data, looking at any data and not seeing it is impossible. It's everywhere.
 
 ### Models with Memory...
 
-The existence of clustering in your data complicates any attempts to model an outcome of interest at the population-level, making it necessary to split the population-level variance (the variance across all observations without accounting for grouping structure) into two components - within-group variance (variance across observations within the same group) and between-group variance (variance across groups). The between-group variance estimates how much groups differ from each other, on average, and tells us how much group-level factors influence the outcome, while the within-group variance, the remainder of the population-level variance after group differences have been accounted for, estimates how much observations differ from one another in a given group, telling us the population-level differences that are not explained by the group that observation belongs to.
+The existence of clustering in your data complicates any attempts to model an outcome of interest at the population level, making it necessary to split the population-level variance (the variance across all observations without accounting for grouping structure) into two components - within-group variance (variance across observations within the same group) and between-group variance (variance across groups). The between-group variance estimates how much groups differ from each other, on average, and tells us how much group-level factors influence the outcome. In contrast, the within-group variance, the remainder of the population-level variance after group differences have been accounted for, estimates how much observations differ in a given group, telling us the population-level differences not explained by the group that observation belongs to.
 
-I think the most intuitive way to understand how multilevel models work, at a conceptual level, is that put forward by Richard McElreath [-@mcelreath2023] in the multilevel models chapter of his Statistical Rethinking lectures[^Rethinking], which is embedded below. While the focus is on Bayesian methods, the early chapters of the video talk in general enough terms to apply to frequentist multilevel models too. 
+I think the most intuitive way to understand how multilevel models work, at a conceptual level, is that put forward by Richard McElreath [-@mcelreath2023] in the multilevel models chapter of his Statistical Rethinking lectures[^Rethinking] (embedded below). While the focus is on Bayesian methods, the early chapters of the video talk in general enough terms to apply to frequentist multilevel models, too. 
 
 {{< video https://youtu.be/iwVqiiXYeC4?si=YmR8plIeBkQ2ufi5 >}}
 
-@mcelreath2023 describes multilevel models as "models within models". You are not fitting multiple models at the same time, but it can be helpful to think about a multilevel model as bringing together the information that comes from models of the different levels at which variance exists. The population-level model (again, a "model" from a conceptual but not technical perspective) estimates population-level effects, much like a single-level model, while group-level sub-models estimate the group-specific deviations from the population-level effects. The population model serves as a jumping off point for each sub-model, and in this sense the population model gives what McElreath describes as "a kind of memory" when fitting the sub-models.
+@mcelreath2023 describes multilevel models as "models within models". You do not fit multiple models simultaneously, but it can be helpful to think about a multilevel model as bringing together the information from models of the different levels at which variance exists. The population-level model (again, a "model" from a conceptual but not technical perspective) estimates population-level effects, much like a single-level model. In contrast, group-level sub-models estimate the group-specific deviations from the population-level effects. The population model serves as a jumping-off point for each sub-model, and in this sense, the population model gives what McElreath describes as "a kind of memory" when fitting the sub-models.
 
 [^Rethinking]:
 
@@ -195,24 +180,19 @@ I think the most intuitive way to understand how multilevel models work, at a co
 
 #### ...Learn Faster 
 
-When dealing with clustered data, a single-level model that controls for the grouping structure in the data leaves information on the table by treating each group as entirely independent of each other[^Independence]. To continue to riff off McElreath's idea of model memory, a single-level model will forget everything it has learned, whenever it switches clusters [@mcelreath2017]. But clusters that are of the same type will have common features. For example, in a regression model that estimates how party members behave under certain conditions, party members will be clustered by the political party, and while every political party will be different, there will also be inherent similarities that are very useful to factor in to a model.
+When dealing with clustered data, a single-level model that controls for the grouping structure in the data leaves information on the table by treating each group as entirely independent of each other. To continue to riff off McElreath's idea of model memory, a single-level model will forget everything it has learned whenever it switches clusters [@mcelreath2017]. However, clusters of the same type will have common features. For example, in a regression model that estimates how party members behave under certain conditions, party members will be clustered by the political party. While every political party will be different, there will also be inherent similarities that are very useful to factor into a model.
 
-While single-level models leave a lot of information on the table, multilevel models retain information about other clusters by borrowing information from the overall population when estimating group-level effects, in a process called "partial pooling" (more on this in the following section). This process causes multilevel models to learn "faster" and more efficiently by leveraging information from across all groups when modelling group-level differences, and it allows multilevel models to reach stable point estimates with less data, because groups with smaller sample sizes can rely more heavily on the information borrowed from the population.
-
-[^Independence]:
-
-    As a reminder, a single-level model that doesn't account for grouping structure at all will not only leave a lot of information on the table by not considering the 
-    grouping structure as an explanatory variable, it will also violate the independence assumption. That's bad. Don't do that.
+While single-level models leave a lot of information on the table, multilevel models retain information about other clusters by borrowing information from the overall population when estimating group-level effects in a process called "partial pooling" (more on this in the following section). This process causes multilevel models to learn "faster" and more efficiently by leveraging information from across all groups when modelling group-level differences, and it allows multilevel models to reach stable point estimates with less data because groups with smaller sample sizes can rely more heavily on the information borrowed from the population.
 
 #### ...Resist Overfitting
 
 Partial pooling makes multilevel models both efficient and flexible, but in addition to this, shrinking group-level estimates towards the overall population mean serves as a form of regularisation[^Regularisation], striking a balance between underfitting[^Underfitting] and overfitting[^Overfitting].
 
-This balance is a natural consequence of partial pooling, which itself finds a compromise between complete and no pooling. Complete pooling models all observations together, not accounting for any group effects, and fits a single global estimate. This leads to underfitting because the model is not complex enough to effectively model the variation in the data, with between-group variance that is an important part of the data generating process but is being ignored. On the other hand, models with no pooling treat groups as independent of each other, fitting separate models for each group. No pooling leads to overfitting, particularly with groups that have limited data, because the model doesn't use information from other groups that might help stabilise estimates, and without that additional context the model is more likely to treat the group-level noise as signal.
+This balance is a natural consequence of partial pooling, which is itself a compromise between complete and no pooling. Complete pooling models all observations together, not accounting for group effects, and fits a single global estimate. Complete pooling leads to underfitting because the model is not complex enough to effectively model the variation in the data, with the between-group variance being an essential part of the data-generating process but being ignored. On the other hand, models with no pooling treat groups as independent of each other, fitting separate models for each group. No pooling leads to overfitting, particularly with groups with limited data, because the model doesn't use information from other groups that might help stabilise estimates. Without that additional context, the model will more likely treat the group-level noise as signal.
 
-The partial pooling process is an "adaptive compromise that achieves regularisation" [@mcelreath2023]. It balances the risks of underfitting and overfitting by pooling information across the groups, shrinking all group-level estimates towards the overall population mean. The amount of shrinkage depends on how large a group's sample is and how much variance there is in that group. Groups with less data or high variance will shrink towards the population mean more. This means that extreme group-level estimates are less likely unless the group has a large enough sample and small enough variance to make it justifiable.
+The partial pooling process is an "adaptive compromise that achieves regularisation" [@mcelreath2023]. It balances the risks of underfitting and overfitting by pooling information across the groups, shrinking all group-level estimates towards the overall population mean. The amount of shrinkage depends on how large a group's sample is and how much variance there is in that group. Groups with less data or high variance will shrink towards the population mean more, meaning extreme group-level estimates are less likely unless the group has a large enough sample and small enough variance to make it justifiable.
 
-While the motivation for moving away from single-level models when dealing with clustered data is the artificially small standard errors they will estimate, the reason to fall in love with multilevel models as the solution to clustered data is partial pooling. Partial pooling, which serves as a type of memory, makes multilevel models more efficient, faster, and less vulnerable to overfitting, and the consequence of all of this, is better point estimates. So clustered data is everywhere, and when dealing with clustered data a multilevel model will produce more realistic uncertainty estimates and more accurate point estimates. If you're not convinced by now you're a heathen.
+While the motivation for moving away from single-level models when dealing with clustered data is the artificially small standard errors they will estimate, the reason to fall in love with multilevel models as the solution to clustered data is partial pooling. Partial pooling, which serves as a type of memory, makes multilevel models more efficient, faster, and less vulnerable to overfitting, and the consequence of all of this is better point estimates. So, clustered data is everywhere, and when dealing with clustered data, a multilevel model will produce more realistic uncertainty estimates and more accurate point estimates. If you're not convinced by now, you're a heathen.
 
 [^Regularisation]:
 
@@ -230,13 +210,11 @@ While the motivation for moving away from single-level models when dealing with 
 
 ## The Role of Money in Football
 
-Having (hopefully) given you a decent overview of multilevel models conceptually, and demonstrated how much value they can add to so many problems, I suppose I should now make an effort to prove that the data we are using here is a good fit for a multilevel model.
+Let me shock you for a second: I believe football clubs with lots of money generally do better than those without. While I'm sure even readers who are not interested in football are well aware that money makes the goals go around, we don't know _exactly_ how much of an impact money can have on club outcomes. 
 
-Let me shock you, for a second: I believe that football clubs with lots of money generally do better than those without. While I'm sure even readers that are not interested in football are well aware that money makes the goals go round, I don't think we know _exactly_ how much of an impact money can have on club outcomes. 
+We will model the association between club resources and league outcomes, primarily focusing on total points but also considering goals and expected goals. Club resources will be captured using Transfermarkt squad values as a noisy proxy for the financial strength of a team. Squad values are imperfect, but they are justifiable. Values for each player are crowdsourced by the nerds that make up the Transfermarkt community, with the goal being that these values will be an approximation of what a player would cost on the open market. This process relies on the wisdom of the crowds [@transfermarkt2021]. 
 
-We will model the association between club resource and league outcomes, primarily focusing on total points, but also goals and expected goals. Club resources will be captured using Transfermarkt squad values as a noisy proxy for the financial strength of a team. This is imperfect, by all means, but I think it's justifiable. Values for each player are crowdsourced by the nerds that make up the Transfermarkt community, with the goal being that these values will be an approximation of what a player would cost on the open market. This process relies on the wisdom of the crowds [@transfermarkt2021]. 
-
-I think these values can be relied on to be a fine though imperfect estimate of a player's value in an open market (not a prediction of what they will actually sell for), and in this, a useful measure that can be leveraged here. The goal is to understand how a club's financial resources can impact their results on the pitch, and obviously the most important mechanism is investing in the squad (though there will be other factors - coaching and support staff, facilities, etc.). Build a better team, get better results! A reliable measure of squad value (and how it changes over time) should give some indication of how the club has invested in their team[^Spending], and this is what we're most interested in here.
+I think these values can be relied on to be a fine though imperfect estimate of a player's value in an open market (not a prediction of what they will actually sell for), and in this, a helpful measure that can be leveraged here. The goal is to understand how a club's financial resources can impact their results on the pitch. The most important mechanism is investing in the squad (though there will be other factors - coaching and support staff, facilities, etc.). Build a better team, get better results! A reliable measure of squad value (and how it changes over time) should give some indication of how the club has invested in their team[^Spending], and this is what we're most interested in here.
 
 [^Spending]: 
 
@@ -246,13 +224,13 @@ I think these values can be relied on to be a fine though imperfect estimate of 
 
 ### Exploring Football's Multilevel Data
 
-Football has some immediately obvious grouping structure. The promotion/relegation system explicitly organises teams hierarchically! I'm only looking at outcomes in the top divisions, but I am also looking at leagues in five different countries, which is going to be a source of some clustering in the data too. Since I am looking at outcomes over 12 seasons, the teams themselves will also be a huge source of clustering too, because inevitably certain teams will do more with their money than others and will regularly outperform others in the league.
+Football has some immediately apparent grouping structures. The promotion/relegation system explicitly organises teams hierarchically! I'm only looking at outcomes in the top divisions, but I am also looking at leagues in five different countries, which will also be a source of some clustering in the data. Since I am looking at outcomes over 12 seasons, the teams themselves will also be a considerable source of clustering because, inevitably, certain teams will do more with their money than others and regularly outperform others in the league.
 
 #### League Differences
 
-Not accounting for league differences would likely lead to Bayern Munich's dominance in the Bundesliga not being given enough weight and therefore the regression would undervalue the effect of financial resources. While Bayern are certainly one of the richest clubs in the world, there are plenty of teams across the big five leagues with at least comparable resources, and in the Premier League there are multiple teams with a lot more money. However, compared against the rest of the Bundesliga, Bayern have untold riches, and this has been a major contributing factor in their decade-long run of title-winning seasons. It is necessary to account for league effects, among other factors, to make sure details like this are not missed by the regression model.
+Not accounting for league differences will undervalue the resource advantage that teams like Bayern Munich, PSG, and Juventus have in their leagues while ignoring the significant riches of the Premier League. 
 
-This becomes more obvious when we plot the median squad market values in the big five leagues over time, as shown below. The massive resource advantage that the likes of Bayern Munich, Juventus, PSG, Real Madrid, and Barcelona hold over their league compatriots would potentially be masked by the huge amount of money in the Premier League. 
+These league differences become more apparent when we plot the median squad market values in the Big Five leagues over time.
 
 ```{r}
 #| label: value-by-league
@@ -279,11 +257,11 @@ club_resources |>
   theme(legend.key.width = unit(.8, units = "cm"))
 ```
 
-Plenty of Premier League teams have astronomical amounts of money when compared even against the rest of the big five leagues despite not coming close to mixing with the very richest teams in England. It's important to account for league differences so that those teams are being compared against their league competition, where their gigantic vault of gold is only a moderately-sized pot of gold. This disparity has only grown larger as time goes on. The Premier League really has far too much money.
+Plenty of Premier League teams have astronomical amounts of money when compared even against the rest of the big five leagues despite not coming close to mixing with the very richest teams in England. It's important to account for league differences so that those teams are being compared against their league competition, where their gigantic pot of gold is only a moderately sized pot of gold.
 
 #### Squad Values
 
-Of course, just being rich isn't enough. What do rich clubs do with all that money? Well, besides Manchester United, they spend it on good players! We should expect that, on average, rich teams will build squads that are more valuable, and that teams that are valued higher by Transfermarkt will be more successful in the league. The plot below visualises how our three outcomes (points, goal difference, and expected goals (xG) difference) vary by squad market value, all split by league.
+Just being rich isn't enough. What do rich clubs do with all that money? We expect rich teams to build more valuable squads and that teams valued higher by Transfermarkt will be more successful in the league. The plot below visualises how our three outcomes (points, goal difference, and expected goals (xG) difference) vary by squad market value, all split by league.
 
 ```{r}
 #| label: value-by-outcome
@@ -324,7 +302,7 @@ club_resources |>
     title = "Season Outcomes by Squad Value in the Top Five Leagues",
     x = "Squad Value", y = NULL,
     caption = 
-      "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+      "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
     ) +
   theme(
     panel.spacing.x = unit(.3, units = "cm"),
@@ -332,13 +310,13 @@ club_resources |>
     )
 ```
 
-It's clear that the value of a team's squad has a positive effect on all three outcomes, though that relationship is non-linear. It appears that increases in squad market value at the lower end of the range of values have a huge impact on each outcome but that this effect tails off, to varying degrees by outcome and league, as squad market value approaches the higher end of it's range. That sounds an awful lot like a logarithm function! The regression line fit to the data is done so using a log-transformed squad market value, and while it's not perfect, it does seem to do a reasonably good job of fitting the data, and it captures the apparent diminishing returns as squad market values get way out in front of the rest of the league.
+The value of a team's squad positively affects all three outcomes, though that relationship is non-linear. The regression line fit to the data is done using a log-transformed squad market value, and it does a reasonably good job of capturing the apparent diminishing returns as squad market values get way out in front of the rest of the league.
 
-It is also worth noting that while the relationship between squad value and the outcomes is similar across all five leagues, there is some variance, and this is most obvious up around the upper quartile of squad values for each league. The highest squad values are much larger in some leagues than others, as are the highest total values of each outcome (especially the league points, since these are constrained by a maximum number of points that any team could win, which varies by league). This illustrates how not accounting for league differences could bias a regression of market value's effects on league performance. 
+It is also worth noting that while the relationship between squad value and the outcomes is similar across all five leagues, there is some variance. This variance is most apparent at the top end of the value ranges. The highest squad values are much larger in some leagues than others, as are the highest total values of each outcome (especially the league points, since these are constrained by a maximum number of points that any team could win, which varies by league).
 
 #### Season Differences
 
-Finally, we can consider how these effects have changed over time, plotting the relationship between squad values and league points, split by time, below. The darker blue points are earlier seasons in the data and the lighter grey points are the most recent seasons[^Legend].
+Finally, we can consider how these effects have changed over time, plotting the relationship between squad values and league points, split by time, below. The darker blue points are earlier seasons in the data, and the lighter grey points are the most recent seasons[^Legend].
 
 ```{r}
 #| label: value-by-season
@@ -367,11 +345,11 @@ club_resources |>
     title = "League Points by Squad Value Over Time",
     x = "Squad Value", y = "League Points",
     caption = 
-      "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+      "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
     )
 ```
 
-There is a clear shift over time, with the earliest seasons seeing the greatest marginal gains in league points as squad values increase at the lower end of the values, and over time we see that curve flatten out a little. This is because, as more money is spent in the top five leagues each season, the gains you can get from those smaller increases in squad value are no longer there. It looks like teams are having to spend more to increase their points totals now, and the ceiling of squad values has increased with time too.
+There is a clear shift over time. Teams have to spend more to increase their points totals now, and the ceiling of squad values has also increased with time.
 
 [^Legend]:
 
@@ -381,11 +359,11 @@ There is a clear shift over time, with the earliest seasons seeing the greatest 
 
 ### Estimating Squad Value Effects
 
-The previous section highlights multiple grouping structures that need to be accounted for in the data, which is fortunate because I've already spent a lot of time talking about multilevel models here, and that would have been a real waste of time. This exploratory work also identified that squad values appear to have a non-linear relationship with the three outcomes. The other detail that we can see from the variation within and between groups across the range of squad values is that not only does the mean value vary by league, but also the magnitude of squad value's effect on the three outcomes varies. Multilevel models can handle both of these types of variation quite easily. When the mean difference is allowed to vary between groups this is a varying intercepts model, and allowing the magnitude of the effect to vary by group is called a varying slopes model. When your model allows both, it is a varying intercepts & slopes model[^MLMs], and this is the kind of model we will use here. Both the slope and intercept differences were relatively small, but this was only at the league level[^Null]. The biggest differences will occur at club-level, but this would have been a mess to visualise. 
+The previous section highlights multiple grouping structures that need to be accounted for in the data, which is fortunate because I've already spent a lot of time talking about multilevel models here, and that would have been a real waste of time. This exploratory work also identified that squad values appear to have a non-linear relationship with the three outcomes. The other detail that we can see from the variation within and between groups across the range of squad values is that not only does the mean value vary by league, but also the magnitude of squad value's effect on the three outcomes varies. Multilevel models can handle both of these types of variation quite easily. When the mean difference is allowed to vary between groups, this is a varying intercepts model, and allowing the magnitude of the effect to vary by group is called a varying slopes model. When your model allows both, it is a varying intercepts & slopes model, and this is the kind of model we will use here. We saw minor but clear differences at the league level[^Null], and we know that the most significant differences will occur at the club level (this just would have been a mess to visualise).
 
-The regression models fit to the three outcomes - league points, goal difference, and xG difference - all have the same basic structure. All three outcomes have been transformed to a "Per Game" value, in order to account for the shortened season in Ligue 1 during the COVID-19 pandemic. There are three population-level explanatory variables included in the model; squad value, club mean value, and time. Squad market value has been decomposed into two variables - group-mean centered squad value[^Centering], using clubs as the groups, and the club mean squad value, to effectively capture the within and between effects, respectively [@bafumi2007; @bell2019; @enders2007]. Both squad values variables have been log-transformed to account for the decreasing gains in league outcomes as squad values increase. An additional variable for time, a continuous variable with a minimum value of 0 (the 2012/13 season) and a maximum value of 11 (the 2023/24 season), is included. The time variable has been included to account for changes in the distribution of outcomes over time (for example increasing disparities in outcomes between the best and worst teams). The grouping structures include team nested in league and a separate crossed grouping variable for season[^Grouping]. 
+The regression models fit to the three outcomes - league points, goal difference, and xG difference - all have the same basic structure. All three outcomes have been transformed to a "Per Game" value in order to account for the shortened season in Ligue 1 during the COVID-19 pandemic. The model includes three population-level explanatory variables: squad value, club mean value, and time. Squad market value has been decomposed into two variables - group-mean centred squad value[^Centring], using clubs as the groups, and the club mean squad value, to effectively capture the within and between effects, respectively [@bafumi2007; @bell2019; @enders2007]. Both squad value variables have been log-transformed to account for the decreasing gains in league outcomes as squad values increase. An additional variable for time, a continuous variable indexed at 0 (2012/13) and with a maximum of 11 (2023/24), is included. The time variable has been included to account for changes in the distribution of outcomes over time (for example, increasing disparities in outcomes between the best and worst teams). The grouping structures include teams nested within their league and a separate crossed-grouping variable for each season[^Grouping]. 
 
-While the model intercepts are allowed to vary according to each of these grouping structures, the squad value slopes are specified to vary by the nested league/team grouping. This means that the magnitude of the effect squad values have on outcomes is allowed to vary by league and team. We could have allowed the squad value effects to vary by season as well, given that there did appear to be some flattening of the curve of squad values association with league points over time, however, the differences were small and allowing the intercepts to vary should be sufficient, without inviting unnecessary complexity. The season grouping structure, in contrast to the population-level time variable (which is intended to capture trends), mostly serves to capture the fact that outcomes are not independent of each other in a given season. There are a finite number of points in a season, so if Man City win them all, there's none left for anyone else. Similarly, if Man City score 1000 goals, everyone else's goal difference will be much worse. Finally, the model is specified with no covariance between the league/team intercepts and slopes, because there were some issues with singularity[^Singularity].
+While the model intercepts are allowed to vary according to each grouping structure, the squad value slopes are specified to vary by the nested league/team grouping. The varying slopes component means that the magnitude of squad values' effect on outcomes is allowed to vary by league and team. We could have allowed the squad value effects to vary by season as well, given that there did appear to be some flattening of the curve of squad values association with league points over time, however, the differences were minor and allowing the intercepts to vary should be sufficient, without inviting unnecessary complexity. In contrast to the population-level time variable (which is intended to capture trends), the season grouping structure mostly captures the fact that outcomes are not independent of each other in a given season. There are a finite number of points in a season, so if Man City win them all, there's none left for anyone else. Similarly, if Man City score 1000 goals, everyone else's goal difference will be much worse.
 
 ```{r}
 #| label: mlm-function
@@ -433,6 +411,7 @@ models <-
         .default = outcome
       )
   ) |>
+  filter(!is.na(value)) |> 
   tidyr::nest(.by = c(outcome)) |> 
   mutate(
     model = purrr::map(data, fit_mlms),
@@ -442,7 +421,7 @@ models <-
   )
 ```
 
-I've used a function that fits the same model across the three outcomes, and the models have been fit in a dataframe which is nested by outcome, using `purrr::map` (the code for both in the above code chunks). This avoids a little repetition and keeps the code nice and tidy. The regression results are below in @tbl-model-summary. 
+The regression results are below in @tbl-model-summary. 
 
 ```{r}
 #| label: tbl-model-summary
@@ -529,20 +508,9 @@ models |>
 ```
 
 
-The intercept values represent the average outcome value when squad value and club value are both at the mean average (when both variables equal zero) in the 2012/13 season (when time = 0).
+The intercept values represent the average outcome value when squad value and club value are both at the mean average (when both variables equal zero) in the 2012/13 season (when time = 0). As the squad value has been log-transformed, the coefficients aren't immediately interpretable besides the direction of the effect. A log-transformed explanatory variable that has been fit to a raw outcome is interpreted as every additional 1% increase in the squad value leads to an x/100 increase in the outcome, and in this case, multiplied by 38 to capture the estimated increase over an entire Premier League season (we will focus on 10% increases because they are more meaningful). Every 10% increase in squad value (~€24m) within a club leads to a ~1.4 increase in points in a season, a ~1.5 increase in xG difference, and a ~2.3 increase in goal difference. Every 10% increase in a club's average squad value (the value of their squad, on average, over the entire 12-season period) leads to a ~1.9 increase in points in a season, a ~2.1 increase in xG difference, and a ~2.9 increase in goal difference. Finally, in order to gain three points, a ~22.5% increase in squad value within a club or a ~16.5% increase in a club's average squad value is needed. These differences are relatively small, but they feel significant in a sport where small point differences can decide seasons, and clubs are willing to spend millions on just one player.
 
-As squad value has been log-transformed, the coefficients aren't immediately interpretable, besides the direction of the effect. A log-transformed explanatory variable that has been fit to a raw outcome is interpreted as every additional 1% increase in the squad value leads to a x/100 increase in the outcome, and in this case multiplied by 38 to capture the estimated increase over an entire Premier League season. Every 1% increase in squad value (which is an increase of ~€2.4m) within a club leads to a ~0.15 increase in points in a season, a ~0.16 increase in xG difference, and a ~0.24 increase in goal difference. Every 10% increase in squad value within a club leads to a ~1.4 increase in points in a season, a ~1.5 increase in xG difference, and a ~2.3 increase in goal difference. Every 1% increase in the club's average squad value (so the value of their squad, on average, over the entire 12-season period), is worth around ~0.2 additional points each season, a ~0.22 increase in xG difference, and a ~0.31 increase in goal difference. Every 10% increase in a club's average squad value leads to a ~1.9 increase in points in a season, a ~2.1 increase in xG difference, and a ~2.9 increase in goal difference. Finally, in order to gain three points, a ~22.5% increase in squad value within a club or a ~16.5% increase in a club's average squad value is needed. These differences are relatively small, but in a sport where an awful lot can be decided by such small point differences and clubs are willing to spend many millions on just one player, it feels pretty significant.
-
-The intercept variances indicate how much the outcome value varies around the grand-mean intercept, while the slope variances describe how group-level slopes vary around the grand-mean slope (this constitutes a cross-level interaction effect). For example, the 0.15 club slope variance suggests that the smartest teams can gain as much as ~0.06 points more (a total of ~0.2) per 1% increase in squad value in a 38-game season. The correlation between the intercepts and slopes is an indication of how much larger/smaller intercepts are associated with larger/smaller slopes [@heiss2021]. For example, the moderate 0.28 correlation between league-specific intercepts and slopes in the points model indicates that leagues where the average squad values are worth more points per game (a larger intercept) also see increases in squad values leading to greater increases in the points per game (a larger slope). I think this makes sense. When squad values are worth more points per game in a given league, you would expect that increasing squad values would be worth more too. 
-
-Interestingly, the correlations are positive for all but the xG difference intercepts and slopes, which are negative for both league and club-specific correlations. The -0.35 correlation between league intercepts and slopes suggests that in leagues where the average squad value is worth less xG difference than the grand-mean, there is actually more to be gained in xG difference by increasing the squad value. I'm having a difficult time figuring out what to make of that. It's interesting. I'm unclear whether it's more than that? Maybe I've just been looking at this regression table for too long now.
-
-[^MLMs]:
-
-    There are lots of different names for all these different types of models, just as there are lots of different names for multilevel models too. The names I'm using 
-    here definitely aren't the catchiest, but I think they are the most intuitive, and terminology that gives practitioners and readers no hint at what they mean is a 
-    common problem with multilevel models, so I'm going to stick with the intuitive option. For a brief overview of these different types of grouping structures, check 
-    out the [Multilevel Models Cheatsheet](https://paulrjohnson.net/blog/2022-11-01-multilevel-model-r-cheatsheet/) I put together a couple years ago. 
+The intercept variances indicate how much the outcome value varies around the grand-mean intercept, while the slope variances describe how group-level slopes vary around the grand-mean slope (this constitutes a cross-level interaction effect). For example, the 0.15 club slope variance suggests that the smartest teams can gain as much as ~0.06 points more (a total of ~0.2) per 1% increase in squad value in a 38-game season. Correlations between the intercepts and slopes indicate how more extensive intercepts lead to larger or smaller slopes (or vice versa) [@heiss2021]. For example, the moderate 0.28 correlation between league-specific intercepts and slopes in the points model indicates that leagues where the average squad values are worth more points per game also see increases in squad values, leading to greater increases in the points per game. I think this makes sense[^Correlations]. When squad values are worth more points per game in a given league, you would expect that increasing squad values would be worth more, too. 
 
 [^Null]:
 
@@ -551,7 +519,7 @@ Interestingly, the correlations are positive for all but the xG difference inter
     could easily get away with fitting a model only using the teams as the grouping structure, however, given that we know that these other levels exist and will naturally 
     constrain the outcomes, I think it makes sense to include them nonetheless.
 
-[^Centering]:
+[^Centring]:
 
     Group-mean centering takes the average value of the variable for each group at the relevant level (in this case clubs) and subtracts this value from the population 
     values, to "center" them around the group mean. In this instance, heterogeneity bias should be sufficiently negated by group-mean centering using the clubs, because 
@@ -566,22 +534,21 @@ Interestingly, the correlations are positive for all but the xG difference inter
     (and while teams can be relegate, the lower tiers are not included in this data). Grouping structures are crossed, on the other hand, when the lower level grouping is 
     not contained entirely within the higher level grouping. The lower level groups can belong to any of the higher level groups (and multiple groups) when they are crossed. 
     Seasons are crossed with leagues and teams because both can belong to every one of the seasons (and in the case of the leagues, they **do** belong to each season). 
-    
-[^Singularity]:
 
-    Singularity occurs when a component of the model's variance-covariance matrix is effectively zero, due to a very high multicollinearity or because the parameter is 
-    zero [@shaw2022]. In this case, it is likely due to the complexity of the model, with two nested grouping structures and a crossed grouping. The league grouping does
-    add something to the model, but it will definitely be contributing a lot of the same information that the team grouping does, and the model struggles to parse this. 
-    With more data I think this problem would be resolved, but collecting more data would be a nuisance at this point, and with a bit of investigation, this approach seems
-    both defensible and better than alternative model specifications.
+[^Correlations]:
+
+    Interestingly, the correlations are generally positive, but for xG difference, they are negative for both league and club-specific correlations. The -0.35 correlation 
+    between league intercepts and slopes suggests that in leagues where the average squad value is worth less xG difference than the grand mean, there is actually more to be 
+    gained in xG difference by increasing the squad value. I don't know what to make of this. It's interesting. Is it more than that? I've been looking at this regression 
+    table for too long now.
 
 ### Predicting League Points
 
-Translating the model parameters gives us a little bit more than we could have taken from the regression table on its own, but I'm not sure any of this tells us that much. It's difficult to frame a lot of this in any meaningful sense. I'm still not really sure what to make of the effect that club resources have. Instead, computing predictions using the fitted multilevel model will tell us more. I will focus on league points because I think that's a little more interesting than looking at goal or xG difference^[Watch the games, spreadsheet nerds!].
+I still don't know what to make of the effect that club resources have. The model parameters lack context. Computing predictions using the fitted multilevel model will tell us more. I will focus on league points because I think that's a little more interesting than looking at goal or xG difference[^Nerds].
 
 ![](arrested-development.jpg){fig-align="center" width=60%}
 
-We can start by computing conditional predicted league points by squad values, which predicts the points the average team in the average league would gain, and the season (and time) is held at 2023/24, so that the predictions are based on the most current data.
+We can start by looking at the predicted league points across all of the leagues by squad values over the last three seasons.
 
 ```{r}
 #| label: overall-preds
@@ -590,38 +557,30 @@ We can start by computing conditional predicted league points by squad values, w
 
 overall_preds <- 
   function(data) {
-    data |> 
-      plot_predictions(
-        by = c("double_mean_club", "demean_squad"), 
-        type = "response", re.form = NA,
-        draw = FALSE
-        )
-    
-    # predictions(
-    #   data,
-    #   re.form = NA,
-    #   newdata =
-    #     datagrid(
-    #       league = NA,
-    #       squad = NA,
-    #       time = 11, season = "2023/24",
-    #       grid_type = "counterfactual"
-    #       )
-    #   )
+    predictions(
+      data, re.form = NA,
+      variables = 
+        list("time" =  9:11, season = c("2021/22", "2022/23", "2023/24"))
+      # datagrid(
+      #   time = 11 season = NA
+      #   # squad = NA, league = NA,
+      #   # grid_type = "counterfactual"
+      #   )
+      )
   }
 
 models |>
-  filter(outcome == "Points") |> 
-  select(model) |> 
-  rowwise() |> 
-  mutate(preds = list(overall_preds(model))) |> 
+  filter(outcome == "Points") |>
+  select(model) |>
+  rowwise() |>
+  mutate(preds = list(overall_preds(model))) |>
   tidyr::unnest(preds) |>
   mutate(
     across(c(double_mean_club, demean_squad), ~ as.numeric(as.character(.x))),
     double_mean_club = double_mean_club + mean(log(club_resources$squad_value)),
     squad_value = exp(demean_squad + double_mean_club),
     across(c(estimate, conf.low, conf.high), ~ .x * 38)
-    ) |> 
+    ) |>
   ggplot(aes(squad_value, estimate)) +
   # geom_point(alpha = 0.2, size = 1.2) + 
   geom_smooth(
@@ -645,21 +604,20 @@ models |>
       subtitle =
       stringr::str_wrap(
         glue::glue(
-          "Marginal adjusted predicted league points, averaged over squad ",
-          "market values, across the big five European leagues from 2012/13 - 
-          2023/24."
+          "Conditional adjusted predicted league points by squad market values, ",
+          "across the big five European leagues from 2021/22 - 2023/24."
           ),
         width = 95
         ),
     x = "Squad Value", y = "Predicted Points",
     caption =
-      "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+      "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
     )
 ```
 
-The marginal gains for increases in squad value are the largest at the lower end of the values, appearing to start flattening out before the €250m point.
+The marginal gains for increases in squad value are the largest at the lower end of the values, appearing to start flattening out somewhere around the €200m point. There is a ton of value to be had in increasing squad value at the lower end of the leagues, but once a team pushes for 50+ points, further spending becomes less efficient.
 
-We can also compare how increases in squad value change the total predicted points for teams in each league. Here, we will use the conditional predictions, which calculate the effect of increases in squad values for an average team in each league (in the 2023/24 season), plotted below[^CIs]. I think it makes sense to use the marginal predictions when averaging across all leagues, because the "typical" team in the top five leagues feels a little too abstract, while averaging across all teams and leagues feels easier to understand. In this case, I think the typical team in each of the leagues is easily interpretable.
+We can also compare how increases in squad value increase predicted points conditional on the leagues. We will use marginal predictions, which calculate the effect of increases in squad values averaged within each league, plotted below.
 
 ```{r}
 #| label: league-preds
@@ -668,10 +626,19 @@ We can also compare how increases in squad value change the total predicted poin
 
 league_preds <- 
   function(data) {
-    data |> 
-      plot_predictions(
-        by = c("demean_squad", "double_mean_club", "league"),
-        draw = FALSE
+    # data |> 
+    #   plot_predictions(
+    #     by = c("demean_squad", "double_mean_club", "league"),
+    #     draw = FALSE
+    #   )
+    # 
+    predictions(
+      data,
+      by = c("demean_squad", "double_mean_club", "league"),
+      # datagrid(
+      #   time = 11, season = "2023/24",
+      #   grid_type = "counterfactual"
+      #   )
       )
     }
 
@@ -713,24 +680,23 @@ models |>
         ),
     x = "Squad Value", y = "Predicted Points",
     caption =
-      "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+      "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
     )
 ```
 
-The effects are broadly pretty similar, but the interesting details are in the margins. The Premier League intercept is quite a bit lower than the other four leagues, which is to be expected because the average value is much higher and therefore the base level required to win any points at all (and to even make it to the Premier League) is higher. It also appears that increases in squad values are less valuable at the lower end of the range, where there are quite sharp increases in the predicted points for the other four leagues (especially Serie A). However, while all five leagues see less and less gains in further increases in squad values as they reach the more expensive end, it looks like the other four leagues flatten out a little more (with the possible exception of Serie A), the Premier League appears to catch the others up. 
+The predicted points lines for each league are relatively similar, and it is easy to see how they are group intercepts and slopes varying around the grand mean (which is effectively what the previous plot is). However, there are some interesting details around the margins. The Premier League intercept is a little lower than the other four leagues, which is to be expected because the average value is much higher and, therefore, the base level required to win any points at all (and to even make it to the Premier League) is higher. Increases in squad values are less valuable at the lower end of the range, where there are pretty sharp increases in the predicted points for the other four leagues (especially Serie A). However, while all five leagues see less and less gains in further increases in squad values as they reach the more expensive end, it looks like the other four leagues flatten out a little more (with the possible exception of Serie A), the Premier League appears to catch the others up. 
 
-It's also worth noting that Ligue 1 and the Bundesliga have four fewer games per season, so the amount that can be gained in those leagues should flatten out a little more because there are fewer points available.
+It's also worth noting that Ligue 1 and the Bundesliga have four fewer games per season. The points per game have been multiplied by the number of games in each league season, so the amount that can be gained in those leagues should flatten out a little more because fewer points are available, which is reflected in the plot.
 
-[^CIs]: 
+[^Nerds]:
 
-    The prediction intervals haven't been included here because the standard errors are consistent across the leagues. There is no additional information to be gained, 
-    but you _can_ make a big mess by overlaying multiple intervals on top of each other like that.
+    Watch the games, spreadsheet nerds!
 
 #### Identifying Performance Above/Below Expectations
 
-All this is very interesting, but the real question is, "Which teams have wasted their money more than everyone else?"
+All this is very interesting, but the real question is, "Which teams can I use this to laugh at?"
 
-We can compute the predicted points for each team and compare these predictions against their actual points totals each season. Below, I've plotted the performance above/below expectations of the Premier League's "top six", from 2012/13 to 2023/24.
+We can compute the predicted points for each team and compare these predictions against their actual points totals each season. Below, I've plotted the performance above/below expectations of the Premier League's "top six" from 2012/13 to 2023/24.
 
 ```{r}
 #| label: top-six
@@ -790,85 +756,19 @@ models |>
       ),
     x = NULL, y = NULL,
     caption = 
-      "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+      "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
     )
 ```
 
-I think these results are, for the most part, aligned with what I would have expected. The obvious exception is Manchester United. In the early years, when Alex Ferguson was still around, they're still performing above expectations, but I would have expected to see them decline significantly since then, not just in terms of the expectations, but also performing significantly below expectations. In fact, United have spent much of this time as the poster child for performing below expectations for a team that spends so much money on their squad.
+These results are mostly aligned with what I would have expected (though Chelsea's early years are pretty chaotic). The exception is Manchester United. In the post-Fergie years, I would have expected to see them decline significantly and underperform the model predictions.
 
-I have also plotted the performances of four more teams which I have generously referred to as "challengers" (as in these teams have at points challenged the top six and experienced varying fortunes since)[^Saints].
-
-```{r}
-#| label: challengers
-#| fig-height: 7
-#| code-fold: true
-#| code-summary: 'Plot Code (Click to Expand)'
-
-models |>
-  filter(outcome == "Points") |> 
-  tidyr::unnest(c(data, preds)) |> 
-  mutate(
-    value = value * mp,
-    preds = round(preds * mp)
-    ) |>  
-  tidyr::pivot_longer(
-    cols = c(value, preds), names_to = "type", values_to = "points"
-    ) |> 
-  mutate(
-    type = 
-      case_when(
-        type == "value" ~ "Total Points",
-        type == "preds" ~ "Predicted Points",
-        .default = type
-      )
-    # season = stringr::str_sub(season, 3, -1)
-    ) |> 
-  filter(
-    squad %in% c(
-      "Brighton", "Everton", "Leicester City", "Southampton"
-      )
-    ) |>
-  ggplot(aes(season, points, group = type, linetype = type)) +
-  geom_smooth(
-    method = lm, formula = y ~ splines::ns(x, 3), 
-    linewidth = 0.5, se = FALSE, colour = "#343a40"
-    ) +
-  geom_point(aes(fill = type), shape = 21, size = 1.2, stroke = 1) +
-  guides(fill = guide_legend(override.aes = list(size = 2))) + 
-  scale_fill_manual(values = c("white", "#343a40")) +
-  scale_linetype_manual(values = c("dashed", "solid")) +
-  scale_x_discrete(
-    expand = c(0.05, 0.05),
-    #limits = club_resources$season,
-    breaks = c("2013/14", "2015/16", "2017/18", "2019/20", "2021/22", "2023/24")
-    ) +
-  facet_wrap(facets = vars(squad), nrow = 2, scales = "free_x") +
-  labs(
-    title = "Premier League Challengers' Performance Above/Below Expectations",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "Comparing Brighton, Everton, Leicester, Southampton's  total ",
-          "and predicted points in the Premier League from 2012/23 to 2023/24, ",
-          "conditional on each club's total market value and net spend per season."
-          ),
-        width = 95
-      ),
-    x = NULL, y = NULL,
-    caption = 
-      "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
-    )
-```
-
-We see a little more wild swings here, particularly in Leicester's case. Unsurprising as a team that won the Premier League despite barely surviving relegation the season before and then spending a few years challenging for Europe only to get themselves relegated a couple seasons ago with a team that shouldn't have been anywhere near the bottom three. Southampton and Everton have also experienced quite big swings, and big declines in recent seasons. Brighton, interestingly, haven't massively overperformed. 
-
-[^Saints]:
-
-    In reality I just wanted an excuse to add Southampton to this blog post.
+I think this highlights a flaw in the methodology used here, particularly around the operationalisation of "squad market values" as a proxy for the club's financial clout. A critical assumption underpinning the use of squad values in this model is that teams are approximately smart enough to spend their money on the best players they can afford. The intelligent teams will get the better deals, and the dummies will overspend, but the spending will at least appear reasonable enough to reflect in the value of the squad. Over and underperformance can then be assumed to represent the teams that have been smart versus those that have misspent (though, in reality, it will be a function of other factors, too). In Manchester United's case, they are not performing significantly above or below expectations based on their squad value, but this is likely due to the fact their squad building has been so poor that the Transfermarkt squad values don't capture the amount they've spent on new players because the valuations are so misaligned with the fees United paid.
 
 ##### The Biggest Over & Underperformers
 
-Lets wrap this up by sorting the penny wise from the (billion) pound foolish! Which teams have performed above or below expectations more than anyone else? @tbl-overperformers and @tbl-underperformers include the top three teams in each league in terms of overperformance and underperformance, calculating each team's total predicted points as a percentage above or below their total points, respectively. 
+Let's wrap this up by looking at the best and worst of the bunch, according to the model. Now we're really sorting the penny-wise from the (billion) pound foolish! 
+
+@tbl-overperformers and @tbl-underperformers include the top three teams in each league regarding overperformance and underperformance, calculating each team's total predicted points as a percentage above or below their total points, respectively. 
 
 ```{r}
 #| label: fun-tbl
@@ -941,13 +841,85 @@ performance_table(slice_min)
 
 :::
 
-The biggest overperformer across all five leagues is Union Berlin, after their incredible run two seasons ago that saw them finish in the top four not long after getting promoted to Germany's top flight. Cádiz, Girona, and Lens are Union's closest competitors (though none are that close). The race for Europe's biggest underperformer is a closer race, but that table is topped by Norwich City, followed by Sunderland, and Fulham, Deportivo de La Coruña, and Troyes are joint-third. 
+The biggest overperformers across all five leagues are Cádiz (18.8%), Union Berlin (17.96%), and Bastia (12.94%). Interestingly, there is a decent mix of teams in @tbl-overperformers. While the biggest overperformers have been promoted and defied the odds, the likes of Manchester City, Juventus, and Bayern Munich show a few different ways to overperform!
+
+On the other side, the biggest underperformers are a little less dramatic, with Troyes (-9.09%), Fulham (-8.43%), and Deportivo de La Coruña (-7.33%) edging out the competition to top the table. Unlike @tbl-overperformers, the vast majority of the teams in @tbl-underperformers are teams that are expected to struggle in the league but end up underperforming their already low expectations according to their squad values[^Underperformers]. The only exceptions are Valencia and Schalke, who both fell on hard times financially despite being big hitters in their respective leagues.
+
+And to round all this out, here is a plot of the best and worst of the bunch (though I've selected the two underperformers I found most interesting since it was so close).
+
+```{r}
+#| label: best-and-worst
+#| fig-height: 7
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+models |>
+  filter(outcome == "Points") |> 
+  tidyr::unnest(c(data, preds)) |> 
+  mutate(
+    value = value * mp,
+    preds = round(preds * mp)
+    ) |>  
+  tidyr::pivot_longer(
+    cols = c(value, preds), names_to = "type", values_to = "points"
+    ) |> 
+  mutate(
+    type = 
+      case_when(
+        type == "value" ~ "Total Points",
+        type == "preds" ~ "Predicted Points",
+        .default = type
+      )
+    # season = stringr::str_sub(season, 3, -1)
+    ) |> 
+  filter(
+    squad %in% c(
+      "Valencia", "Schalke", "Union Berlin", "Cádiz"
+      )
+    ) |>
+  ggplot(aes(season, points, group = type, linetype = type)) +
+  geom_smooth(
+    method = lm, formula = y ~ splines::ns(x, 3), 
+    linewidth = 0.5, se = FALSE, colour = "#343a40"
+    ) +
+  geom_point(aes(fill = type), shape = 21, size = 1.2, stroke = 1) +
+  guides(fill = guide_legend(override.aes = list(size = 2))) + 
+  scale_fill_manual(values = c("white", "#343a40")) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  scale_x_discrete(
+    expand = c(0.05, 0.05),
+    #limits = club_resources$season,
+    breaks = c("2013/14", "2015/16", "2017/18", "2019/20", "2021/22", "2023/24")
+    ) +
+  facet_wrap(facets = vars(squad), nrow = 2, scales = "free_x") +
+  labs(
+    title = "Europe's Best & Worst Performances Above/Below Expectations",
+    subtitle = 
+      stringr::str_wrap(
+        glue::glue(
+          "Comparing Cádiz, Schalke, Union Berlin, and Valencia's total and ",
+          "predicted points in their respective domestic league from 2012/23 ",
+          "to 2023/24, conditional on each club's total market value per season."
+          ),
+        width = 95
+      ),
+    x = NULL, y = NULL,
+    caption = 
+      "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
+    )
+```
+
+
+[^Underperformers]:
+
+    I also checked the numbers for the predicted xG differences and the same trend seems to apply, with the biggest overperformers being a bit of a mix and the 
+    underperformers being almost exclusively teams for whom the floor seems to have dropped out during the season.
 
 ## Wrapping Up
 
-I started this blog post unclear as to whether I was writing a multilevel regression tutorial using football data as the example, or an analysis of the money in football using a multilevel regression. I'm still not entirely sure which it is. Maybe this is a Choose Your Own Adventure blog post for nerds? Whichever adventure you chose, I hope you enjoyed it. And if you didn't, please don't write mean things about me on the Internet.
+I started this blog post wondering whether I was writing a multilevel regression tutorial using football data as an example or an analysis of the money in football using a multilevel regression. I still don't know which it is. Maybe this is a Choose Your Own Adventure blog post for nerds? Whichever adventure you chose, I hope you enjoyed it. And if you didn't, please don't write mean things about me on the Internet.
 
-In the interest of overpromising and underdelivering, I have the lofty goals of a follow-up blog post that recreates (and builds on) what I've done here using Bayesian methods. It remains to be seen if that idea takes me two years to get round to finishing, like this one.
+In the interest of overpromising and underdelivering, I have the lofty goals of a follow-up blog post that recreates some of this and potentially builds on it further, using Bayesian methods. I may build a Bayesian multilevel model that looks at changes in squad value from season to season. It remains to be seen if it will take me two years to finish like this one.
 
 ## Acknowledgments {.appendix}
 
