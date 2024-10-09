@@ -1,11 +1,11 @@
 ---
-title: Analysing the Effect of Money in Football Using Multilevel Regression
+title: Analysing Money's Effect on Football Using Multilevel Regression
 subtitle: |
   What if I told you that we can use statistics to laugh at the silly football 
   teams too?
 description-meta: |
   Developing a multilevel model to measure the effect of football (soccer) club 
-  resources on league points, goals, and expected goals in Europe's top five 
+  resources on league points, goals, and expected goals in Europe's big five 
   leagues.
 date: 2024-10-09
 image: money.webp
@@ -227,6 +227,14 @@ These league differences become more apparent when we plot the median squad mark
 
 ```{r}
 #| label: value-by-league
+#| fig-alt: |
+#|    A barplot visualising the median average Transfermarkt squad values per 
+#|    season in the Big Five leagues from 2012/13 to 2023/24. All five leagues 
+#|    are relatively equal, at a median squad value of around €100m, in the 
+#|    2012/13 season. While the median squad value increases significantly in 
+#|    every league during this period, the Premier League's growth dwarfs the 
+#|    other four leagues. By the 2023/24 season, the Premier League median squad 
+#|    value is around €500m, while the other four leagues are all around €200m.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -267,6 +275,14 @@ Just being rich isn't enough. What do rich clubs do with all that money? We expe
 ```{r}
 #| label: value-by-outcome
 #| fig-height: 7
+#| fig-alt: |
+#|    A regression plot visualising the association between squad market values 
+#|    and league outcomes. The data is subset by outcome (points, goal difference, 
+#|    and xG difference) and league, producing 15 plots fit. Each plot shows a 
+#|    positive association between squad values and outcomes. However, the 
+#|    association appears to be non-linear. The regression line fit to each subset 
+#|    of the data includes a log-transformed squad value as the predictor, which 
+#|    fits the data relatively well, though to varying degrees.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -330,6 +346,15 @@ Finally, we can consider how these effects have changed over time, plotting the 
 
 ```{r}
 #| label: value-by-season
+#| fig-alt: |
+#|    A regression plot visualising the association between squad market values 
+#|    and league points across the Big Five leagues in each season from 2012/13 
+#|    to 2023/24. The data is split by season, with a separate regression line 
+#|    fit to each season's data, including a log-transformed squad value as the 
+#|    predictor. While the association between squad value and points is positive 
+#|    throughout the period, the slopes appear to flatten with time, suggesting 
+#|    that increases in squad value are worth fewer league points in recent 
+#|    seasons than earlier in the data.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -563,14 +588,14 @@ The parameter estimates for the group-level variables quantify variance (except 
 
 I still don't know what to make of the effect that club resources have. The model parameters lack context. Computing predictions using the fitted multilevel model will tell us more. I will focus on league points because I think that's a little more interesting than looking at goal or xG difference[^Nerds].
 
-![](arrested-development.jpg){fig-align="center" width=60%}
+![](arrested-development.jpg){fig-align="center" width=60% fig-alt="The 'It's One Banana Michael' meme from Arrested Development, with Lucille Bluth saying 'I mean, it's one point, Michael? What could it cost? 100 million dollars?'"}
 
 We can start by looking at the predicted league points across all of the leagues by squad values over the last three seasons.
 
 ```{r}
-#| label: overall-preds
+#| label: overall-preds-function
 #| code-fold: true
-#| code-summary: 'Plot Code (Click to Expand)'
+#| code-summary: 'Helper Function Code (Click to Expand)'
 
 overall_preds <- 
   function(data) {
@@ -580,6 +605,22 @@ overall_preds <-
         list("time" =  9:11, season = c("2021/22", "2022/23", "2023/24"))
       )
   }
+```
+
+```{r}
+#| label: overall-preds
+#| fig-alt: |
+#|    A regression plot visualising the relationship between squad market values 
+#|    and the model's predicted points across the Big Five leagues in the last 
+#|    three seasons (2021/22 - 2023/24). The plot includes a fitted regression 
+#|    line and 95% confidence intervals, showing that increases in the lowest 
+#|    squad values lead to exponential gains in predicted points, with squad 
+#|    values up to around €200m leading to predicted points increasing from close 
+#|    to zero up to around 50 points. While further increases in squad value lead 
+#|    to higher predicted points totals, it takes squad values of over €750m to 
+#|    reach 75 points.
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
 
 models |>
   filter(outcome == "Points") |>
@@ -633,9 +674,9 @@ The marginal gains for increases in squad value are the largest at the lower end
 We can also compare how increases in squad value increase predicted points conditional on the leagues. We will use marginal predictions, which calculate the effect of increases in squad values averaged within each league, plotted below.
 
 ```{r}
-#| label: league-preds
+#| label: league-preds-function
 #| code-fold: true
-#| code-summary: 'Plot Code (Click to Expand)'
+#| code-summary: 'Helper Function Code (Click to Expand)'
 
 league_preds <- 
   function(data) {
@@ -644,6 +685,28 @@ league_preds <-
       by = c("demean_squad", "double_mean_club", "league"),
       )
     }
+```
+
+```{r}
+#| label: league-preds
+#| fig-alt: |
+#|    A regression plot visualising the relationship between squad market values 
+#|    and the model's predicted points in the Big Five leagues from 2012/13 - 
+#|    2023/24. The plot includes fitted regression lines for each league. The five 
+#|    regression lines are similar in shape. However, the Premier League slope is 
+#|    more gradual with a smaller intercept, suggesting that Premier League teams 
+#|    need more expensive squads to compete and increases in squad value are worth 
+#|    fewer points. The Premier League line also extends further on the x-axis 
+#|    because the most expensive squads in the Premier League are worth 
+#|    significantly more than the rest of the leagues. The intercepts for the 
+#|    other four leagues are very similar, but the Bundesliga and Ligue 1 tail off 
+#|    as squad value increases due to playing fewer games in a season and, 
+#|    therefore, having fewer available points that the increases in squad value 
+#|    could gain. Finally, La Liga and Serie A have similar slopes. The endpoint 
+#|    of the La Liga line is further along the x-axis due to the significantly 
+#|    larger Real Madrid and Barcelona squad values.
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
 
 models |>
   filter(outcome == "Points") |> 
@@ -704,6 +767,18 @@ Performances above/below the model's expectations for the Premier League's "top 
 ```{r}
 #| label: top-six
 #| fig-height: 9
+#| fig-alt: |
+#|    A time-series plot visualising Arsenal, Chelsea, Liverpool, Man City, Man 
+#|    United, and Spurs's total and predicted points each season from 2012/13 to 
+#|    2023/24, including a fitted line that visualises the trends in predicted 
+#|    and total points. Arsenal significantly underperformed expectations midway 
+#|    through the period but in recent seasons have experienced similarly 
+#|    significant overperformances, while Liverpool and Arsenal have consistently 
+#|    overperformed expectations recently. Manchester United and Tottenham have 
+#|    performed above expectations in earlier seasons but have otherwise met 
+#|    expectations. Finally, Chelsea have the largest swings, with massive 
+#|    overperformances in the early seasons and similarly significant 
+#|    underperformances in other seasons.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -750,9 +825,9 @@ models |>
     subtitle = 
       stringr::str_wrap(
         glue::glue(
-          "Comparing Arsenal, Chelsea, Liverpool, Man City, Man Utd, & Spurs' total ",
-          "and predicted points in the Premier League from 2012/23 to 2023/24, ",
-          "conditional on squad market values per season."
+          "Comparing Arsenal, Chelsea, Liverpool, Man City, Man Utd, & Spurs's ",
+          "total and predicted points in the Premier League from 2012/13 to ",
+          "2023/24, conditional on squad market values per season."
           ),
         width = 95
       ),
@@ -789,7 +864,7 @@ performance_table <-
         mp = sum(mp),
         avg_ppg = sum(value)/mp,
         pred_ppg = sum(preds)/mp,
-        pct_diff = ((avg_ppg / pred_ppg) - 1) * 100,
+        pct_diff = (avg_ppg / pred_ppg) - 1,
         .by = c(squad, league)
         ) |>
       min_max(order_by = pct_diff, n = 3, by = league) |>
@@ -798,13 +873,14 @@ performance_table <-
       cols_label(
         avg_ppg = "Average",
         pred_ppg = "Predicted",
-        pct_diff ~ "Over/Under (%)"
+        pct_diff ~ "Over/Under"
         ) |>
       tab_spanner(
         label = "Points Per Game",
         columns = c(avg_ppg, pred_ppg)
         ) |> 
       fmt_number(columns = c(avg_ppg, pred_ppg, pct_diff), decimals = 2) |> 
+      fmt_percent(columns = pct_diff)  |>  
       cols_align(align = "center", columns = c(avg_ppg, pred_ppg, pct_diff)) |>
       tab_style(
         style = cell_text(weight = "bold"),
@@ -849,6 +925,17 @@ The best and worst of the bunch are plotted below to illustrate what the largest
 ```{r}
 #| label: best-and-worst
 #| fig-height: 7
+#| fig-alt: |
+#|    A time-series plot visualising Cádiz, Schalke, Union Berlin, and Valencia's 
+#|    total and predicted points each season from 2012/13 to 2023/24, including a 
+#|    fitted line that visualises the trends in predicted and total points. Cádiz 
+#|    were promoted in 2020/21 and overperformed their predicted points every 
+#|    season until being relegated last season, while Union Berlin have had a 
+#|    similar experience, being promoted in 2019/20 and massively overperforming 
+#|    expectations until a signficant underperformance last season (though they 
+#|    avoided relegation). Schalke and Valencia, on the other hand, have 
+#|    consistently underperformed while also seeing a significant decline in 
+#|    their predicted points.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -895,7 +982,7 @@ models |>
       stringr::str_wrap(
         glue::glue(
           "Comparing Cádiz, Schalke, Union Berlin, and Valencia's total and ",
-          "predicted points in their respective leagues from 2012/23 to ",
+          "predicted points in their respective leagues from 2012/13 to ",
           "2023/24, conditional on squad market values per season."
           ),
         width = 95
