@@ -727,7 +727,9 @@ models |>
   geom_smooth(
     method = lm, formula = y ~ log(x), se = FALSE, alpha = .8, linewidth = 1
     ) +
-  scale_colour_manual(values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")) +
+  scale_colour_manual(
+    values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")
+    ) +
   scale_x_continuous(
     labels = 
       scales::label_number(scale_cut = scales::cut_short_scale(), prefix = "€")
