@@ -479,16 +479,16 @@ cm <-
     "demean_squad" = "Squad Value",
     "double_mean_club" = "Club Mean Value",
     "time" = "Time (Seasons)",
-    "SD (Intercept squadleague)" = "_Club_: Intercept Variance",
-    "SD (demean_squad squadleague)" = "_Club_: Slope Variance",
+    "SD (Intercept squadleague)" = "_Club_: Intercept Std. Dev.",
+    "SD (demean_squad squadleague)" = "_Club_: Slope Std. Dev.",
     "Cor (Intercept~demean_squad squadleague)" = 
       "_Club_: Intercept x Slope Correlation",
-    "SD (Intercept league)" = "_League_: Intercept Variance",
-    "SD (demean_squad league)" = "_League_: Slope Variance",
+    "SD (Intercept league)" = "_League_: Intercept Std. Dev.",
+    "SD (demean_squad league)" = "_League_: Slope Std. Dev.",
     "Cor (Intercept~demean_squad league)" = 
       "_League_: Intercept x Slope Correlation",
-    "SD (Intercept season)" = "_Season_: Intercept Variance",
-    "SD (Observations)" = "Residual Variance"
+    "SD (Intercept season)" = "_Season_: Intercept Std. Dev.",
+    "SD (Observations)" = "Residual Std. Dev."
   )
 
 models |> 
@@ -556,7 +556,7 @@ We can also calculate the percentage increase in a team's value that the model e
 
 These differences are relatively small, but they feel significant in a sport where small point differences can decide seasons, and clubs are willing to spend millions on just one player.
 
-The parameter estimates for the group-level variables quantify variance (except for the intercept-slope correlations), indicating how much the intercepts and slopes deviate from their grand means. For example, the 0.15 club slope variance suggests that the smartest teams can gain approximately 0.54 more points per 10% increase in squad value in a 38-game season. Additionally, the correlations between intercepts and slopes reveal how larger intercepts are associated with larger or smaller slopes (and vice versa) [@heiss2021]. For example, the moderate 0.28 correlation between league-specific intercepts and slopes in the points model indicates that leagues with higher average squad values yield more points per game, which in turn leads to greater increases in points per game with rising squad values. I think this makes sense. When squad values are worth more points per game in a given league, you would expect that increasing squad values would be worth more, too[^Correlations].
+The parameter estimates for the group-level variables (except for the intercept-slope correlations) indicate how much the intercepts and slopes deviate from their grand means. For example, the 0.15 club slope standard deviation (0.02 variance) suggests that the smartest teams can, on average, gain approximately 0.07 more points per 10% increase in squad value in a 38-game season. Additionally, the correlations between intercepts and slopes reveal how larger intercepts are associated with larger or smaller slopes (and vice versa) [@heiss2021]. For example, the moderate 0.28 correlation between league-specific intercepts and slopes in the points model indicates that leagues with higher average squad values yield more points per game, which in turn leads to greater increases in points per game with rising squad values. I think this makes sense. When squad values are worth more points per game in a given league, you would expect that increasing squad values would be worth more, too[^Correlations].
 
 [^Centring]:
 
