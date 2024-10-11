@@ -3,7 +3,7 @@ project:
   resources: _redirects
 
 website:
-  title: P(Johnson) > 0.05
+  title: Paul Johnson
   site-url: https://paulrjohnson.net
   description: A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
   favicon: assets/img/favicon/favicon.ico
@@ -17,6 +17,7 @@ website:
   comments: false
  
   navbar:
+    title: P(Johnson) > 0.05
     logo: assets/img/favicon/favicon.ico
     logo-alt: Purple Octopus
     tools:
@@ -58,7 +59,7 @@ format:
       - cosmo
       - assets/css/theme.scss
     highlight-style: assets/github-plus.theme
-    pagetitle: "{{< meta title >}} | Paul Johnson"
+    # pagetitle: "{{< meta title >}} | Paul Johnson"
     fig-align: center
     lightbox: true
     mermaid:

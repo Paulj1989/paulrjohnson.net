@@ -1,6 +1,5 @@
 ---
 title: Paul Johnson
-pagetitle: Paul Johnson
 subtitle: Using Causal Inference & Machine Learning to Confirm My Priors
 image: assets/img/paul/paul.webp
 image-alt: Me looking handsome as hell
