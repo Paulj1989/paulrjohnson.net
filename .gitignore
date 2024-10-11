@@ -55,3 +55,4 @@ rsconnect/
 _site/
 
 /.quarto/
+blog/2024-10-09-analysing-money-in-football/data/squad_values.csv

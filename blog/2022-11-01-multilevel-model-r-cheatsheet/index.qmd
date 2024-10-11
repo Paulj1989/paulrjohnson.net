@@ -8,12 +8,19 @@ description-meta: |
   model terminology, making this method more accessible to analysts interested 
   in modelling multilevel data.
 date: 2022-11-01
+date-modified: 2024-04-28
 image: hierarchy.webp
 image-alt: |
   A photograph of a glass ceiling inside a building, taken from directly beneath.
 categories: [Multilevel Regression, Statistics, R]
 eval: false
 ---
+
+::: {.callout-note}
+
+Some minor changes have been made to this blog post, cleaning up some unclear and confusing language/phrasing, and adding additional resources for learning about multilevel regression.
+
+:::
 
 Multilevel models (MLMs) are hard. Some part of the difficulty is due to the fact that multilevel data structures add an extra layer of complexity conceptually and mathematically, and therefore the appropriate model structure for this kind of data is also more complex. However, there's plenty about them that just seems needlessly hard.
 
@@ -27,7 +34,7 @@ I won't go into the details about fitting, interpreting, and validating multilev
 
 ## What are Multilevel Models?
 
-A common feature of many real-world questions that practitioners might study is that there are multiple "levels" around which the data is structured. A dataset may contain observations at a unit-level, with a higher-level variable that specifies a group that those observations belong to (for example, patients being treated by a certain doctor or in a certain hospital, or political parties operating in different countries). @fig-multilevel-data below is a visual representation of how multilevel data might be structured.
+A common feature of many real-world questions that practitioners might study is that there are multiple "levels" around which the data is structured. A dataset may contain observations at a population-level, with a higher-level variable that specifies a group that those observations belong to (for example, patients being treated by a certain doctor or in a certain hospital, or political parties operating in different countries). @fig-multilevel-data below is a visual representation of how multilevel data might be structured.
 
 ```{mermaid}
 %%| label: fig-multilevel-data
@@ -263,6 +270,9 @@ Given how complex things can get with MLMs, this cheatsheet is obviously only sc
 -   [Gelman & Hill - Data Analysis Using Regression and Multilevel/Hierarchical Models](http://www.stat.columbia.edu/~gelman/arm/)
 -   [Gelman et al. - Applied Regression and Multilevel Models](http://www.stat.columbia.edu/~gelman/armm/)[^armm]
 -   [**brms** Vignettes](https://paul-buerkner.github.io/brms/articles/index.html)
+-   [Heiss - A Guide to Working with Country-Year Panel Data and Bayesian Multilevel Models](https://www.andrewheiss.com/blog/2021/12/01/multilevel-models-panel-data-guide/)
+-   [Clark - Mixed Models with R](https://m-clark.github.io/mixed-models-with-R)
+-   [Magnusson - Using R and lme/lmer to Fit Different Two- and Three-Level Longitudinal Models](https://rpsychologist.com/r-guide-longitudinal-lme-lmer)
 
 [^armm]: ARMM hasn't been published (released?) yet, but it is billed as the updated and expanded second edition of Gelman & Hill's book. It's worth keeping an eye out for when this is released, because I'm sure it will be an excellent resource.
 
