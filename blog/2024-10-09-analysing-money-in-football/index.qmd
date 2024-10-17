@@ -489,62 +489,44 @@ cm <-
     "SD (Observations)" = "Residual Std. Dev."
   )
 
+gm <- 
+  list(
+    list("raw" = "nobs", "clean" = "Num.Obs", "fmt" = 0),
+    list("raw" = "r2.marginal", "clean" = "R<sup>2</sup> Marginal", "fmt" = 2),
+    list("raw" = "r2.conditional", "clean" = "R<sup>2</sup> Conditional", "fmt" = 2),
+    list("raw" = "icc", "clean" = "ICC", "fmt" = 2),
+    list("raw" = "rmse", "clean" = "RMSE", "fmt" = 2)
+    )
+
 models |> 
   pull(model, name = outcome) |>
   modelsummary::msummary(
-    statistic = 'conf.int', gof_omit = "AIC|BIC", coef_map = cm, 
-    fmt = 2, output = "gt"
+    statistic = 'conf.int', gof_map = gm, coef_map = cm, fmt = 2, output = "gt"
     ) |> 
-  tab_row_group(
-    label = md("**Group Effects**"),
-    rows = 9:14
-  ) |>
-  tab_row_group(
-    label = md("**Population-Level Effects**"),
-    rows = 1:8
-  ) |> 
+  tab_row_group(label = md("**Group Effects**"), rows = 9:14) |>
+  tab_row_group(label = md("**Population-Level Effects**"), rows = 1:8) |> 
   tab_footnote(
-    footnote =
-      "Integers 0-11 (2012/13 = 0; 2022/23 = 11)",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = 7
-      )
-  ) |> 
+    footnote = "Integers 0-11 (2012/13 = 0; 2022/23 = 11)",
+    locations = cells_body(columns = 1, rows = 7)
+    ) |> 
   tab_footnote(
     footnote = "Log-transformed",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = c(3, 5)
-      )
+    locations = cells_body(columns = 1, rows = c(3, 5))
     ) |>
   tab_footnote(
     footnote = "Group mean centred",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = 3
-      )
+    locations = cells_body(columns = 1, rows = 3)
     ) |> 
   tab_footnote(
     footnote = "Grand mean centred",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = 5
-      )
+    locations = cells_body(columns = 1, rows = 5)
     ) |> 
   tab_spanner(columns = 2:4, label = "Outcomes (Per Game)") |> 
-  fmt_markdown(columns = 1, rows = 9:14) |> 
+  fmt_markdown(columns = 1, rows = 9:17) |> 
   tab_style(
     style = cell_text(size = "small"),
-    locations = cells_body(
-      columns = 2:4,
-      rows = c(2, 4, 6, 8)
-    )
-  ) |>
+    locations = cells_body(columns = 2:4, rows = c(2, 4, 6, 8))
+    ) |>
   tbl_theme()
 ```
 
