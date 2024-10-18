@@ -184,6 +184,8 @@ When dealing with clustered data, a single-level model that controls for the gro
 
 While single-level models leave a lot of information on the table, multilevel models retain information about other clusters by borrowing information from the overall population when estimating group-level effects in a process called "partial pooling" (more on this in the following section). This process causes multilevel models to learn "faster" and more efficiently by leveraging information from across all groups when modelling group-level differences, and it allows multilevel models to reach stable point estimates with less data because groups with smaller sample sizes can rely more heavily on the information borrowed from the population.
 
+All this said, where no obvious clustering is observed in the data, a simpler model can be justified. Where you are not interested in quantifying the clustering effects and just want to account for them to avoid violating the independence assumption, a simpler model with robust standard errors can get you a lot of the way there.
+
 #### ...Resist Overfitting
 
 Partial pooling makes multilevel models both efficient and flexible, but in addition to this, shrinking group-level estimates towards the overall population mean serves as a form of regularisation[^Regularisation], striking a balance between underfitting[^Underfitting] and overfitting[^Overfitting].
@@ -481,82 +483,60 @@ cm <-
     "time" = "Time (Seasons)",
     "SD (Intercept squadleague)" = "_Club_: Intercept Std. Dev.",
     "SD (demean_squad squadleague)" = "_Club_: Slope Std. Dev.",
-    "Cor (Intercept~demean_squad squadleague)" = 
-      "_Club_: Intercept x Slope Correlation",
     "SD (Intercept league)" = "_League_: Intercept Std. Dev.",
     "SD (demean_squad league)" = "_League_: Slope Std. Dev.",
-    "Cor (Intercept~demean_squad league)" = 
-      "_League_: Intercept x Slope Correlation",
     "SD (Intercept season)" = "_Season_: Intercept Std. Dev.",
     "SD (Observations)" = "Residual Std. Dev."
   )
 
+gm <- 
+  list(
+    list("raw" = "nobs", "clean" = "Num.Obs", "fmt" = 0),
+    list("raw" = "r2.marginal", "clean" = "R<sup>2</sup> Marginal", "fmt" = 2),
+    list("raw" = "r2.conditional", "clean" = "R<sup>2</sup> Conditional", "fmt" = 2),
+    list("raw" = "icc", "clean" = "ICC", "fmt" = 2),
+    list("raw" = "rmse", "clean" = "RMSE", "fmt" = 2)
+    )
+
 models |> 
   pull(model, name = outcome) |>
   modelsummary::msummary(
-    statistic = 'conf.int', gof_omit = "AIC|BIC", coef_map = cm, 
-    fmt = 2, output = "gt"
+    statistic = 'conf.int', gof_map = gm, coef_map = cm, fmt = 2, output = "gt"
     ) |> 
-  tab_row_group(
-    label = md("**Group Effects**"),
-    rows = 9:16
-  ) |>
-  tab_row_group(
-    label = md("**Population-Level Effects**"),
-    rows = 1:8
-  ) |> 
+  tab_row_group(label = md("**Group Effects**"), rows = 9:14) |>
+  tab_row_group(label = md("**Population-Level Effects**"), rows = 1:8) |> 
   tab_footnote(
-    footnote =
-      "Integers 0-11 (2012/13 = 0; 2022/23 = 11)",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = 7
-      )
-  ) |> 
+    footnote = "Integers 0-11 (2012/13 = 0; 2022/23 = 11)",
+    locations = cells_body(columns = 1, rows = 7)
+    ) |> 
   tab_footnote(
     footnote = "Log-transformed",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = c(3, 5)
-      )
+    locations = cells_body(columns = 1, rows = c(3, 5))
     ) |>
   tab_footnote(
     footnote = "Group mean centred",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = 3
-      )
+    locations = cells_body(columns = 1, rows = 3)
     ) |> 
   tab_footnote(
     footnote = "Grand mean centred",
-    locations =
-      cells_body(
-        columns = 1,
-        rows = 5
-      )
+    locations = cells_body(columns = 1, rows = 5)
     ) |> 
   tab_spanner(columns = 2:4, label = "Outcomes (Per Game)") |> 
-  fmt_markdown(columns = 1, rows = 9:16) |> 
+  fmt_markdown(columns = 1, rows = 9:17) |> 
   tab_style(
     style = cell_text(size = "small"),
-    locations = cells_body(
-      columns = 2:4,
-      rows = c(2, 4, 6, 8)
-    )
-  ) |>
+    locations = cells_body(columns = 2:4, rows = c(2, 4, 6, 8))
+    ) |>
   tbl_theme()
 ```
 
-Log-transformed coefficients are not directly interpretable beyond the direction of the effect. However, by transforming the coefficient $\beta_1$ with the formula $38 \times \beta_1 \times \text{log}(1.10)$, we can estimate the average increase in the outcome over a 38-game season for every additional 10% increase in squad value (~€24m)[^Scale]. Every 10% increase in squad value results in an approximate increase of 1.4 points in a 38-game season, 1.5 in xG difference, and 2.3 in goal difference, while a 10% increase in a club's average squad value over the 12-season period leads to an estimated increase of 1.9 points in a 38-game season, 2.1 in xG difference, and 2.9 in goal difference.
+Log-transformed coefficients are not directly interpretable beyond the direction of the effect. However, by transforming the coefficient $\beta_1$ with the formula $38 \times \beta_1 \times \text{log}(1.10)$, we can estimate the average increase in the outcome over a 38-game season for every additional 10% increase in squad value (~€24m)[^Scale]. Every 10% increase in squad value results in an approximate increase of 1.4 points in a 38-game season, 1.5 in xG difference, and 2.3 in goal difference, while a 10% increase in a club's average squad value over the 12-season period leads to an estimated increase of 1.9 points in a 38-game season, 2.1 in xG difference, and 2.9 in goal difference[^Net].
 
 We can also calculate the percentage increase in a team's value that the model estimates will lead to three additional points in a 38-game season, using the formula $\left(e^{\frac{3}{38 \times \beta_1}} - 1\right) \times 100$. The model estimates that a ~22.4% increase in squad value leads to a three-point increase in a season, while a ~16.4% increase in a club's average squad value should be sufficient to achieve the same result a given season.
 
-These differences are relatively small, but they feel significant in a sport where small point differences can decide seasons, and clubs are willing to spend millions on just one player.
+The parameter estimates for the group-level variables indicate how much the intercepts and slopes deviate from their grand means[^Variance]. For example, the 0.15 club slope standard deviation (0.02 variance) suggests that the smartest teams can, on average, gain approximately 0.07 more points per 10% increase in squad value in a 38-game season.
 
-The parameter estimates for the group-level variables (except for the intercept-slope correlations) indicate how much the intercepts and slopes deviate from their grand means. For example, the 0.15 club slope standard deviation (0.02 variance) suggests that the smartest teams can, on average, gain approximately 0.07 more points per 10% increase in squad value in a 38-game season. Additionally, the correlations between intercepts and slopes reveal how larger intercepts are associated with larger or smaller slopes (and vice versa) [@heiss2021]. For example, the moderate 0.28 correlation between league-specific intercepts and slopes in the points model indicates that leagues with higher average squad values yield more points per game, which in turn leads to greater increases in points per game with rising squad values. I think this makes sense. When squad values are worth more points per game in a given league, you would expect that increasing squad values would be worth more, too[^Correlations].
+These differences are relatively small, but they feel significant in a sport where small point differences can decide seasons, and clubs are willing to spend millions on just one player.
 
 [^Centring]:
 
@@ -577,12 +557,15 @@ The parameter estimates for the group-level variables (except for the intercept-
 [^Scale]:
 
     I have chosen to use 10% increases in squad values because this seems more meaningful than 1% increases (~€2.4m). 
+    
+[^Net]:
 
-[^Correlations]:
+    It's worth noting that this is net spending, so what matters is how much more the new players are worth than those that were sold.
 
-    Interestingly, the intercept-slope correlations for xG difference are negative for both the league and club levels. The -0.35 correlation between league intercepts and 
-    slopes suggests that in leagues where the average squad value is worth less than the grand mean xG difference, more can be gained by increasing the squad value. I don't 
-    know what to make of this. It's interesting. Is it more than that? I've been looking at this regression table for too long now.
+[^Variance]:
+
+    The club-specific intercept and slope standard deviations are smaller because the squad values are centred around club-specific group means. League-specific parameters
+    should be expected to vary more than club-specific anyway, since the league-specific parameters are a combination of multiple clubs.
 
 ### Predicting League Points
 

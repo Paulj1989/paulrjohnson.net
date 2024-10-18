@@ -2,8 +2,8 @@
 title: Blog Posts
 author: ""
 description: |
-  This is my blog, where I share the many stupid things I've done so you don't 
-  have to tread the same sorry path.<br><br>[Subscribe via RSS](/blog/index.xml)
+  This is my blog. These are the many stupid things I've done so you don't have 
+  to tread the same sorry path.<br><br>[Subscribe via RSS](/blog/index.xml)
 description-meta: |
   Blog posts chronicling my data science journey through statistics, machine 
   learning, and programming in R & Python, sharing tips and tricks to help others 
