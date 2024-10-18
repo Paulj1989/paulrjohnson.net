@@ -491,7 +491,7 @@ cm <-
 
 gm <- 
   list(
-    list("raw" = "nobs", "clean" = "Num.Obs", "fmt" = 0),
+    list("raw" = "nobs", "clean" = "Num. Obs", "fmt" = 0),
     list("raw" = "r2.marginal", "clean" = "R<sup>2</sup> Marginal", "fmt" = 2),
     list("raw" = "r2.conditional", "clean" = "R<sup>2</sup> Conditional", "fmt" = 2),
     list("raw" = "icc", "clean" = "ICC", "fmt" = 2),
