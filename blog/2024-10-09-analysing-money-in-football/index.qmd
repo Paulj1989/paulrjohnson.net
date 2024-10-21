@@ -5,7 +5,7 @@ subtitle: |
   teams too?
 description-meta: |
   Developing a multilevel model to measure the effect of football (soccer) club 
-  resources on league points, goals, and expected goals in Europe's big five 
+  resources on league points, goals, and expected goals in Europe's Big Five 
   leagues.
 date: 2024-10-09
 image: money.webp
@@ -122,7 +122,7 @@ Building a brand is essential in many professional fields. When we finally decid
 
 No. That won't do. Building a brand around One Neat Trick is much easier. My One Neat Trick is multilevel models. I recommend them for most problems, usually long before I'm sure they are necessary. I assume that most problems will eventually reveal some multilevel data that justifies using a multilevel model. Once you've convinced yourself that this particular hammer _does_ turn everything into a nail, it's hard to roll that back. I'm fortunate that, in this case, I'm not far from the truth. It's good that I didn't pick Tobit regression[^Tobits]. 
 
-So when I was inspired to take a deeper look at the effect that financial resources have on outcomes in football because a [tweet](https://x.com/SBienkowski/status/1561464135279329280) had me mad on the Internet[^Tweet], I assumed it was probably going to be a multilevel model. I'm interested in understanding how much money impacts football and whether it all comes down to spending your way to the top. I have leveraged Transfermarkt's squad values as a proxy for a club's financial powers and used outcomes in Europe's big five leagues from 2012/13 to 2023/24 to estimate the effects of resources on league performance. The results suggest that having money is good and that teams with lots of money tend to be better at football (breathtaking insight); there's some relatively interesting nuance in there, too, so this blog post wasn't a complete waste of time. 
+So when I was inspired to take a deeper look at the effect that financial resources have on outcomes in football because a [tweet](https://x.com/SBienkowski/status/1561464135279329280) had me mad on the Internet[^Tweet], I assumed it was probably going to be a multilevel model. I'm interested in understanding how much money impacts football and whether it all comes down to spending your way to the top. I have leveraged Transfermarkt's squad values as a proxy for a club's financial powers and used outcomes in Europe's Big Five leagues from 2012/13 to 2023/24 to estimate the effects of resources on league performance. The results suggest that having money is good and that teams with lots of money tend to be better at football (breathtaking insight); there's some relatively interesting nuance in there, too, so this blog post wasn't a complete waste of time. 
 
 I'm still unsure if this blog post is more about multilevel regression or the money in football, but the beauty of running your own silly little blog is that you can write posts that meander aimlessly. If someone has the misfortune to read this, that's on them.
 
@@ -268,7 +268,7 @@ club_resources |>
   theme(legend.key.width = unit(.8, units = "cm"))
 ```
 
-Plenty of Premier League teams have astronomical amounts of money when compared even against the rest of the big five leagues despite not coming close to mixing with the very richest teams in England. It's important to account for league differences so that those teams are being compared against their league competition, where their gigantic pot of gold is only a moderately sized pot of gold.
+Plenty of Premier League teams have astronomical amounts of money when compared even against the rest of the Big Five leagues despite not coming close to mixing with the very richest teams in England. It's important to account for league differences so that those teams are being compared against their league competition, where their gigantic pot of gold is only a moderately sized pot of gold.
 
 #### Squad Values
 
