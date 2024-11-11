@@ -1,0 +1,309 @@
+---
+title: Building a Bayesian Multilevel Model to Understand the Money in Football
+subtitle: |
+  It's like the old model but it's fancier!
+description-meta: |
+  Developing a Bayesian multilevel model to measure the effect of football (soccer) 
+  club resources on league points, goals, and expected goals in Europe's big five 
+  leagues.
+date: 2024-11-10
+image: money.webp
+image-alt: |
+  A photograph of many €100 bank notes layered on top of each other.
+categories: [Multilevel Regression, Statistics, R]
+bibliography: references.bib
+draft: true
+draft-mode: gone
+execute:
+  eval: false
+---
+
+```{r}
+#| label: setup
+#| output: false
+#| code-fold: true
+#| code-summary: 'Setup Code (Click to Expand)'
+
+# import packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(brms)
+  library(gt)
+  library(ggplot2)
+  library(patchwork)
+  library(marginaleffects)
+})
+
+# setup fonts
+sysfonts::font_add_google("Poppins")
+sysfonts::font_add_google("Lora")
+showtext::showtext_auto()
+
+# set plot theme
+# inspired by https://github.com/z3tt/TidyTuesday/blob/main/R/2020_31_PalmerPenguins.Rmd
+theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
+  theme_update(
+    panel.grid.major = element_line(color = "grey90", linewidth = .4),
+    panel.grid.minor = element_blank(),
+    panel.spacing.x = unit(.65, units = "cm"),
+    panel.spacing.y = unit(.3, units = "cm"),
+    axis.title.x = element_text(
+      color = "grey30", margin = margin(t = 5), size = rel(1.05)
+      ),
+    axis.title.y = element_text(
+      color = "grey30", margin = margin(r = 5), size = rel(1.05)
+      ),
+    axis.text = element_text(color = "grey50", size = rel(1)),
+    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75),
+    axis.ticks = element_line(color = "grey90", linewidth = .4),
+    axis.ticks.length = unit(.2, "lines"),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = rel(.9)),
+    legend.box.margin = margin(0, 0, -10, 0),
+    legend.key.width = unit(1, units = "cm"),
+    plot.title = element_text(
+      hjust = 0, color = "black", family = "Lora",
+      size = rel(1.5), margin = margin(t = 5, b = 5)
+    ),
+    plot.subtitle = element_text(
+      hjust = 0, color = "grey30", family = "Lora",
+      lineheight = 0.5, size = rel(1.1), 
+      margin = margin(5, 0, 5, 0)
+    ),
+    plot.title.position = "plot",
+    plot.caption = element_text(
+      color = "grey50", size = rel(0.8), hjust = 1,
+      margin = margin(10, 0, 0, 0)
+    ),
+    plot.caption.position = "plot",
+    plot.margin = margin(rep(10, 4)),
+    strip.text = element_text(size = rel(1), margin = margin(0, 0, 5, 0)),
+    strip.clip = "off"
+  )
+
+# set table theme
+tbl_theme <-
+  function(data, width = 100, alignment = "center") {
+    data |>
+      tab_source_note(
+        source_note = "Source: FBref & Transfermarkt Via {worldfootballR}"
+        ) |>
+      tab_options(
+        footnotes.marks = "standard",
+        footnotes.spec_ref = "^xb", 
+        footnotes.spec_ftr = "(x)",
+        table.width = pct(width), 
+        table.align = alignment,
+        table.font.names = "Poppins"
+        ) |> 
+      tab_style(
+        style = cell_text(align = "left"),
+        locations = list(cells_source_notes(), cells_footnotes())
+        )
+  }
+
+# load data
+club_resources <- 
+  readr::read_rds(
+    here::here(
+      "blog", "2024-building-bayesian-models", 
+      "data", "club_resources.rds"
+      )
+  )
+```
+
+```{css}
+#| label: rm-striping 
+#| echo: false
+
+.rm-striping .gt_table tr.odd {
+  --bs-table-striped-bg: transparent;
+}
+```
+
+Previously built a frequentist multilevel model that estimated the effect that squad values have on league outcomes (points, goal difference, xG difference).
+
+Here I will attempt to replicate this using Bayesian methods instead, before expanding on what was done to model the change in squad values.
+
+
+Will start by building a slightly simpler model so that I can play around with setting the priors without getting bogged down with the 18 different priors the full model will need. I can iteratively build on this.
+
+To be clear, this is me stepping out of my comfort zone somewhat. Usually I spend a lot of time reading through the existing literature on the methods I'm using and try to make sure I am well-versed in what I am doing. In the case of something like the previous frequentist MLM, I was already working with a method that I am very familiar with. I can't claim that everything I do is perfect, but I am usually reasonably confident I've done a decent job! In this case, I'm definitely an aspiring Bayesian, but I haven't fit a Bayesian multilevel model using real-world data before. I have done the work I usually would to check my work, but I'm definitely learning. If there is any mistakes here, my apologies (and if you spot any, please let me know).
+
+```{r}
+test_data <- 
+  club_resources |>
+  mutate(
+    squad_value = log(squad_value),
+    mean_club = mean(squad_value),
+    demean_squad = squad_value - mean_club,
+    .by = squad
+  ) |> 
+  tidyr::pivot_longer(
+    cols = c(pts, xgd, gd),
+    names_to = "outcome",
+    values_to = "value"
+  ) |>
+  mutate(
+    double_mean_club = mean_club - mean(squad_value),
+    value = value/mp,
+    time = as.numeric(season) - 1,
+    outcome =
+      case_when(
+        outcome == "pts" ~ "Points",
+        outcome == "gd" ~ "Goal Difference",
+        outcome == "xgd" ~ "xG Difference",
+        .default = outcome
+      )
+  ) |>
+  filter(outcome == "Points")
+```
+
+## Priors
+
+```{r}
+#| label: get-priors
+
+get_prior(
+  value ~ 1 + demean_squad + (1| league/squad), 
+  data = test_data
+  ) |> select(1:4)
+```
+
+                  prior     class         coef  group    source
+                 (flat)         b                     (unknown)
+                 (flat)         b demean_squad        (unknown)
+ student_t(3, 1.3, 2.5) Intercept                     (unknown)
+   student_t(3, 0, 2.5)        sd                     (unknown)
+                 (flat)        sd              league (unknown)
+                 (flat)        sd    Intercept league (unknown)
+   student_t(3, 0, 2.5)     sigma                     (unknown)
+   
+- intercept - mu = 1.5?
+- demean_squad - mu = 0.5, sigma = 0.5
+- league intercept - var = 0.2
+- squad intercept - var = 0.2
+
+```{r}
+#| label: plot-priors
+
+tibble(x = seq(0, 3, by = 0.01), y = dstudent_t(x, 3, 1.5, 0.5)) |>
+  ggplot(aes(x, y)) + 
+  geom_line(linewidth = 1) +
+  labs(title = "Intercept", x = NULL, y = NULL)
+
+tibble(x = seq(-1.5, 1.1, by = 0.01), y = dnorm(x, 0.3, 0.3)) |>
+  ggplot(aes(x, y)) + 
+  geom_line(linewidth = 1) +
+  labs(title = "Squad Values (Demean)", x = NULL, y = NULL)
+```
+
+```{r}
+#| label: prior-pred-dist
+
+prior_preds <- 
+  brm(
+    value ~ 1 + demean_squad + (1| league),
+    prior = 
+      c(
+        prior(normal(0.5, 0.2), class = b),
+        prior(student_t(3, 1.3, 0.5), class = Intercept),
+        prior(student_t(3, 0.5, 0.5), class = sd),
+        prior(student_t(3, 1, 0.5), class = sigma)
+        ),
+    data = test_data, sample_prior = "only"
+    )
+
+mcmc_plot(prior_preds)
+
+conditional_effects(prior_preds)
+
+pp_check(prior_preds, ndraws = 100, type = "dens_overlay_grouped", group = "league")
+```
+## Model
+
+```{r}
+
+test_model <- 
+  brm(
+    value ~ 1 + demean_squad + (1| league),
+    prior = 
+      c(
+        prior(normal(0.5, 0.2), class = b),
+        prior(student_t(3, 1.3, 0.5), class = Intercept),
+        prior(student_t(3, 0.5, 0.5), class = sd),
+        prior(student_t(3, 1, 0.5), class = sigma)
+        ),
+    data = test_data,
+    warmup = 100, iter = 500, init = "random", cores = 6
+    )
+
+plot(test_model)
+```
+
+```{r}
+#| label: mlm-function
+#| code-fold: true
+#| code-summary: 'Helper Function Code (Click to Expand)'
+
+fit_mlms <- 
+  function(data) {
+    lmer(
+      value ~ 1 + demean_squad + double_mean_club + time + 
+        (1 + demean_squad | league/squad) + (1 | season),
+      data = data, REML = TRUE,
+      control = lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 200000))
+      )
+  }
+```
+
+```{r}
+#| label: fit-models
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+
+models <-
+  club_resources |>
+  mutate(
+    squad_value = log(squad_value),
+    mean_club = mean(squad_value),
+    demean_squad = squad_value - mean_club,
+    .by = squad
+  ) |> 
+  tidyr::pivot_longer(
+    cols = c(pts, xgd, gd),
+    names_to = "outcome",
+    values_to = "value"
+  ) |>
+  mutate(
+    double_mean_club = mean_club - mean(squad_value),
+    value = value/mp,
+    time = as.numeric(season) - 1,
+    outcome =
+      case_when(
+        outcome == "pts" ~ "Points",
+        outcome == "gd" ~ "Goal Difference",
+        outcome == "xgd" ~ "xG Difference",
+        .default = outcome
+      )
+  ) |>
+  filter(!is.na(value)) |> 
+  tidyr::nest(.by = c(outcome)) |> 
+  mutate(
+    model = purrr::map(data, fit_mlms),
+    summary = purrr::map(model, broom.mixed::glance),
+    coefs = purrr::map(model, ~ broom.mixed::tidy(.x, conf.int = TRUE)),
+    preds = purrr::map(model, ~ predict(.x))
+  )
+```
+
+## Acknowledgments {.appendix}
+
+Many thanks to Camilo Alvarez and Adam Ozer for their helpful feedback during the development of this blog post. I greatly appreciate anyone who helps me be just a little less stupid.
+
+Preview image by [Immo Wegmann](https://unsplash.com/@tinkerman) on [Unsplash](https://unsplash.com/photos/round-gold-colored-2-euro-coin-Ym2mFGr4GWI).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
