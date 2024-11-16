@@ -101,6 +101,18 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     plot.margin = margin(rep(10, 4)),
     strip.text = element_text(size = rel(1), margin = margin(0, 0, 5, 0))
   )
+
+# set table theme
+tbl_theme <-
+  function(tbl, width = 100) {
+    tbl |>
+      gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
+      gt::tab_options(table.width = gt::pct(width), table.font.names = "Poppins") |> 
+      gt::tab_style(
+        style = gt::cell_text(align = "left"),
+        locations = list(gt::cells_source_notes(), gt::cells_footnotes())
+        )
+  }
 ```
 
 I recently presented a talk about missing data, discussing the different types of missing data and their appropriate solutions. As a modern man who understands that the posting never ends, I figured I could turn this talk into a series of blog posts. Resources discussing missing data often offer either brief overviews or incredible depth, but there are fewer resources out there that thread the needle between the two. My goal is to do that with this series.
@@ -491,7 +503,7 @@ missing_years |>
           "conditional on Years at Company's missingness and split by Job ",
           "Satisfaction. For low satisfaction, missing values are distributed ",
           "across all values of monthly income. For all other levels of ",
-          "satisfaction, missing values are clustered between $15k and $20k.",
+          "satisfaction, missing values are clustered between $15k and $20k."
         ),
         width = 92
       ),
@@ -526,9 +538,8 @@ missing_years |>
     coef_omit = c(-7, -16, -18, -19, -26),
     gof_omit =  "IC|Log", exponentiate = TRUE, 
     stars = TRUE, output = "gt"
-  ) |> 
-  gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
-  gt::tab_options(table.width = gt::pct(100), table.font.names = "Poppins")
+  ) |>
+  tbl_theme()
 ```
 
 I have only included statistically significant variables^[I used `coef_omit = c(-7, -16, -18, -19, -26)` in [**modelsummary**](https://modelsummary.com/) to do this because I couldn't figure out a programmatic way of omitting by significance. If anyone has any idea of a non-manual way to achieve this, I'd love to hear it! I promise I won't do it on proper regression models.]. While this is generally a bad practice, regression tables with 31 variables look like a mess in the middle of a blog post. A narrow focus on p-values is a bad idea in any regression model because effect size tells us a lot more than significance, but in this case, we're taking some shortcuts. The extremely small p-values for monthly income and job satisfaction indicate that the probability of observing an effect size at least as extreme as our model coefficients if the data was MCAR is small^[The other significant coefficients will be an artefact of those variables' association with monthly income and job satisfaction.]. These results support our assumption that the data is MAR.
@@ -562,9 +573,8 @@ missing_years |>
     "Missing Patterns" = missing.patterns
   ) |> 
   gt::gt() |> 
-  gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
   gt::cols_align(align = "center", columns = 1:4) |>
-  gt::tab_options(table.width = gt::pct(80), table.font.names = "Poppins")
+  tbl_theme(width = 80)
 ```
 
 A high test statistic value and a p-value of zero means we reject the null hypothesis. If the data is MCAR, the probability of observing mean differences as or more extreme than this is very low, suggesting the missing data is either MNAR or MAR. However, there are several limitations to Little's MCAR test. First, it tests all missing data across the entire dataset instead of testing specific missing patterns. Running logistic regressions on specific missingness is a lot more granular and can be more informative. Second, Little's MCAR test relies on a slightly backwards approach to hypothesis testing. The null hypothesis is that the data is MCAR. Failing to reject the null is not the same as being able to conclude that the null is true, so it isn't a test for MCAR data as much as it is a test to reject the hypothesis that the data is MCAR. I'd argue this is fine because the starting assumption is that data is MAR. Little's MCAR test provides a broad summary of the data. A high p-value suggests further investigation is needed because data might not be MAR, and a low p-value is evidence to support the assumption that the data is MAR. However, I think logistic regressions are more informative, robust, and equally easy to compute, so I would recommend this approach instead.

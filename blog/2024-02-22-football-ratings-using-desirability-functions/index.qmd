@@ -89,6 +89,10 @@ format_table <-
       tab_options(
         table.width = pct(100),
         table.font.names = "Poppins"
+      ) |>
+      tab_style(
+        style = cell_text(align = "left"),
+        locations = list(cells_source_notes(), cells_footnotes())
       )
   }
 ```
