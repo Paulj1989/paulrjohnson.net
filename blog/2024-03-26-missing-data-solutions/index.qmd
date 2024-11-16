@@ -103,6 +103,18 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     plot.margin = margin(rep(10, 4)),
     strip.text = element_text(size = rel(1), margin = margin(0, 0, 5, 0))
   )
+
+# set table theme
+tbl_theme <-
+  function(tbl, width = 100) {
+    tbl |>
+      gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
+      gt::tab_options(table.width = gt::pct(width), table.font.names = "Poppins") |> 
+      gt::tab_style(
+        style = gt::cell_text(align = "left"),
+        locations = list(gt::cells_source_notes(), gt::cells_footnotes())
+        )
+  }
 ```
 
 In the opening post in the Missing Data Matters series^[I keep calling it a series because I couldn't think of another way to refer to it, but calling two posts a series feels grandiose. Am I forgetting a better word for this?], I looked at the mechanisms that cause missing data - missing completely at random (MCAR), missing at random (MAR), and missing not at random (MNAR) - and demonstrated some of the options available for diagnosing missing data mechanisms. This post will cover the next step in the missing data workflow - what the hell are you supposed to do now, having realised that your data is complete trash?
@@ -504,8 +516,7 @@ modelsummary::modelsummary(
   ) |>
   gt::tab_spanner(label = "Imputation", columns = 4:6) |>
   gt::tab_spanner(label = "Outcome: Job Attrition", columns = 2:6) |> 
-  gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
-  gt::tab_options(table.width = gt::pct(100), table.font.names = "Poppins")
+  tbl_theme()
 ```
 
 @tbl-regression highlights how impressive multiple imputation can be and why it is often ill-advised to use deletion or single imputation methods. While there are one or two coefficients where the deletion or single imputation methods are close to or even marginally outperform the multiple imputation process, the multiple imputation results are significantly better overall. 
