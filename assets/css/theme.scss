@@ -96,21 +96,42 @@ div.sourceCode {
   }
 }
 
-
-
 // Categories
 
-// posts
-.quarto-category {
-  color: #212529 !important;
-  border-color: #DEE2E6 !important;
-  opacity: 1 !important;
+.quarto-categories {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: .5em;
+  column-gap: .4em;
+  padding-bottom: .5em;
+  margin-top: .75em;
+}
+
+.quarto-categories .quarto-category {
+  font-size: 0.7rem;  
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02rem;
+  color: #212529;
+  border-color: #dee2e6;
+  padding: 5px;
+  border-width: 0.1px;
+  border-style: solid;
+  border-radius: 0.25rem;
 }
 
 // listings
 .listing-category {
-  color: #212529 !important;
-  opacity: 1 !important;
+  font-size: 0.7rem;  
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02rem;
+  color: #212529;
+  border-color: #dee2e6;
+  padding: 5px;
+  border-width: 0.1px;
+  border-style: solid;
+  border-radius: 0.25rem;
 }
 
 div.quarto-post .thumbnail img {
