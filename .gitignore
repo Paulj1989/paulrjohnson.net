@@ -49,7 +49,7 @@ po/*~
 rsconnect/
 
 # Quarto folder
-.quarto/
+/.quarto/
 
 # Site build folder
 _site/
