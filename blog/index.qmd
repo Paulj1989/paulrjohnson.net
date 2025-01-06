@@ -26,7 +26,6 @@ comments: false
 format: 
   html: 
     page-layout: full
-title-block-banner: "#FFFFFF"
 title-block-style: plain
 css: ../assets/css/listing-default.css 
 ---
