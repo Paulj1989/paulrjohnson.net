@@ -1,0 +1,43 @@
+---
+title: Planning for the New Year
+subtitle: |
+    If we don't call them resolutions then they can't be doomed to failure.
+description-meta: |
+    Spending some time reflecting on my career as a data scientist and the role 
+    this blog played in my development in 2024, before considering where I want 
+    to go with the site in 2025 and how I want to continue improving as a data
+    scientist.
+date: 2025-06-01
+image: fireworks.webp
+image-alt: |
+   Pink fireworks explode above Syndey Harbour Bridge at nighttime, celebrating 
+   New Years Eve, in the background, with the harbour in the foreground, filled 
+   with boats watching the firework display.
+categories: [Data Science, Me Me Me]
+---
+
+I'm not one for New Year's Resolutions. I'm not one of those that hates them, either. It's good to set goals for yourself, and using a new year as a starting point to help motivate you seems as good an approach as any! We fail at our goals because we're bad at setting them and changing habits is hard. Still, I don't tend to set myself resolutions, mostly because I can't be bothered.
+
+I do want to use the new year as an opportunity to think about what I want to achieve in 2025, though. They're not resolutions.
+
+## What Worked in 2024
+
+## Plans for 2025
+
+### Post Fast, Post Often
+
+### Keep On Learning
+
+### Diversify My Content
+
+### Interact, Share, Recreate
+
+## This is Not The High Performance Podcast
+
+## Acknowledgments {.appendix}
+
+Preview image by [Tom Hill](https://unsplash.com/@tomchill) on [Unsplash](https://unsplash.com/photos/fireworks-above-long-bridge-at-night-time-ZvvirfG75Ns).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
