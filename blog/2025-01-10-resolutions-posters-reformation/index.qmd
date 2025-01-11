@@ -1,0 +1,98 @@
+---
+title: Resolutions for the Poster's Reformation
+subtitle: |
+    It's a brand new year. All our past failures are 2024's problem. Do not, under 
+    any circumstances, accept responsibility for your actions. 2025 is **our** year.
+description-meta: |
+    Spending some time reflecting on my career as a data scientist and the role 
+    this blog played in my development in 2024, before considering where I want 
+    to go with the site in 2025 and how I want to continue improving as a data
+    scientist.
+date: 2025-01-10
+image: fireworks.webp
+image-alt: |
+   Pink fireworks explode above Syndey Harbour Bridge at nighttime, celebrating 
+   New Years Eve, in the background, with the harbour in the foreground, filled 
+   with boats watching the firework display.
+categories: [Data Science, Me Me Me]
+---
+
+The microblogging church has fractured. The dominant domain faces challenges from all corners as new groups offer salvation and prosperity to new followers. A familiar, smug order rises from the rubble amid the chaos. Fuelled by technological advances like ~~the printing press~~ Quarto, a Calvinist commitment to the content mines, and delicious, hopped-up beers as an [act of rebellion](https://www.npr.org/sections/thesalt/2017/10/31/561117731/the-other-reformation-how-martin-luther-changed-our-beer-too)[^Hops], a new age of blogger has rejected the opulence and ritualism of the old way, instead choosing to go back to basics. 
+
+If you're feeling lost, you're not alone. This joke started to get away from me several sentences ago, and now I'm adrift[^Reformation]. What I'm saying is [Mark Thompson](https://get-goalside-newsletter-archive.beehiiv.com) is correct - [Blogging is Cool Again](https://get-goalside-newsletter-archive.beehiiv.com/p/bloggings-cool-again). 
+
+The recent resurgence of the humble blog[^Substack] is a consequence of the increasing fragmentation of text-based social media platforms. Shifting away from shorter-form content packed into threads is a dizzying new freedom. So much freedom has downsides, as evidenced by all this slop. It's nothing that can't be fixed by some planning and a tiny shred of shame, though, and that's why we're here today. If 2025 is the year of the blogsman, I intend to seize the moment and post my way to the moon. If I want to remain among the cool kids, I will need a plan of attack. Some goals for the new year. Resolutions, even. Hasn't that worked out well?
+
+[^Hops]:
+
+    Listen, if I want to make my soul sad and weigh down my inner organs, that's my business.
+
+[^Reformation]:
+
+    I haven't studied the Reformation Period, but I assume it was just a bunch of lovely lads 
+    who travelled around Europe being **very** normal about Christianity.
+
+[^Substack]:
+
+    Do Substacks count as a blog? What's really the difference between a newsletter and a blog 
+    from a content perspective? I think they're the same.
+
+## Posting My Way to Happiness in 2025
+
+I had much fun working on this blog over the last year. I wrote several pretty hefty posts that I'm still pleased to look back at now, and I learned plenty in the process. The dominant thread through the year was football analytics. Half of my blog posts this year were standalone football analytics projects. The intention isn't that this should be the blog's focus, but that's how it shook out this year. 
+
+I had fun working on these blog posts and felt like they were worth my time (at least one person read each one, and I came away from each knowing more than I did before). No one emailed me to tell me how mad they were at me. I'd call this a success!
+
+### Post Fast, Post Often
+
+Like a child who left home to escape the tyranny of bedtime, this website is evidence of my living completely untethered, refusing to admit that I need adult supervision. Instead, many of my posts last year approached the word count of great works of Russian literature. Coming from academia, my natural instinct is to go long, but there are plenty of cases where this is unnecessary. I would like to reel it in more this year.
+
+I do my best work in these extensive long-form analyses, but just like any writing, a quick analysis that does something interesting and doesn't leave the reader with many unanswered questions is a learned skill. Over the next year, I want to practice this skill[^Questions]. 
+
+Not all posts need to involve carrying out an analysis either[^Football]. I would like to mix things up a bit, from sharing cool stuff I've found to writing about experiences in my career. I just want to spend 2025 keeping the haters guessing.
+
+[^Questions]:
+
+    I suspect that writing quick, interesting analyses is as much about the setup as it is 
+    about the writing itself. Identifying questions interesting enough to bother answering 
+    but simple enough to tackle quickly will make a big difference.
+
+[^Football]:
+
+    I've heard posts don't **have** to be about football, either, though I've yet to see any 
+    evidence to support this claim.
+
+### Be Good, Not Perfect
+
+This one sounds incredibly smug and self-serving, but that's only because I couldn't think of another subheading that doesn't make me sound like a massive LinkedIn bozo. Nothing I've ever written is perfect, and some of it might not even be good, but the old adage, "perfect is the enemy of good," is something I struggle with often with my blog posts. I frequently spend several days, weeks, or even months trying to get everything right. While that might be defensible in some cases (I think it was a worthwhile effort for the analysis of [the effect of money in football](http://paulrjohnson.net/blog/analysing-money-in-football/)), it is usually just a case of completely overthinking things.
+
+If anyone comes to this blog expecting perfection, that's on them. The goal should be to do a good job and write something interesting and fun, at least for the kind of nerd who reads my posts. I'd highly recommend Julia Evans' advice about [blogging myths](https://jvns.ca/blog/2023/06/05/some-blogging-myths/)[^Myths], and I'd like to do a better job of following it myself this year. Pursuing perfection is both unrealistic and, frankly, silly for what is ultimately just a fun little blog. 
+
+[^Myths]:
+
+    I am guilty of falling for all of the myths Julia mentions, sometimes often.
+
+### Keep On Learning (and Sharing)
+
+My current role often involves serving as a generalist data scientist, giving me opportunities to learn new methods, tools, or skills. This keeps things interesting, and being comfortable picking up something new with minimal stress is a valuable skill. Still, there are downsides to being a generalist, so I balance this by keeping up some deeper study in areas of interest (which often tie in nicely as easy ideas for blog posts) in my own time. 
+
+Over the last year, some areas I focused on were the foundations of statistics and science (filling any gaps or misconceptions my smooth brain has retained), causal inference, and Bayesian statistics. This year, I intend to continue learning in all three of these areas, but especially Bayesian statistics, which has been a subject in which I've been making gradual progress over the years. I also want to spend some time thinking about the broader data science process/workflow and how this stuff ties into decision-making, with books like Rohan Alexander's [_Telling Stories With Data_](https://tellingstorieswithdata.com) and Allen Downey's [_Probably Overthinking It_](https://press.uchicago.edu/ucp/books/book/chicago/P/bo206532752.html). Finally, in a similar vein to going back over the fundamentals of statistics, I am also hoping to find some time to read [_An Introduction to Statistical Learning_](https://www.statlearning.com)[^ISL]. Much of my education in machine learning has come from learning by doing, and while that has worked well, there's always something to be gained from reading the classics! 
+
+[^ISL]: 
+
+    _An Introduction to Statistical Learning_ is one of those books I've read a decent chunk 
+    of over the years but never start to finish.
+
+## Undertaking With Vigor The Task of Posting
+
+In the end, whether you are writing long wordy threads about football tactics on Twitter or Bluesky, or debating the specifics of political language deep in the Discord trenches, or you're just a simple blogsman seeking salvation from such indulgences, we are all just posting^[The exception being people on LinkedIn, who are are demonic creatures.]. It's not your place to judge. I'm too busy post-maximising.
+
+I'm just a nerd posting. This is all relevant to my professional development. I'm learning stuff that will benefit my career, and as silly as the tone of this blog often is, it's still a portfolio of sorts. Nonetheless, I do this because I enjoy it, and the goal in 2025, above all else, is to keep enjoying it. If I can create something others find useful and avoid anyone emailing me telling me to log off, even better.
+
+## Acknowledgments {.appendix}
+
+Preview image by [Tom Hill](https://unsplash.com/@tomchill) on [Unsplash](https://unsplash.com/photos/fireworks-above-long-bridge-at-night-time-ZvvirfG75Ns).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
