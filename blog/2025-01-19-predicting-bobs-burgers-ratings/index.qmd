@@ -1,0 +1,882 @@
+---
+title: Predicting Bob's Burgers Episode Ratings
+subtitle: |
+  Using machine learning for the dumbest possible reasons.
+description-meta: |
+  Building a machine learning model in Python to predict the IMDB ratings of 
+  Bob's Burgers episodes, using episode details and dialogue metrics.
+date: 2025-01-19
+image: bobs-burgers.webp
+image-alt: |
+  The main characters of Bob's Burgers.
+categories: [Machine Learning, Python]
+fig-height: 7
+fig-width: 5
+bibliography: references.bib
+---
+
+```{python}
+#| label: setup
+#| output: false
+#| code-fold: true
+#| code-summary: 'Setup Code (Click to Expand)'
+
+# import packages
+import optuna
+import textwrap
+import time 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+from great_tables import GT
+from plotnine import (
+  aes,
+  element_blank,
+  element_line,
+  element_text,
+  facet_wrap,
+  geom_bar,
+  geom_point,
+  geom_smooth,
+  ggplot,
+  labs,
+  scale_x_continuous,
+  scale_fill_gradient,
+  theme,
+  theme_minimal,
+  theme_set,
+  theme_update
+)
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.compose import ColumnTransformer
+from sklearn.decomposition import PCA
+from sklearn.dummy import DummyRegressor
+from sklearn.ensemble import (
+  ExtraTreesRegressor, 
+  HistGradientBoostingRegressor, 
+  GradientBoostingRegressor, 
+  RandomForestRegressor
+)
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer, SimpleImputer
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import make_scorer, root_mean_squared_error
+from sklearn.model_selection import cross_val_score, KFold, train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, OrdinalEncoder
+
+# import data
+bobs_burgers = (
+    pd.read_csv(
+        "https://raw.githubusercontent.com/rfordatascience/tidytuesday/"
+        "master/data/2024/2024-11-19/episode_metrics.csv"
+    )
+    .merge(
+        pd.read_csv(
+            "https://raw.githubusercontent.com/poncest/bobsburgersR/refs/"
+            "heads/main/data-raw/IMDb_Wikipedia_Bobs_Burgers_Data_Clean.csv"
+        ),
+        on=["season", "episode"]
+    )
+    .assign(
+        wikipedia_directed_by=lambda df: df['wikipedia_directed_by']
+        .str.replace(r'\bBoohwan\b(?! Lim)', 'Boohwan Lim', regex=True)
+        .str.replace('Brian LoSchiavo', 'Brian Loschiavo')
+        .str.replace('Mathew Long', 'Matthew Long')
+    )
+    .assign(
+        wikipedia_written_by=lambda df: df['wikipedia_written_by']
+        .str.replace('Teleplay by : ', '')
+        .str.replace('Story by : ', ' & ')
+        .str.replace('Lizzie Molyneux-Logelin', 'Lizzie Molyneux')
+        .str.replace(r'\bLizzie\b(?! Molyneux)', 'Lizzie Molyneux', regex=True)
+    )
+    .pipe(
+      lambda df: df.astype({col: 'category' for col in df.select_dtypes('object')})
+      )
+)
+
+# set plot theme
+theme_set(theme_minimal(base_size=12, base_family="Poppins"))
+theme_update(
+  panel_grid_major=element_line(color="#e5e5e5", size=1),
+  panel_grid_minor = element_blank(),
+  panel_spacing_x = 0.01,
+  panel_spacing_y = 0.01,
+  # panel_spacing_x = 1,
+  # panel_spacing_y = .5,
+  axis_title_x = element_text(color="#4d4d4d", margin={"t": 5}, size=12),
+  axis_title_y = element_text(color="#4d4d4d", margin={"r": 5}, size=12),
+  axis_text = element_text(color="#7f7f7f", size=10),
+  axis_text_x = element_text(angle=30, vjust=1, hjust=.75),
+  axis_ticks = element_line(color="#e5e5e5", size=.4),
+  axis_ticks_length = 1,
+  legend_position = "top",
+  legend_title = element_blank(),
+  legend_text = element_text(
+    size=12, va="center", margin={"t": 5, "r": 5, "b": 0, "l": 5}
+  ),
+  legend_box_margin = 5,
+  legend_key_width = 20,
+  legend_key_spacing = 10,
+  plot_title = element_text(
+    ha="left", color="black", family="Lora", size=16, margin={"t": 5, "b": 5}
+  ),
+  plot_subtitle = element_text(
+    ha="left", color="#4d4d4d", family="Lora", lineheight=1.2, size=14, 
+    margin={"t": 5, "r": 0, "b": 5, "l": 0}
+  ),
+  plot_caption = element_text(
+    color = "#7f7f7f", size=8, ha="right", 
+    margin={"t": 10, "r": 0, "b": 0, "l": 0}
+  ),
+  strip_text = element_text(size=12, margin={"t": 0, "r": 0, "b": 5, "l": 0}),
+  figure_size = (8, 6)
+)
+
+# suppress all optuna outputs
+optuna.logging.set_verbosity(optuna.logging.CRITICAL)
+# to switch back - optuna.logging.set_verbosity(logging.INFO)
+```
+
+Biologists have been trying to understand protein structures since the 1960s. Proteins consist of chains of amino acids that fold into complex three-dimensional structures, and this structure determines their biological function. Predicting the structure of proteins enables scientists to understand diseases and accelerate the development of medications [@heaven2022].
+
+While experimental methods exist for predicting protein structures, they are arduous, sometimes taking months or even years. Experimental methods are no match for the more than 200 million proteins discovered in nature [@service2020]. Since 1994, the CASP (Critical Assessment of Structure Prediction) competition sought to facilitate advancements in the computational prediction of protein structures, but no methods came close to matching the performance of experimental methods. That was, until DeepMind's [AlphaFold2](https://deepmind.google/technologies/alphafold/) was released at CASP14 [@jumper2021].
+
+Combining a huge repository of training data in the [Protein Data Bank](https://www.wwpdb.org) and significant innovations in the field of deep learning, powered by immense computational resource, DeepMind made a landmark scientific breakthrough with AlphaFold.
+
+Artificial intelligence is controversial, owing to both the perceived dangers it poses and the hype around its progress. But AlphaFold is an example of what can be achieved when you combine huge amounts of data and computational power. Data can help us solve all kinds of problems. Some of them so much less pressing than the prediction of protein structures. Like, for example, predicting the IMDB ratings of Bob's Burgers episodes. 
+
+While the big brains at the world's best universities are busy trying to change the world, I'm creating models that no one needs and no one asked for. I will create a machine learning model that predicts IMDB ratings for Bob's Burgers epsidoes, using features that summarise the episode (episode and season number, date aired, writer, director etc.) and metrics that describe the dialogue in the episode itself. I will build a full workflow, as far as the limited sample size allows, and see how far we can get without getting more data or engineering new features. The motivation for this is just that I thought it would be fun. I'm nothing if not a silly goose.
+
+I don't know what the TV equivalent is to "football isn't played on a spreadsheet", but by the end of this I hope everyone is so mad they are telling me to "watch the ~~games~~ TV".
+
+## Data Exploration
+
+The data I'm working with comes from the [TidyTuesday repository](https://github.com/rfordatascience/tidytuesday/tree/main/data/2024/2024-11-19). Most of the features are self-explanatory, but there's a handful of dialogue metrics that have been computed for the TidyTuesday task, and they probably need clarifying. @tbl-dialogue-metrics below shows what we're working with.
+
+::: {#tbl-dialogue-metrics}
+
+```{python}
+#| label: dialogue-metrics
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+(
+  pd.DataFrame({
+    "Features": [
+      "dialogue_density",
+      "avg_length",
+      "sentiment_variance",
+      "unique_words",
+      "question_ratio",
+      "exclamation_ratio"
+      ],
+      "Description": [
+        "The number of non-blank lines in this episode.",
+        "The average number of characters (technically codepoints) per line of "
+        "dialogue.",
+        "The variance in the numeric AFINN sentiment of words in this episode.",
+        "The number of unique lowercase words in this episode.",
+        "The proportion of lines of dialogue that contain at least one question "
+        "mark (\"?\").",
+        "The proportion of lines of dialogue that contain at least one exclamation "
+        "point (\"!\")."
+        ]
+    })
+    .pipe(lambda df: GT(df))
+)
+```
+
+Dialogue Metrics' Definitions
+
+:::
+
+There are further details about the data in the TidyTuesday repository, including the following quote:
+
+> As such, our suggestion is to use the data provided to practice your data tidying and plotting techniques, and to consider for yourself what nuances might underlie these relationships.
+
+They are definitely not wrong! If I was doing all this **properly**, I'd spend a lot more time trying to actually understand the data, particularly looking at the dialogue itself, and trying to extract more information from what is the richest data available on this topic. While I'm not sure the results would be groundbreaking, I'm sure the model would be more precise! However, I'm just a big silly goose having a little bit of fun, and seeing if I can ruin something as fun as Bob's Burgers by boiling it down to a bunch of numbers.
+
+I may be planning to chuck it all in the mixer and see what comes out, but I should do a little exploratory work first, anyway. I'm not a complete monster. To start with, we can plot the outcome distribution, with a colour gradient scale to represent seasons. IMDB ratings are approximately normally distributed, with most values between seven and eight. There are a handful of ratings that break the nine mark though.
+
+```{python}
+#| label: season-ratings
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+(
+  ggplot(bobs_burgers, aes("rating", fill="factor(season)")) + 
+  geom_bar() +
+  labs(
+    title="Distribution of Bob's Burgers' Ratings by Season",
+    subtitle=(
+      textwrap.fill(
+        "The distribution of IMDB ratings for all episodes of Bob's Burgers, "
+        "with a gradient scale representing season (dark blue = earlier seasons; "
+        "light grey = later seasons). The earlier seasons of the show are generally "
+        "favoured.",
+        width = 80
+      )
+    ),
+    x="IMDB Rating", y="",
+    caption="Visualisation: Paul Johnson | Data: TidyTuesday"
+  ) +
+  scale_fill_gradient(low="#026E99", high="#D2D2D2", guide=None)
+  # scale_fill_manual(values=["#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431"])
+  # theme(plot_background=element_rect(fill="white"))
+)
+```
+
+It looks like the earlier seasons are generally higher rated than later seasons, though some of the highest ratings of all are in the later seasons. In fact, a total of five episodes have ratings that are nine or higher. Two of them are in season six, two in season 13, and one in season 14. The highest rated episode gets a 9.6, which seems rather large! It is _The Plight Before Christmas_, or episode 10 of season 13.
+
+We can also take a little look at the correlation between all the numerical features in the dataset and the target, IMDB ratings, in @tbl-correlations.
+
+::: {#tbl-correlations}
+
+```{python}
+#| label: correlations
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+(
+  bobs_burgers
+  .select_dtypes(include='number') 
+  .drop(columns='rating') 
+  .corrwith(bobs_burgers['rating']) 
+  .sort_values(ascending=False) 
+  .reset_index() 
+  .rename(columns={0: 'correlation', 'index': 'feature'}) 
+  .pipe(lambda df:
+    GT(df, rowname_col = 'feature')
+    .fmt_number(columns='correlation', decimals=2)
+    .cols_label(correlation='Correlation')
+    .cols_align(columns='correlation', align='center') 
+    .tab_options(table_width="100%")
+  )
+)
+```
+
+Correlations Between Numeric Features & IMDB Ratings
+
+:::
+
+Ratings have a moderate correlation with viewers, exclamation ratio, season, the overall episode number, and the year it was aired. I suspect season, episode overall, and year are capturing a lot of the same information.
+
+There's definitely a couple in here that probably aren't moving the needle a whole lot, but I think we can probably go ahead and chucke them in and pretend like they're doing something. Maybe they're not completely meaningless? Maybe?
+
+Using the `episode_overall` feature, we can plot the change in episode ratings over time. We already know from the correlations that there appears to be a moderate negative correlation between `episode_overall` (and the other variables that are capturing time) and ratings, as shown below.
+
+```{python}
+#| label: episode-ratings
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+(
+  ggplot(bobs_burgers, aes(x="episode_overall", y="rating")) + 
+  geom_point(size=2, stroke=0.5, fill="white", color="#343a40", shape="o") +
+  geom_smooth(method='lm', size=1, se=False, color="#026E99") +
+  scale_x_continuous(breaks=[0,50,100,150,200,250]) +
+  labs(
+    title="Bob's Burgers Ratings Over Time",
+    subtitle=(
+      textwrap.fill(
+        "The variance in IMDB ratings of Bob's Burgers' episodes over time. "
+        "There has been a small but steady decline in ratings since the early "
+        "seasons, with the first sub-seven ratingscoming after 150 episodes.",
+        width = 78
+      )
+    ),
+    x="Episode", y="IMDB Rating",
+    caption="Visualisation: Paul Johnson | Data: TidyTuesday"
+  )
+  # theme(plot_background=element_rect(fill="white"))
+)
+```
+
+At the other end of @tbl-correlations, there is a moderate positive correlation between ratings and viewership. This is a relationship you'd expect to observe, though I'm not sure you'd expect it to be more than a noisy signal. The plot below visualises the relationship between ratings and viewership.
+
+```{python}
+#| label: viewers-ratings
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+(
+  ggplot(bobs_burgers, aes(x="wikipedia_viewers", y="rating")) + 
+  geom_point(size=2, stroke=0.5, fill="white", color="#343a40", shape="o") +
+  geom_smooth(method='lm', size=1, se=False, color="#026E99") +
+  labs(
+    title="Bob's Burgers' Ratings by Total Viewers",
+    subtitle=(
+      textwrap.fill(
+        "The variance in IMDB ratings of Bob's Burgers' episodes by viewership. "
+        "While it is noisy, there does appear to be a small, positive association "
+        "between viewing figures and the episode rating.",
+        width = 78
+      )
+    ),
+    x="Viewers (Millions)", y="IMDB Rating",
+    caption="Visualisation: Paul Johnson | Data: TidyTuesday"
+  )
+  # theme(plot_background=element_rect(fill="white"))
+)
+```
+
+There's one huge outlier in there that pushes the x-axis out a lot further. It turns out that the first episode of Bob's Burgers hit a peak, in terms of viewership, that the show hasn't matched since. It reached over nine million viewers, and almost three million more than any other episode. Excluding that episode, there does appear to be a positive association between viewership and ratings, though it is noisy.
+
+If viewership has any relationship with ratings, it is likely serving as a proxy for the quality of the episode. The assumed mechanism is that word spreads about the best episodes and this attracts viewers (though I think viewership may just be on the night it is aired, so maybe this is wrong and I need to rethink the mechanism). 
+
+The dialogue metrics are intended to capture characteristics of the episode itself and the assumption is that these characteristics will contribute to the episode's quality (and thereefore ratings). The plots below show that the dialogue metrics are noisy and, where there might be any signal, it is limited.
+
+```{python}
+#| label: metric-ratings
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+(
+  bobs_burgers.melt(
+    id_vars=['rating'],  # Keep 'rating' as the identifier column
+    value_vars=[
+      'dialogue_density', 'avg_length', 'sentiment_variance', 
+      'unique_words', 'question_ratio', 'exclamation_ratio'
+      ],
+    var_name='label',  # New column for labels
+    value_name='value'  # New column for values
+    )
+    .assign(
+      label=lambda df: df['label']
+        .str.replace('_', ' ')  # Replace underscores with spaces
+        .str.title()           # Convert to titlecase
+        .str.replace('Avg', 'Average', case=False)  # Replace 'Avg' with 'Average'
+    )
+    .pipe(
+      lambda df: 
+        ggplot(df, aes(x='value', y='rating', group=1)) +
+        geom_point(size=2, stroke=0.5, fill="white", color="#343a40", shape="o") +
+        geom_smooth(method='lm', size=1, se=False, color="#026E99") +
+        facet_wrap('~label', scales='free_x') +
+        labs(
+          title="Bob's Burgers' Ratings by Dialogue Metrics",
+          subtitle=(
+            textwrap.fill(
+              "There is a small positive correlation between the proportion of "
+              "lines of dialogue in Bob's Burgers episodes containing exclamation "
+              "points and their IMDB ratings.",
+              width = 78
+            )
+          ),
+        x="", y="IMDB Rating",
+        caption="Visualisation: Paul Johnson | Data: TidyTuesday"
+      )
+    )
+)
+```
+
+While certainly metrics like dialogue density appear to offer nothing, exclamation ratio and unique words do appear to offer some signal that might help us predict ratings. If I squint I can see some interesting patterns in question ratio and sentiment variance but I think there's really nothing there. They may add some interactive effect with other metrics though (he says, hopefully).
+
+Finally, having focused on picking out the strong correlations observed in @tbl-correlations, we've ignored the categorical variables that may be relevant. I don't think many of these will add much value, but I think director and writers are probably pretty relevant! @tbl-director-ratings & @tbl-writer-ratings below show the total episodes and average rating for each director and writer credited on at least five Bob's Burgers episodes.
+
+::: {.panel-tabset}
+
+### Director Ratings
+
+:::: {#tbl-director-ratings}
+
+```{python}
+#| label: director-ratings
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+(
+  bobs_burgers
+  .assign(wikipedia_directed_by=lambda df: df['wikipedia_directed_by'].str.split(' & ')) 
+  .explode('wikipedia_directed_by')
+  .groupby('wikipedia_directed_by')
+  .agg(episodes=('wikipedia_directed_by', 'size'), average_rating=('rating', 'mean')) 
+  .query('episodes >= 5')
+  .sort_values(by='average_rating', ascending=False)
+  .reset_index() 
+  .pipe(lambda df:
+    GT(df, rowname_col='wikipedia_directed_by')
+    .fmt_number(columns='average_rating', decimals=2)
+    .cols_label(
+      episodes='Total Episodes Directed',
+      average_rating='Average Episode Rating'
+    )
+    .cols_align(columns=['episodes', 'average_rating'], align='center')
+    .tab_options(table_width="100%")
+  )
+)
+```
+
+IMDB Ratings by Director
+
+::::
+
+### Writer Ratings
+
+:::: {#tbl-writer-ratings}
+
+```{python}
+#| label: writer-ratings
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+(
+  bobs_burgers
+  .assign(wikipedia_written_by=lambda df: df['wikipedia_written_by'].str.split(' & ')) 
+  .explode('wikipedia_written_by') 
+  .groupby('wikipedia_written_by') 
+  .agg(episodes=('wikipedia_written_by', 'size'), average_rating=('rating', 'mean'))
+  .query('episodes >= 5')
+  .sort_values(by='average_rating', ascending=False)
+  .reset_index()
+  .pipe(lambda df:
+    GT(df, rowname_col='wikipedia_written_by')
+    .fmt_number(columns='average_rating', decimals=2)
+    .cols_label(
+      episodes='Total Episodes Written',
+      average_rating='Average Episode Rating'
+    )
+    .cols_align(columns=['episodes', 'average_rating'], align='center')
+    .tab_options(table_width="100%")
+  )
+)
+```
+
+IMDB Ratings by Writer
+
+::::
+
+:::
+
+It looks like the directors and writers do matter! There's some variance in ratings across both directors and writers, and it is definitely a reasonable assumption that these should have an impact on the ratings and improve model performance.
+
+This quick exploratory glimpse at the data has at least demonstrated that IMDB ratings are not entirely random. The results don't fill me with confidence either, but we've got some interesting features to work with.
+
+## Data Preparation
+
+Having already decided that I'm not going to do any feature engineering, the data preparation steps are a little less cumbersome. I'm sure there are a lot of potential gains in creating new features, particularly from the dialogue, but today we are just taking shortcuts. Instead, we just need to partition the data and then do some preprocessing. 
+
+### Train/Test Split
+
+In addition to the lack of feature engineering, I've taken some shortcuts in terms of the partitioning. I should have done this before doing the exploratory work, but we didn't really have enough data to get away with splitting it up before doing some exploration. Is it any wonder they suggested this dataset should be used for wrangling or visualisation?
+
+```{python}
+#| label: train-test-split
+#| code-fold: true
+#| code-summary: 'Data Code (Click to Expand)'
+
+X_train, X_test, y_train, y_test = (
+  train_test_split(
+    bobs_burgers.drop(['rating'], axis=1), 
+    bobs_burgers['rating'], 
+    test_size=0.3, random_state=42
+    )
+  )
+```
+
+The data has been partitioned into train and test sets, with the test set making up 30% of the data. Just as I didn't have enough data to be splitting everything up before the exploratory work, there isn't enough data to really get away with a validation set either. So here we are. I'm being a silly goose. Is that a crime? Are you going to arrest me for being a silly goose? I certainly hope not.
+
+### Data Preprocessing
+
+```{python}
+#| label: explode-encode-class
+#| code-fold: true
+#| code-summary: 'Class Code (Click to Expand)'
+
+class ExplodeAndEncode(TransformerMixin, BaseEstimator):
+    def __init__(self, min_frequency=3):
+        self.min_frequency = min_frequency  # Store min_frequency as an instance variable
+        self.ohe_directors = OneHotEncoder(
+            handle_unknown='ignore', sparse_output=False, min_frequency=self.min_frequency
+        )
+        self.ohe_writers = OneHotEncoder(
+            handle_unknown='ignore', sparse_output=False, min_frequency=self.min_frequency
+        )
+
+    def fit(self, X, y=None):
+        # Ensure X is a DataFrame
+        if not isinstance(X, pd.DataFrame):
+            raise ValueError("Input to ExplodeAndEncode must be a DataFrame.")
+
+        # Fit encoders to the expanded and encoded columns
+        directors_encoded = self._expand_and_encode(X['wikipedia_directed_by'])
+        writers_encoded = self._expand_and_encode(X['wikipedia_written_by'])
+
+        self.ohe_directors.fit(directors_encoded)
+        self.ohe_writers.fit(writers_encoded)
+        return self
+
+    def transform(self, X, y=None):
+        # Ensure X is a DataFrame
+        if not isinstance(X, pd.DataFrame):
+            raise ValueError("Input to ExplodeAndEncode must be a DataFrame.")
+
+        # Transform using fitted encoders
+        transformed_directors = self.ohe_directors.transform(self._expand_and_encode(X['wikipedia_directed_by']))
+        transformed_writers = self.ohe_writers.transform(self._expand_and_encode(X['wikipedia_written_by']))
+
+        # Combine transformed features
+        return np.hstack([transformed_directors, transformed_writers])
+
+    def _expand_and_encode(self, series):
+        # Handle Categorical dtype
+        if isinstance(series.dtype, pd.CategoricalDtype):
+            # Add 'Unknown' to categories if not already present
+            if 'Unknown' not in series.cat.categories:
+                series = series.cat.add_categories(['Unknown'])
+        
+        # Fill missing values with 'Unknown'
+        series = series.fillna('Unknown')
+
+        # Split, sort, and rejoin the categories
+        expanded = series.str.split(' & ').apply(lambda x: sorted(set(x)))
+        return expanded.str.join(' & ').values.reshape(-1, 1)
+```
+
+```{python}
+#| label: preprocessing
+#| code-fold: true
+#| code-summary: 'Data Code (Click to Expand)'
+
+categorical_features = ['wikipedia_written_by', 'wikipedia_directed_by']
+ordinal_features = ['season', 'episode']
+numeric_features = [
+  'dialogue_density', 'unique_words', 'question_ratio', 'exclamation_ratio',
+  'episode_overall', 'wikipedia_viewers', 'avg_length', 'sentiment_variance', 
+  ]
+
+ordinal_transformer = Pipeline(steps=[
+  ('ordinal', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1))
+])
+
+categorical_transformer = Pipeline(steps=[
+    ('explode_encode', ExplodeAndEncode(min_frequency=1))
+  ]
+)
+
+numeric_transformer = Pipeline(steps=[
+  ('imputer', IterativeImputer())
+  ]
+)
+
+col_transformer = ColumnTransformer(
+    transformers=[
+        ('ord', ordinal_transformer, ordinal_features),
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ]
+)
+
+preprocessor = Pipeline(
+  steps=[
+    ('col_transformer', col_transformer),
+    ('pca', PCA(n_components=4))
+    ]
+  )
+```
+
+There are several necessary preprocessing steps that need to be included in the model pipeline. I have split the features up into categorical, ordinal, and numeric, and missing values are imputed using slightly different methods depending on the data type. The most involved of the three processes is the categorical features, which are the writers and directors credited for each episode. Many episodes have multiple writers and/or directors, which requires splitting out the values for both features to capture each writer and director individually using one-hot encoding, in addition to addressing inconsistencies in formatting across values for both feature and handling missing values. All taken together, I wasn't entirely sure what the best approach would be to implement these steps. I ended up using ChatGPT to save me the bother, which returned this handy little Python class that explodes the two columns before doing the encoding. I haven't had a ton of experience building custom transformers like this, but the appraoch seems pretty intuitive. Thanks ChatGPT, I'm sure you won't ever do anything to hurt me like make things up or take my job and do it even worse than I do.
+
+The final step in the preprocessing pipeline is a principal component analysis, which reduces some unhelpful sparsity in the data. The dataset is reduced to four components which capture the vast majority of the variance.
+
+```{python}
+#| label: pca-plot
+#| include: false
+
+preprocessor.fit(X_train, y_train)
+
+pca = preprocessor.named_steps['pca']
+
+plt.figure(figsize=(8, 6))
+plt.plot(range(1, len(pca.explained_variance_ratio_) + 1), 
+         pca.explained_variance_ratio_, marker='o', color='b', label='Explained Variance Ratio')
+plt.xlabel('Number of Components')
+plt.ylabel('Explained Variance')
+plt.title('Explained Variance Ratio by PCA Components')
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(8, 6))
+plt.plot(range(1, len(pca.explained_variance_ratio_) + 1), 
+         pca.explained_variance_ratio_.cumsum(), marker='o', color='g', label='Cumulative Explained Variance')
+plt.xlabel('Number of Components')
+plt.ylabel('Cumulative Explained Variance')
+plt.title('Cumulative Explained Variance by PCA Components')
+plt.grid(True)
+plt.show()
+```
+
+```{python}
+#| label: pca-tuning
+#| include: false
+
+def objective(trial):
+    n_components = trial.suggest_int('n_components', 1, 10)
+    pca = PCA(n_components=n_components)
+    model = RandomForestRegressor()
+    
+    pipeline = Pipeline([
+      ('col_transformer', col_transformer),
+      ('pca', pca),
+      ('regressor', model)
+    ])
+
+    scores = cross_val_score(pipeline, X_train, np.ravel(y_train), cv=5, scoring='neg_root_mean_squared_error')
+    return -scores.mean()
+
+study = optuna.create_study(direction='minimize')
+study.optimize(objective, n_trials=100)
+
+print("Best n_components:", study.best_params['n_components'])
+```
+
+## Model Training
+
+I'll start with a couple baseline models to compare against. This is always a good starting point, but it's especially worthwhile when there's a reasonable chance your model is going to be garbage. You need to make sure you are at **least** able to build a model that performs better than taking the most basic baseline predictions.
+
+The first baseline model predicts that all test set values will equal the mean value of IMDB ratings in the training set. 
+
+```{python}
+#| label: baseline-model
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+
+baseline_model = DummyRegressor(strategy='mean')
+
+baseline_model.fit(X_train, y_train)
+
+y_pred = baseline_model.predict(X_test)
+
+baseline_rmse = root_mean_squared_error(y_test, y_pred)
+# print(f"Baseline RMSE: {baseline_rmse:.3f}")
+```
+
+The RMSE for the baseline model is **`{python} f"{baseline_rmse:.3f}"`**. This gives us a target to try and beat. If we can't do better than this, our model is literally worthless.
+
+Now, lets see how a relatively simple model performs, both as a comparison against the baseline, and to help evaluate whether anything more complex model is worth the effort.
+
+```{python}
+#| label: linear-regression
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+
+pipeline = Pipeline(steps=[('preprocessor', preprocessor),
+                           ('regressor', LinearRegression())])
+
+pipeline.fit(X_train, y_train)
+
+y_pred = pipeline.predict(X_test)
+
+lm_rmse = root_mean_squared_error(y_test, y_pred)
+```
+
+The linear regression returns a score of **`{python} f"{lm_rmse:.3f}"`**, which beats the baseline. We can use both these models as a good starting point. 
+
+### Model Selection
+
+The next step, having established some useful baselines, is to identify the algorithm that should give us the best shot. I decided to stick with algorithms provided by scikit-learn, choosing random forest, extra trees, histogram-based gradient boosting, and gradient boosting. I am testing the performance of each of these algorithms using Optuna, carrying a study that tests each algorithm with some relatively simple hyperparameters to identify the one that is most likely to give us the best performance.
+
+```{python}
+#| label: model-selection
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+#| cache: true
+#| output: asis
+
+rmse_scorer = make_scorer(root_mean_squared_error, greater_is_better=False)
+
+def objective(trial):
+    regressor_name = trial.suggest_categorical('regressor', ['RandomForest', 'ExtraTrees', 'HistGradientBoosting', 'GradientBoosting'])
+    
+    if regressor_name == 'RandomForest':
+        max_depth = trial.suggest_int("max_depth", 3, 10)
+        n_estimators = trial.suggest_int("n_estimators", 100, 500, step=50)
+        model = RandomForestRegressor(max_depth=max_depth, n_estimators=n_estimators)
+    
+    elif regressor_name == 'ExtraTrees':
+        max_depth = trial.suggest_int("max_depth", 3, 10)
+        n_estimators = trial.suggest_int("n_estimators", 100, 500, step=50)
+        model = ExtraTreesRegressor(max_depth=max_depth, n_estimators=n_estimators)
+    
+    elif regressor_name == 'HistGradientBoosting':
+        max_depth = trial.suggest_int("max_depth", 3, 10)
+        max_iter = trial.suggest_int("max_iter", 100, 500, step=50)
+        learning_rate = trial.suggest_float("learning_rate", 0.01, 0.5, log=True)
+        model = HistGradientBoostingRegressor(max_depth=max_depth, max_iter=max_iter, learning_rate=learning_rate)
+    
+    else:  # GradientBoosting
+        max_depth = trial.suggest_int("max_depth", 3, 10)
+        n_estimators = trial.suggest_int("n_estimators", 100, 500, step=50)
+        learning_rate = trial.suggest_float("learning_rate", 0.01, 0.5, log=True)
+        model = GradientBoostingRegressor(max_depth=max_depth, n_estimators=n_estimators, learning_rate=learning_rate)
+    
+    # Create a pipeline
+    pipeline = Pipeline([
+        ('preprocesser', preprocessor),
+        ('regressor', model)
+    ])
+
+    # cross-validation
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    scores = cross_val_score(pipeline, X_train, np.ravel(y_train), cv=kf, scoring=rmse_scorer)
+    
+    # Return the mean RMSE (negative because `greater_is_better=False`)
+    return -scores.mean()
+
+# Optimization
+selection_study = optuna.create_study(direction='minimize')
+selection_study.optimize(objective, n_trials=100, timeout=600)
+
+# Best results
+# print(f"Best Model: {study.best_params.get('regressor')}")
+```
+
+The study suggests the best model to go with is **`{python} f"{selection_study.best_params.get('regressor')}"`**.
+
+### Hyperparameter Tuning
+
+Having selected the algorithm we want to work with, we can carry out some more rigorous hyperparameter tuning.
+
+```{python}
+#| label: extra-trees
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+#| cache: true
+
+rmse_scorer = make_scorer(root_mean_squared_error, greater_is_better=False)
+
+def objective(trial):
+
+    n_estimators = trial.suggest_int("n_estimators", 100, 250)
+    criterion = trial.suggest_categorical('criterion', ['poisson', 'friedman_mse', 'squared_error'])
+    max_depth = trial.suggest_int("max_depth", 10, 15)
+    min_samples_split = trial.suggest_int("min_samples_split", 5, 10)
+    max_features = trial.suggest_categorical("max_features", ["sqrt", "log2", None])
+    # min_impurity_decrease = trial.suggest_float("min_impurity_decrease", 0, 1e-5)
+
+    model = ExtraTreesRegressor(
+        n_estimators=n_estimators,
+        criterion=criterion,
+        max_depth=max_depth,
+        min_samples_split=min_samples_split,
+        max_features=max_features,
+        # min_impurity_decrease=min_impurity_decrease,
+        random_state=42
+    )
+    
+    pipeline = Pipeline([
+        ('preprocessor', preprocessor),
+        ('regressor', model)
+    ])
+
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    scores = cross_val_score(pipeline, X_train, np.ravel(y_train), cv=kf, scoring=rmse_scorer)
+
+    return -scores.mean()
+
+tuning_study = optuna.create_study(direction='minimize')
+tuning_study.optimize(objective, n_trials=250, timeout=600)
+
+# print(f"Best ExtraTrees Trial: **{study.best_trial.value:.3f}**\n")
+# print("Using the following hyperparameter values:\n")
+# for param, value in study.best_params.items():
+#     print(f"- {param}: {value}\n")
+```
+
+The tuned ExtraTrees model produces an RMSE of `{python} f"{tuning_study.best_trial.value:.3f}"`. @tbl-hyperparameters below shows the tuned hyperparameter values.
+
+::: {#tbl-hyperparameters}
+
+```{python}
+#| label: tuned-hyperparameters
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+(
+  GT(
+    pd.DataFrame(
+      tuning_study.best_trial.params.items(), 
+      columns=["Hyperparameter", "Value"]
+      )
+      .fillna("None")
+  )
+  .tab_options(table_width="100%")
+)
+```
+
+Tuned Hyperparameter Values from Optuna Study
+
+:::
+
+```{python}
+#| label: contour-plot
+#| include: false
+
+# optuna.visualization.plot_param_importances(study)
+
+# optuna.visualization.plot_contour(study, params=["n_estimators", 'min_samples_split'])
+
+# optuna.visualization.plot_slice(study, ['max_depth'])
+```
+
+## Model Evaluation
+
+Finally, having tuned the hyperparameters, we should hopefully have a model that will give us the best performance available on our test set.
+
+```{python}
+#| label: final model
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+#| cache: true
+#| output: asis
+
+best_params = tuning_study.best_params
+
+best_extra_trees = ExtraTreesRegressor(
+    n_estimators=best_params['n_estimators'],
+    criterion=best_params['criterion'],
+    max_depth=best_params['max_depth'],
+    min_samples_split=best_params['min_samples_split'],
+    max_features=best_params['max_features'],
+    # min_impurity_decrease=best_params['min_impurity_decrease'],
+    random_state=42
+)
+
+pipeline = Pipeline([
+    ('preprocessor', preprocessor),
+    ('regressor', best_extra_trees)
+])
+
+# Fit the pipeline to the training data
+pipeline.fit(X_train, np.ravel(y_train))
+
+# Predict on the test set
+y_pred = pipeline.predict(X_test)
+
+# Evaluate RMSE on the test set
+extra_trees_rmse = root_mean_squared_error(np.ravel(y_test), y_pred)
+# print(f"Test RMSE: {test_rmse:.3f}")
+```
+
+The model improves on the baseline RMSE of **`{python} f"{baseline_rmse:.3f}"`** to achieve an RMSE of **`{python} f"{extra_trees_rmse:.3f}"`**. That is a ~`{python} f"{100 * ((baseline_rmse - extra_trees_rmse)/baseline_rmse):.0f}"`% decrease. This is not nothing! 
+
+Interestingly, the linear regression with full preprocessing manages to achieve an RMSE of **`{python} f"{lm_rmse:.3f}"`**, which really isn't that far off the performance we achieve with our final model. If I was to take this further, for example to put this into production, I'd be inclined to back the linear model.
+
+## Final Thoughts
+
+Was this a good use of my time? No, but did we learn something? Also no[^ExtraTrees]. Perhaps there's a moral to this story? Still, no. If you were hoping for a big reveal that makes the time you invested in reading this worth it, then I regret to inform you that I'm not nearly that clever. It really was a big dumb blog post.
+
+Obviously, as stated straight out the gates, this isn't how I'd go about this task if it was any less than a silly post for a silly goose. I would spend a lot more time on the exploratory end really getting to know the data and questioning whether there's enough here to build a model that's worth the effort it took to make it. There'd probably be some time spent trying to model this as an explanatory task. Only after doing all this and convincing myself that there's enough signal here that we might actually be able to predict episode ratings reaonsably well would I then consider building a predictive model.
+
+There is inevitably an almost infinite number of features that could be extracted from the dialogue and the various dialogue metrics that have already been created. If I was to go a little further, I'd look at the synposis text and see if there's signal in there. I did have a little look at sentiment and it didn't seem like there was much there, but I could also look at the frequency of certain named entities, or do some topic modelling. I imagine there's also more that could be extracted from the actual dialogue, if we went back and grabbed that.
+
+[^ExtraTrees]:
+
+    That's a lie. I've never used ExtraTrees before, so I learned a little playing around with it. Still, I'm not sure this meets the level for claiming to have learned something...
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
