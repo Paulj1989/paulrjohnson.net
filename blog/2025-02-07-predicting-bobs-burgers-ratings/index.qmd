@@ -9,7 +9,7 @@ date: 2025-02-07
 image: burgers.webp
 image-alt: |
   A red sign outside a restaurant that has the outline of a burger, with 
-  "Burgers" written in place of the patty.
+  Burgers written in place of the patty.
 categories: [Machine Learning, Hyperparameter Optimisation, Python]
 bibliography: references.bib
 ---
