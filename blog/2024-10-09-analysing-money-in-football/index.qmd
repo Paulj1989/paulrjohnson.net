@@ -15,6 +15,11 @@ categories: [Multilevel Regression, Statistics, R]
 bibliography: references.bib
 ---
 
+::: {.callout-note}
+
+An earlier version of this post included a couple errors and insufficient detail in the section translating the model's outputs into real-world findings. While I've fixed these issues, I won't be as bold as to claim there are now zero errors in this post. There are fewer than before, though.
+:::
+
 ```{r}
 #| label: setup
 #| output: false
@@ -462,11 +467,9 @@ models <-
 
 The previous section highlights multiple grouping structures that need to be accounted for in the data, which is fortunate because I've already spent a lot of time talking about multilevel models here, and that would have been a real waste of time. This exploratory work also identified that squad values appear to have a non-linear relationship with the three outcomes. The other detail that we can see from the variation within and between groups across the range of squad values is that not only does the mean value vary by league, but also the magnitude of squad value's effect on the three outcomes varies. Multilevel models can handle both of these types of variation quite easily. When the mean difference is allowed to vary between groups, this is a varying intercepts model, and allowing the magnitude of the effect to vary by group is called a varying slopes model. When your model allows both, it is a varying intercepts & slopes model, and this is the kind of model we will use here. We saw minor but clear differences at the league level, and we know that the most significant differences will occur at the club level (this just would have been a mess to visualise).
 
-The regression models fit to the three outcomes - league points, goal difference, and xG difference - all have the same basic structure. All three outcomes have been transformed to a "Per Game" value in order to account for the shortened season in Ligue 1 during the COVID-19 pandemic. The model includes three population-level explanatory variables: squad value, club mean value, and time. Squad market value has been decomposed into two variables - group-mean centred squad value[^Centring], using clubs as the groups, and the club mean squad value, to effectively capture the within and between effects, respectively [@bafumi2007; @bell2019; @enders2007]. Both squad value variables have been log-transformed to account for the decreasing gains in league outcomes as squad values increase. An additional variable for time, a continuous variable indexed at 0 (2012/13) and with a maximum of 11 (2023/24), is included. The time variable has been included to account for changes in the distribution of outcomes over time (for example, increasing disparities in outcomes between the best and worst teams). The grouping structures include teams nested within their league and a separate crossed-grouping variable for each season[^Grouping]. 
+The regression models in @tbl-model-summary are fit to the three outcomes - league points, goal difference, and xG difference - all have the same basic structure. All three outcomes have been transformed to a "Per Game" value in order to account for the shortened season in Ligue 1 during the COVID-19 pandemic. The model includes three population-level explanatory variables: squad value, club mean value, and time. Squad market value has been decomposed into two variables - group-mean centred squad value[^Centring], using clubs as the groups, and the club mean squad value, to effectively capture the within and between effects, respectively [@bafumi2007; @bell2019; @enders2007]. Both squad value variables have been log-transformed to account for the decreasing gains in league outcomes as squad values increase. An additional variable for time, a continuous variable indexed at 0 (2012/13) and with a maximum of 11 (2023/24), is included. The time variable has been included to account for changes in the distribution of outcomes over time (for example, increasing disparities in outcomes between the best and worst teams). The grouping structures include teams nested within their league and a separate crossed-grouping variable for each season[^Grouping]. 
 
 While the model intercepts are allowed to vary according to each grouping structure, the squad value slopes are specified to vary by the nested league/team grouping. The varying slopes component means that the magnitude of squad values' effect on outcomes is allowed to vary by league and team. We could have allowed the squad value effects to vary by season as well, given that there did appear to be some flattening of the curve of squad values association with league points over time, however, the differences were minor and allowing the intercepts to vary should be sufficient, without inviting unnecessary complexity. In contrast to the population-level time variable (which is intended to capture trends), the season grouping structure mostly captures the fact that outcomes are not independent of each other in a given season. There are a finite number of points in a season, so if Man City win them all, there's none left for anyone else. Similarly, if Man City score 1000 goals, everyone else's goal difference will be much worse.
-
-The regression results are below in @tbl-model-summary. 
 
 ```{r}
 #| label: tbl-model-summary
@@ -503,7 +506,7 @@ models |>
   modelsummary::msummary(
     statistic = 'conf.int', gof_map = gm, coef_map = cm, fmt = 2, output = "gt"
     ) |> 
-  tab_row_group(label = md("**Group Effects**"), rows = 9:14) |>
+  tab_row_group(label = md("**Group-Level Effects**"), rows = 9:14) |>
   tab_row_group(label = md("**Population-Level Effects**"), rows = 1:8) |> 
   tab_footnote(
     footnote = "Integers 0-11 (2012/13 = 0; 2022/23 = 11)",
@@ -530,14 +533,6 @@ models |>
   tbl_theme()
 ```
 
-Log-transformed coefficients are not directly interpretable beyond the direction of the effect. However, by transforming the coefficient $\beta_1$ with the formula $38 \times \beta_1 \times \text{log}(1.10)$, we can estimate the average increase in the outcome over a 38-game season for every additional 10% increase in squad value (~€24m)[^Scale]. Every 10% increase in squad value results in an approximate increase of 1.4 points in a 38-game season, 1.5 in xG difference, and 2.3 in goal difference, while a 10% increase in a club's average squad value over the 12-season period leads to an estimated increase of 1.9 points in a 38-game season, 2.1 in xG difference, and 2.9 in goal difference[^Net].
-
-We can also calculate the percentage increase in a team's value that the model estimates will lead to three additional points in a 38-game season, using the formula $\left(e^{\frac{3}{38 \times \beta_1}} - 1\right) \times 100$. The model estimates that a ~22.4% increase in squad value leads to a three-point increase in a season, while a ~16.4% increase in a club's average squad value should be sufficient to achieve the same result a given season.
-
-The parameter estimates for the group-level variables indicate how much the intercepts and slopes deviate from their grand means[^Variance]. For example, the 0.15 club slope standard deviation (0.02 variance) suggests that the smartest teams can, on average, gain approximately 0.07 more points per 10% increase in squad value in a 38-game season.
-
-These differences are relatively small, but they feel significant in a sport where small point differences can decide seasons, and clubs are willing to spend millions on just one player.
-
 [^Centring]:
 
     Group-mean centring takes the average value of the variable for each group at the relevant level (in this case, clubs) and subtracts this value from the population 
@@ -554,22 +549,54 @@ These differences are relatively small, but they feel significant in a sport whe
     the higher-level grouping. The lower-level groups can belong to any higher-level groups (and multiple groups) when crossed. Seasons are crossed with leagues and teams 
     because both can belong to every one of the seasons (and in the case of the leagues, they **do** belong to each season). 
 
+#### Population-Level Effects
+
+The intercept values for each model in @tbl-model-summary represent the predicted value for each outcome in the 2012/13 season[^Time] for a club with a squad value that is equal to their mean squad value across all seasons and with a mean squad value that is equal to the grand mean squad value. The Squad Value coefficient represents the within-club effect, while the Club Mean Value coefficient is the between-club effect. The within-club effect estimates how increases in any given club's squad value, relative to their average squad value, impact their outcomes on the pitch. In contrast, the between-club effect estimates how much a difference in a club's average squad value, relative to the grand mean squad value, impacts outcomes. The Club Mean Value coefficient helps us quantify how differences in the average squad value between clubs affect differences in their outcomes. 
+
+Both of these coefficients are log-transformed, which means they are not directly interpretable beyond the direction of the effect. However, we can translate both coefficients to a real-world value. Using the formula $38 \times \beta \times \text{log}(1.10)$, where $\beta$ represents the Squad Value or Club Mean Value coefficients, we can estimate how a 10% increase in a club's squad value[^Net] (for the average club, this is an increase of ~€24m[^Scale]) impacts outcomes over a 38-game season. Every 10% increase in the value of a club's squad, the within-club effect, boosts points by an average of ~1.4 points over 38 games, while it also leads to a ~1.5 increase in xG difference and ~2.3 in goal difference. Transforming the between-club effect, on the other hand, estimates the difference in outcomes over a 38-game season between two clubs where one has a 10% higher average squad value across the dataset than the other. The model estimates that a club with a 10% greater mean average squad value over multiple seasons will win an average of ~1.9 more points in any given 38-game season, while their xG and goal differences will be ~2.1 and ~2.9 greater, respectively.
+
+Finally, using the formula $\left(e^{\frac{3}{38 \times \beta}} - 1\right) \times 100$, we can estimate the percentage increase in a club's squad value that is required to win three additional points, on average, over a 38-game season. The model predicts an increase of ~22.4% in a club's squad value is, on average, equivalent to an extra win.
+
+[^Time]: 
+
+    I chose not to centre time because I don't think this would make the intercept easier to interpret. Consequently, all three models' intercepts are high because the 
+    average club's average squad value will be high by 2012/13 standards.
+
 [^Scale]:
 
-    I have chosen to use 10% increases in squad values because this seems more meaningful than 1% increases (~€2.4m). 
-    
+    I used 10% increases in squad values over 1% because this seems more meaningful. A 1% increase for a club with an average squad value is an increase of ~€2.4m. 
+
 [^Net]:
 
-    It's worth noting that this is net spending, so what matters is how much more the new players are worth than those that were sold.
+    It's worth noting that this is a net increase in squad values, so what matters is how much more the incoming players are worth than those who are outgoing.
 
-[^Variance]:
+#### Group-Level Effects
 
-    The club-specific intercept and slope standard deviations are smaller because the squad values are centred around club-specific group means. League-specific parameters
-    should be expected to vary more than club-specific anyway, since the league-specific parameters are a combination of multiple clubs.
+Group-level effects estimate the amount that group means vary around the grand mean. At a club level, intercept and slope effects effectively capture two distinct sources of over/underperformance.
+
+Club-level intercept estimates capture variability in baseline performance between clubs. This highlights structural differences at the club level independent of squad value and persistent across time. One standard deviation around the points intercept is worth 0.09 points per game, which amounts to $\pm$ 3.42 points over a 38-game season. The largest club-specific intercepts belong to Manchester City and Liverpool, but various clubs perform well. The strongest performers include some of the world's biggest teams, but Union Berlin also come in third, and VfL Bochum and Bastia are in the top 10. This suggests that money does not explain structural advantages (at least not entirely). It could be institutional knowledge, better facilities (training ground, medical staff, analytics), or manager effects. Perhaps teams are paying the refs off (especially when they are playing your team). Rich clubs will have more money to invest in these areas, but well-run clubs may have opportunities to make efficient gains. I imagine paying off a referee costs less than buying a world-class striker.
+
+On the other hand, club-level slope estimates capture variability in the effect of squad value changes on performance across clubs. Positive club-specific estimates suggest a club has more effectively turned increases in the value of their squad into improvements in outcomes on the pitch[^Managers]. The standard deviation around the points slope (0.15) indicates that a club could gain as much as 5.7 additional points in a 38-game season if they are smart when building their squad. Inter Milan have the largest club-specific slope, followed by Man City and Liverpool, while Stuttgart and Lens round out the top five. In this case, the strongest performers are even more mixed, indicating that it's not about how much money a team spends but how effectively they spend it[^Luck].
+
+Finally, league-level effects capture structural differences primarily caused by financial disparities between the Big Five leagues. League intercept effects represent variability driven by the fact that a squad of average value would be more or less competitive depending on the league. In contrast, the league slope effects capture differences in the impact that increases in squad values have between leagues. Ligue 1 has the largest positive intercept, indicating that a squad of average value would be expected to win more points in France. Serie A has the largest positive slope, indicating that increases in squad values can go further in Italy. In contrast, the Premier League has the largest negative slope and intercept because money doesn't go as far in England's top flight!
+
+[^Managers]:
+
+    I have lumped manager effects in as a structural advantage on the assumption that better managers raise a club's baseline outcomes regardless of squad value. However, 
+    manager effects may influence the club-level slope, too, as a better manager gets more out of investments in the squad. We also know that manager effects will bleed 
+    into Transfermarkt's squad values - better managers improving players, leading to those players being given higher values - which will bias the population-level 
+    estimates (especially the within-effect). This points to a limitation of the model and use of squad values. Football is a complex, dynamic system with many moving parts, 
+    all of which can affect outcomes on the pitch. Limitations are okay.
+
+[^Luck]:
+
+    Luck will also be a factor. A team running hot over multiple seasons will look like meaningful overperformance, and a dip in performances caused by a debilitating injury 
+    crisis will, at least partially, be attributed to mistakes made by the club's decision-makers. While the model should, by design, handle this sort of variance well, football 
+    is highly random. Some of this randomness will inevitably bleed into some of the model's estimates, and I suspect this will show up most at the club level.
 
 ### Predicting League Points
 
-I still don't know what to make of the effect that club resources have. The model parameters lack context. Computing predictions using the fitted multilevel model will tell us more. I will focus on league points because I think that's a little more interesting than looking at goal or xG difference[^Nerds].
+While it's useful (and hopefully interesting) to understand how squad values, decomposed into within- and between-club effects, impact outcomes, and how these effects vary at a club- and league-level, I think it's a little difficult to piece all this together conceptually and develop a complete picture of the effect that financial resources (with squad value used as a proxy) have on outcomes. This is an inevitable difficulty with complex model structures. It becomes increasingly difficult to translate the many moving parts into a simple, intuitive understanding of the effect. Computing predictions using the fitted multilevel model will tell us more. I will focus on league points because I think that's a little more interesting than looking at goal or xG difference[^Nerds].
 
 ![](arrested-development.jpg){fig-align="center" width=60% fig-alt="The 'It's One Banana Michael' meme from Arrested Development, with Lucille Bluth saying 'I mean, it's one point, Michael? What could it cost? 100 million dollars?'"}
 
