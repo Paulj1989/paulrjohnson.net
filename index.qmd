@@ -18,9 +18,9 @@ about:
   image-width: 28em
   id: hero-heading
   links:
-    - icon: mastodon
-      aria-label: Mastodon
-      href: https://fosstodon.org/@paulj1989
+    - text: "{{< iconify fa6-brands bluesky >}}"
+      aria-label: Bluesky
+      href: https://bsky.app/profile/paulrjohnson.net
     - icon: linkedin
       aria-label: LinkedIn
       href: https://linkedin.com/in/paulj1989

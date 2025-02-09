@@ -49,10 +49,13 @@ po/*~
 rsconnect/
 
 # Quarto folder
-.quarto/
+/.quarto/
 
 # Site build folder
 _site/
 
-/.quarto/
+# Squad Values data for Money in Football post
 blog/2024-10-09-analysing-money-in-football/data/squad_values.csv
+
+# DS_Store files
+.DS_Store

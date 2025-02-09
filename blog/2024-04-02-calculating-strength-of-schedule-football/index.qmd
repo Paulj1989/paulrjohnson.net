@@ -77,32 +77,40 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
 
 # set gt theme
 tbl_theme <- 
-  function(data, type = c("num", "pct"), .round = 2, ...){
-  if (type == "num") {
-    data |>
-      cols_align(columns = is.numeric, align = "center") |>
-      fmt_number(
-        columns = is.numeric, decimals = .round, drop_trailing_zeros = TRUE
+  function(data, type = c("num", "pct"), .round = 2, ...) {
+    if (type == "num") {
+      data |>
+        cols_align(columns = is.numeric, align = "center") |>
+        fmt_number(
+          columns = is.numeric, decimals = .round, drop_trailing_zeros = TRUE
         ) |> 
-      tab_source_note(source_note = "Source: FBref Via {worldfootballR}") |>
-      tab_options(
-        table.width = pct(100),
-        table.font.names = "Poppins",
-        ...
-      )
-  } else if (type == "pct") {
-    data |>
-      cols_align(columns = is.numeric, align = "center") |>
-      fmt_percent(
-        columns = is.numeric, decimals = .round, drop_trailing_zeros = TRUE
+        tab_source_note(source_note = "Source: FBref Via {worldfootballR}") |>
+        tab_options(
+          table.width = pct(100),
+          table.font.names = "Poppins",
+          ...
+        ) |>
+        tab_style(
+          style = cell_text(align = "left"),
+          locations = list(cells_source_notes(), cells_footnotes())
+        )
+    } else if (type == "pct") {
+      data |>
+        cols_align(columns = is.numeric, align = "center") |>
+        fmt_percent(
+          columns = is.numeric, decimals = .round, drop_trailing_zeros = TRUE
         ) |> 
-      tab_source_note(source_note = "Source: FBref Via {worldfootballR}") |>
-      tab_options(
-        table.width = pct(100),
-        table.font.names = "Poppins",
-        ...
-      )
-  } else {
+        tab_source_note(source_note = "Source: FBref Via {worldfootballR}") |>
+        tab_options(
+          table.width = pct(100),
+          table.font.names = "Poppins",
+          ...
+        ) |>
+        tab_style(
+          style = cell_text(align = "left"),
+          locations = list(cells_source_notes(), cells_footnotes())
+        )
+    } else {
       stop("type must equal `num` or `pct`")
     }
   }
