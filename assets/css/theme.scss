@@ -253,8 +253,14 @@ div.quarto-post .thumbnail img {
 }
 
 //figures
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 .figure-img {
   width: 100%;
+  height: auto;
 }
 
 //tables
