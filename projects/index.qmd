@@ -2,15 +2,15 @@
 title: Project Portfolio
 subtitle: Selected Works from Data Science & Academia
 description-meta: |
-  Selected professional and hobby projects from my career as a social scientist 
-  turned data scientist, including machine learning models, web apps, and academic 
+  Selected professional and hobby projects from my career as a social scientist
+  turned data scientist, including machine learning models, web apps, and academic
   research.
 ---
 
 ## Data Science  {{< fa code-fork >}}
 
 - Data Science Guides [[R](https://r-data-science-guides.netlify.app/)|[Python](https://python-data-science-guides.netlify.app/)] - Guides for common data science tasks, in R & Python.
-- [CAIP App](https://github.com/NHS-South-Central-and-West/caip/) - The PCN Capacity and Access Improvement Payment (CAIP) App.
+- [CAIP App](https://0195527d-3bc5-1025-fd07-35ef0a9dd189.share.connect.posit.cloud) - The PCN Capacity and Access Improvement Payment (CAIP) App.
 - [Expected Kills](https://github.com/Paulj1989/expected-kills) - Predicting kills in volleyball using XGBoost.
 - [Player Similarities](https://github.com/Paulj1989/player-similarities) - Using clustering methods to measure player similarity within positions.
 - [Football Analytics](https://github.com/Paulj1989/football-analytics) - A repository of past football analytics work.
