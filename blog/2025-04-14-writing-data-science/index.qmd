@@ -1,0 +1,119 @@
+---
+title: How to Write About Data Science (Effectively)
+subtitle: |
+    Writing about data science like you have interacted with another human being
+    before.
+description-meta: |
+    Discussing approaches to writing about data science and how data scientists
+    can improve their writing and become more engaging when communicating.
+date: 2025-04-14
+image: typewriter.webp
+image-alt: |
+    An old Corona typewriter on a wooden table, with a pair of hands resting
+    on the keys about to type.
+categories: [Writing, Scientific Communication]
+bibliography: references.bib
+---
+
+Many data scientists will have been kids who excelled at math throughout school. Some would have viewed writing with the fear that the rest of the world views their beloved numbers. I'm not like most data scientists, though. I'm much dumber. My instinct is to express myself using words instead of fancy letters, and as someone who struggled with math in school, I am a little more familiar with the intimidation many feel when faced with notation. I've always enjoyed writing, and I think I'm at least pretty good at it for someone in a field full of number nerds. I'm the bridge between the nerds and the normies. I have successfully spun my own stupidity as a niche.
+
+This post is intended to offer some tips for writing about data science, conceding my only competitive advantage in the process. I am not arrogant enough to think I have anything to offer to a general audience[^General], but I hope I can give some valuable advice to other data scientists. I will focus on the approach rather than the technicalities of writing about data science. The technical elements of good writing remain consistent across context and domain, so I will defer to the subject matter experts on this[^Technical].
+
+Everything that follows is neither definitive nor authoritative. It may even be nonsense. You might be right if you think anything I've said here is wrong or stupid. This is only intended to share some of what has helped me become a better writer. It's important to remember I'm just some dumb bozo on the Internet, and whatever you do, don't be mad at me.
+
+[^General]:
+
+For general advice on becoming a better writer, you are probably better off seeking the counsel of some actual professional writers. I'd recommend William Zinsser's [-@zinsser2001] _On Writing Well_ and Stephen King's [-@king2020] _On Writing_.
+
+[^Technical]:
+
+Regarding the technical aspects of writing, I'd highly recommend William Strunk & E.B. White's [-@strunk1999] _Elements of Style_ and George Gopen & Judith Swan's [-@gopen1990] _The Science of Scientific Writing_.
+
+## Writing the Right Way
+
+> If you're thinking without writing, you only think you're thinking. <br><br> - Leslie Lamport
+
+I really like this quote[^Ref]. It's one of those pithy things you hear people say. They're usually nonsense, but I think it is true in this case. It's a sentiment shared by [Larry McEnerney]( https://www.youtube.com/watch?v=aFwVf5a3pZM&t=551s) in his talk on academic writing at the University of Chicago[^Mark].
+
+Writing is essential to good science because it helps you organise your thoughts, identify the weaknesses in your argument, and turn disparate, muddled thoughts into something resembling a coherent idea. The same benefits to thinking also apply to learning, which is a big reason for maintaining this blog. I build on what I know when I have to write it down for others. Partly because I don't want to make a fool of myself but also because I want to do a good job. And if you are going to write? Well, you might as well do it well, right?
+
+[^Ref]:
+
+I tried to track down a proper source for this quote. I could only find it attributed to Leslie Lamport, but not where he initially said it. I discovered it via Paul Graham's [_Writes and Write-Nots_](https://paulgraham.com/writes.html) [-@graham2024].
+
+[^Mark]:
+
+I have [Mark Thompson](https://get-goalside-newsletter-archive.beehiiv.com) to thank for this one, which he shared in a [recent post](https://get-goalside-newsletter-archive.beehiiv.com/p/bloggings-cool-again).
+
+### Writing is Not an Afterthought
+
+There are plenty of excellent data scientists who might struggle as writers. It's natural to prioritise the skills you excel at––such as math, statistics, or programming––and when those skills become a career, it becomes a strong positive feedback loop. Writing can quickly become an afterthought.
+
+Even so, communicating your findings shouldn't be a lower priority than the findings themselves. Instead of treating the writing stage as the means to an end, treat writing as central to everything you do. If you want to improve your writing, afford it the same weight you do to the other parts of the process and treat it as a part of the journey and a part of the fun. A well-written analysis is just as satisfying as the analysis itself, and a scientist has many tools at their disposal for illuminating their writing[^Tools].
+
+If you care about your writing like you care about your analysis, you'll invest a similar amount of time iterating over the results to maximise the performance. @zinsser2001 talks about the time he invests in his writing, pouring over every sentence, reading and rereading passages just to identify and replace the word that makes it feel clunky, and playing with draft after draft so that the end result can be the best version of his work. Data scientists will recognise this process. You apply it to the modelling stage. You should also do it with your writing.
+
+[^Tools]:
+
+The writing itself is only one component. Analytics gives you a few other tools that are not always available to other writers. Rohan Alexander's [-@alexander2023] _Telling Stories With Data_ goes into detail about this stuff in the Communication section of the book. If your audience is comfortable with notation, there is no more succinct and precise way to express your model, and causal diagrams are an excellent way to lay out your theory intuitively and visually. The most powerful tool is data visualisation. If a picture is worth a thousand words, surely a plot is worth at least a couple hundred?
+
+### Simple is Smart
+
+William Zinsser [-@zinsser2001] lists "four articles of faith" in _On Writing Well_: clarity, simplicity, brevity, and humanity[^Humanity]. I think these are excellent guiding principles for writing that is accessible and engaging.
+
+First and foremost, the goal should be to distil complex ideas as simply as possible. Data science is complicated. Why make it more difficult by overcomplicating how you communicate about it? The Pulitzer Prize winner Cormac McCarthy recommends "minimalism to achieve clarity" [@savage2019]. He advises writers to constantly ask themselves whether words and punctuation marks need to be there, removing anything superfluous. He also suggests that simple, short sentences are effective when communicating about science because they help the reader focus on the key message. Finally, perhaps his best advice relates to theme and structure, recommending a focus on two or three points you want the reader to take away from reading your work[^Research].
+
+I think honest intent is vital, too. Write to show the reader something cool, teach people about an interesting method, or play around with a fun new tool. There are lots of good reasons for writing about data science. But don't write to demonstrate your intelligence. Going in looking to prove how smart you are will encourage you to overcomplicate things. Complexity is a distraction. "Jargon is the enemy of clarity" [@plaxco2010]. Data science is complicated enough, so why make it harder for your readers by taking the scenic route?
+
+There is nothing wrong with wanting to give a good impression. My natural state is the class clown, so I'm more concerned that readers laugh at my dumb jokes than think I'm a clever little boy. But I still don't want everyone to think I'm talking nonsense. I think it's important that these goals are secondary, though. Writing about a complex subject with clarity, simplicity, brevity, and humanity will achieve these secondary goals. Readers will be a lot more impressed if you can do this.
+
+So much of this advice ultimately comes down to making your audience a central consideration. Write for yourself, but communicate with your readers. Write about subjects you are passionate about, methods you love, or study questions to which the answer interests you. But when you write, do so with close consideration to who will read your work, and adjust your approach to make it as accessible and engaging as possible. That doesn't mean that your work can't be complex. There is plenty of room for deep, complex analyses. But write in simple terms. Write in terms that allow any reader to at least read the words and understand the sentence they just read. If they do not have the necessary prerequisite knowledge to understand what it all means, that's not on you. But it shouldn't be your writing that stops someone from following along.
+
+The reality is that data science is not always straightforward, and there are plenty of times when it won't be possible to write something in simple terms. However, I think the goal should always be to try and simplify what you're saying without losing its meaning. How far is that? It's hard to say, and the answer will always vary based on subject, context, and audience. Still, simplicity is generally a good goal for writing, especially when writing about data science.
+
+[^Humanity]:
+
+This section focuses on the first three principles, but humanity is no less critical. Writing with humanity means putting human beings at the centre of your writing. Tell human stories, discuss what you love about a particular topic, and highlight your work's effects on real people. Speak to readers in terms that make them want to keep reading.
+
+[^Research]:
+
+McCarthy focuses on academic writing, but this approach can be applied to writing in many contexts. It will help when dealing with a complex topic, as often in data science.
+
+### Practice Makes ~~Perfect~~ Less Bad
+
+The most important step you can take in improving your writing is to write.
+This blog post forced me to think harder about writing as a craft; otherwise, my writing has improved simply through practice. I've spent many years writing for a variety of audiences, including writing a lot of admittedly relatively trivial[^FTW] articles for the Borussia Dortmund fan site, [Fear the Wall](https://fearthewall.com), and this has helped me find and hone my voice without giving it much thought. This experience has made it so much easier for me now.
+
+It's a little cliché, but the best advice for improving your writing is to carve out the time to write regularly. Like any craft, getting better at writing requires doing more of it. The more you do it, the easier it comes, and the easier it comes, the more you can try to figure out what works for you and what doesn't. With practice, you will get more comfortable writing in your own voice, making your writing more approachable. This idea is perhaps undervalued when writing about data science, particularly in professional settings. There is still value in finding a consistent voice when communicating findings at work, in academic research, and even (and especially) for your silly little blog posts. Consistency makes your writing flow better, familiarity will make your readers' lives easier, and a unique voice is more pleasing and engaging.
+
+Your voice will differ from my voice. My voice is stupid. I'm a profoundly unserious person. You might not be that person, and that's okay (good, even). Finding your voice is essential in your writing journey[^Voice]. Explore what works for you, what you enjoy, and what feels like an authentic representation of your personality.
+
+Many excellent writers stress the importance of writing like a human being [@zinsser2001] or writing like you talk [@graham2015]. How do you communicate with people when you are comfortable? How would you explain something to a friend who likes you enough not to disown you for talking at them about data science? This is how you should write. The closer you get to writing like your spoken voice, the closer you are to sounding like an actual human using everyday words in a regular order. This will also make your work much easier to follow. Cormac McCarthy argues that "spoken language and common sense" are the best guides when writing your first draft because it is more important that the reader can understand you than that you write to the letter of the grammatical law [@savage2019]. And Cormac McCarthy knows a lot more about writing than I do.
+
+Getting good at writing is often about practice, but it's also about challenging yourself to improve, taking the time and effort to think about your writing and where it does and does not work, and considering how you can grow as a writer. Writing more will help you improve.
+
+[^FTW]:
+
+I think the trivial stuff was most helpful in improving my writing. When tasked with writing several hundred words about some absolutely abysmal game I had nothing to say about, I started experimenting. In those moments of desperation, I found a style that worked for me.
+
+[^Voice]:
+
+Your voice doesn't have to be serious for your work to be taken seriously. There's nothing wrong with having fun. Suppose you read my posts and are unconvinced that being a silly goose does not hurt your legitimacy. In that case, I'd point to [Danielle Navarro](https://djnavarro.net) and [Dan Simpson](https://dansblog.netlify.app) as counters to your understandable reticence. Both are very engaging writers and don't take themselves too seriously. Both are also excellent at this stuff and are bonafide experts.
+
+## Final Thoughts
+
+Writing is hard. But it can also be fulfilling when you get it right. I'm wary of seeming like the breezy hobbyist claiming that writing is a joyous experience, knowing that the professionals will read this and laugh at me[^LOL]. Still, I think this point is worth reiterating because I get the sense it doesn't get recognised when talking about writing about data science (or science generally). As much as a clean, well-executed analysis is satisfying, clear and concise findings can make your work shine.
+
+You need to start writing to find those nuggets of joy. To whatever extent I am a good writer, it is because I have plenty of practice. I have developed my voice and learned how to achieve what I want with words. That, and the lower standard expected of a data scientist trying to communicate with words instead of numbers. Whatever your abilities, write honestly, with humanity and some humility. If your intentions are good but your writing is terrible, the latter can at least be fixed with practice.
+
+[^LOL]:
+
+Don't laugh at me on the Internet. That's illegal.
+
+## Acknowledgments {.appendix}
+
+Preview image by [Patrick Fore](https://unsplash.com/@patrickian4) on [Unsplash](https://unsplash.com/photos/person-holding-white-and-black-typewriter-59lC6TgZAbQ).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

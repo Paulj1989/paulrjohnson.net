@@ -4,13 +4,13 @@
 # Helper Functions ----
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-fix_team_names <- 
+fix_team_names <-
   function(data) {
     dplyr::case_when(
       data == "1.FC Heidenheim 1846" ~ "Heidenheim",
       data == "1.FC Köln" ~ "Köln",
       data == "1.FC Nuremberg" ~ "Nürnberg",
-      data == "1.FC Union Berlin" ~	"Union Berlin",
+      data == "1.FC Union Berlin" ~ "Union Berlin",
       data == "1.FSV Mainz 05" ~ "Mainz",
       data == "AC Carpi" ~ "Carpi",
       data == "AC Cesena" ~ "Cesena",
@@ -47,7 +47,7 @@ fix_team_names <-
       data == "Burnley FC" ~ "Burnley",
       data == "CA Osasuna" ~ "Osasuna",
       data == "Cádiz CF" ~ "Cádiz",
-      data == "Cagliari Calcio" ~	"Cagliari",
+      data == "Cagliari Calcio" ~ "Cagliari",
       data == "Calcio Catania" ~ "Catania",
       data == "Carpi FC 1909" ~ "Carpi",
       data == "Catania FC" ~ "Catania",
@@ -191,14 +191,14 @@ fix_team_names <-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # get player values from transfermarkt
-player_values_raw <- 
+player_values_raw <-
   worldfootballR::tm_player_market_values(
     country_name = c("England", "Spain", "Germany", "Italy", "France"),
     start_year = c(2012:2023)
   )
 
 # wrangle to team total values per season?tm
-squad_values <- 
+squad_values <-
   player_values_raw |>
   dplyr::mutate(
     league = comp_name,
@@ -207,16 +207,16 @@ squad_values <-
       .default = league
     ),
     season = season_start_year
-  ) |> 
+  ) |>
   tidyr::drop_na(player_market_value_euro) |>
   dplyr::summarise(
     squad_value = sum(player_market_value_euro),
     .by = c(squad, league, season)
-  ) |> 
+  ) |>
   dplyr::mutate(squad = fix_team_names(squad))
 
 readr::write_csv(
-  squad_values, 
+  squad_values,
   here::here("blog", "2024-07-20-money-in-football", "data", "squad_values.csv")
 )
 
@@ -225,7 +225,7 @@ readr::write_csv(
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # get league tables from fb ref
-league_table_raw <- 
+league_table_raw <-
   worldfootballR::fb_season_team_stats(
     country = c("ENG", "ESP", "GER", "ITA", "FRA"),
     gender = "M",
@@ -234,25 +234,25 @@ league_table_raw <-
     stat_type = "league_table",
     time_pause = 5
   )
- 
+
 # wrangle league tables to merge with squad values
 league_tables <-
   league_table_raw |>
   janitor::clean_names(
     replace = c(
       "xGD" = "xgd",
-      "xGA"= "xga",
+      "xGA" = "xga",
       "xG" = "xg"
-      )
-    ) |>
+    )
+  ) |>
   dplyr::mutate(
     season = season_end_year - 1,
-    league =
-      dplyr::case_when(
-        competition_name == "Fußball-Bundesliga" ~ "Bundesliga",
-        .default = competition_name
-        ),
-    squad = fix_team_names(squad)) |> 
+    league = dplyr::case_when(
+      competition_name == "Fußball-Bundesliga" ~ "Bundesliga",
+      .default = competition_name
+    ),
+    squad = fix_team_names(squad)
+  ) |>
   dplyr::select(league, squad, season, rk, mp, pts, gf, ga, gd, xg, xga, xgd)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -266,8 +266,8 @@ season_list <- c(2012:2023)
 crossed <- tidyr::crossing(country_list, season_list)
 
 # specify function for transfer balances
-balance_fun <- 
-  function(countries, years){
+balance_fun <-
+  function(countries, years) {
     worldfootballR::tm_team_transfer_balances(
       country_name = countries,
       start_year = years
@@ -275,8 +275,8 @@ balance_fun <-
       dplyr::mutate(season = years)
   }
 
-# get transfer balances 
-transfer_balance_raw <- 
+# get transfer balances
+transfer_balance_raw <-
   purrr::map2_dfr(
     crossed$country_list,
     crossed$season_list,
@@ -284,7 +284,7 @@ transfer_balance_raw <-
   )
 
 transfer_balances <-
-  transfer_balance_raw |>  
+  transfer_balance_raw |>
   dplyr::mutate(
     net_spend = expenditure_euros - income_euros,
     gross_spend = expenditure_euros,
@@ -292,14 +292,15 @@ transfer_balances <-
       league == "LaLiga" ~ "La Liga",
       .default = league
     ),
-    squad = fix_team_names(squad)) |> 
+    squad = fix_team_names(squad)
+  ) |>
   dplyr::select(league, season, squad, gross_spend, net_spend)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Number of Players ----
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-fb_std_raw <- 
+fb_std_raw <-
   worldfootballR::fb_season_team_stats(
     country = c("ENG", "ESP", "GER", "ITA", "FRA"),
     gender = "M",
@@ -307,7 +308,7 @@ fb_std_raw <-
     tier = "1st",
     stat_type = "standard",
     time_pause = 5
-    )
+  )
 
 num_players <-
   fb_std_raw |>
@@ -315,12 +316,12 @@ num_players <-
   dplyr::filter(team_or_opponent == "team") |>
   dplyr::mutate(
     season = season_end_year - 1,
-    league =
-      dplyr::case_when(
-        competition_name == "Fußball-Bundesliga" ~ "Bundesliga",
-        .default = competition_name
-        ),
-    squad = fix_team_names(squad)) |> 
+    league = dplyr::case_when(
+      competition_name == "Fußball-Bundesliga" ~ "Bundesliga",
+      .default = competition_name
+    ),
+    squad = fix_team_names(squad)
+  ) |>
   dplyr::select(league, season, squad, num_players) |>
   tidyr::drop_na()
 
@@ -334,15 +335,14 @@ tm_combined <-
 fb_combined <-
   dplyr::full_join(league_tables, num_players)
 
-club_resources <- 
-  dplyr::full_join(fb_combined, tm_combined) |> 
+club_resources <-
+  dplyr::full_join(fb_combined, tm_combined) |>
   dplyr::mutate(
-    season =
-      forcats::as_factor(
-        glue::glue(
-          "{season}/{as.numeric(stringr::str_sub(season, start = -2)) + 1}"
-        )
+    season = forcats::as_factor(
+      glue::glue(
+        "{season}/{as.numeric(stringr::str_sub(season, start = -2)) + 1}"
       )
+    )
   )
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -350,8 +350,11 @@ club_resources <-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 readr::write_rds(
-  club_resources, 
+  club_resources,
   file = here::here(
-    "blog", "2024-07-20-money-in-football", "data", "club_resources.rds"
-    )
+    "blog",
+    "2024-07-20-money-in-football",
+    "data",
+    "club_resources.rds"
   )
+)

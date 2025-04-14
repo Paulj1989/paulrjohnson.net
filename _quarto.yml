@@ -15,7 +15,7 @@ website:
   image: assets/img/paul/paul.webp
   image-alt: Me looking handsome as hell
   comments: false
- 
+
   navbar:
     title: P(Johnson) > 0.05
     logo: assets/img/favicon/favicon.ico
@@ -40,12 +40,11 @@ website:
       - text: Curriculum Vitae
         aria-label: Curriculum Vitae
         href: cv/index.qmd
-  
-  page-footer:  
-    left: >-
-     &#169; 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
 
-    right: 
+  page-footer:
+    left: 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
+
+    right:
       - text: Contact
         aria-label: Contact Form
         href: contact.qmd
@@ -53,9 +52,9 @@ website:
         aria-label: License Details
         href: license.qmd
 
-format: 
+format:
   html:
-    theme: 
+    theme:
       - cosmo
       - assets/css/theme.scss
     highlight-style: assets/github-plus.theme
@@ -66,13 +65,13 @@ format:
       theme: neutral
 
 knitr:
-  opts_chunk: 
+  opts_chunk:
     dev: ragg_png
 
-execute: 
+execute:
   freeze: auto
   warning: false
   error: false
 
-include-in-header: 
+include-in-header:
   - assets/umami.html
