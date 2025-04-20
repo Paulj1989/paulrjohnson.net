@@ -4,7 +4,7 @@ subtitle: |
     The importance of communicating uncertainty when writing about data science.
 description-meta: |
     Discussing hedging.
-date: 2025-04-15
+date: 2025-05-05
 image: hedge.webp
 image-alt: |
     A green hefge with a pink wall of a building in the background.
