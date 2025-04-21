@@ -1,0 +1,332 @@
+---
+title: Comparing Staff Costs & Squad Values
+subtitle: |
+  Using the Bundesliga's financial reports to test Transfermarkt's squad values
+  as a proxy for squad costs.
+description-meta: |
+  Using the Bundesliga's financial reports to test Transfermarkt's squad values
+  as a proxy for squad costs.
+date: 2025-05-01
+image: ball.webp
+image-alt: |
+  A Derbystar Bundesliga match ball sitting on the turf of a football pitch.
+categories: [Football Analytics, Statistics, R]
+bibliography: references.bib
+---
+
+```{r}
+#| label: setup
+#| output: false
+#| code-fold: true
+#| code-summary: 'Setup Code (Click to Expand)'
+
+# import packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(gt)
+  library(ggplot2)
+})
+
+# setup fonts
+sysfonts::font_add_google("Poppins")
+sysfonts::font_add_google("Lora")
+showtext::showtext_auto()
+
+# set plot theme
+# inspired by https://github.com/z3tt/TidyTuesday/blob/main/R/2020_31_PalmerPenguins.Rmd
+theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
+  theme_update(
+    panel.grid.major = element_line(color = "grey90", linewidth = .4),
+    panel.grid.minor = element_blank(),
+    panel.spacing.x = unit(.65, units = "cm"),
+    panel.spacing.y = unit(.3, units = "cm"),
+    axis.title.x = element_text(
+      color = "grey30",
+      margin = margin(t = 5),
+      size = rel(1.05)
+    ),
+    axis.title.y = element_text(
+      color = "grey30",
+      margin = margin(r = 5),
+      size = rel(1.05)
+    ),
+    axis.text = element_text(color = "grey50", size = rel(1)),
+    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75),
+    axis.ticks = element_line(color = "grey90", linewidth = .4),
+    axis.ticks.length = unit(.2, "lines"),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = rel(.9)),
+    legend.box.margin = margin(0, 0, -10, 0),
+    legend.key.width = unit(1, units = "cm"),
+    plot.title = element_text(
+      hjust = 0,
+      color = "black",
+      family = "Lora",
+      size = rel(1.5),
+      margin = margin(t = 5, b = 5)
+    ),
+    plot.subtitle = element_text(
+      hjust = 0,
+      color = "grey30",
+      family = "Lora",
+      lineheight = 0.5,
+      size = rel(1.1),
+      margin = margin(5, 0, 5, 0)
+    ),
+    plot.title.position = "plot",
+    plot.caption = element_text(
+      color = "grey50",
+      size = rel(0.8),
+      hjust = 1,
+      margin = margin(10, 0, 0, 0)
+    ),
+    plot.caption.position = "plot",
+    plot.margin = margin(rep(10, 4)),
+    strip.text = element_text(size = rel(1), margin = margin(0, 0, 5, 0)),
+    strip.clip = "off"
+  )
+
+# set table theme
+tbl_theme <-
+  function(data, width = 100, alignment = "center") {
+    data |>
+      tab_source_note(
+        source_note = "Source: FBref & Transfermarkt Via {worldfootballR}"
+      ) |>
+      tab_options(
+        footnotes.marks = "standard",
+        footnotes.spec_ref = "^xb",
+        footnotes.spec_ftr = "(x)",
+        table.width = pct(width),
+        table.align = alignment,
+        table.font.names = "Poppins"
+      ) |>
+      tab_style(
+        style = cell_text(align = "left"),
+        locations = list(cells_source_notes(), cells_footnotes())
+      )
+  }
+
+# load data
+buli_resources <-
+  readr::read_rds(
+    here::here(
+      "blog",
+      "2025-05-01-staff-costs-vs-squad-values",
+      "data",
+      "buli_resources.rds"
+    )
+  )
+```
+
+I found out the staff costs data was easily available from the DFL site: https://www.dfl.de/de/hintergrund/lizenzierungsverfahren/finanzkennzahlen-der-proficlubs/
+
+## Exploring the Variance
+
+There is significant difference between squad values and staff costs, which is to be expected because they're not claiming to be the same thing. But the difference doesn't appear to change all that much from season-to-season.
+
+```{r}
+#| label: value-diff
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+buli_resources |>
+  mutate(diff = squad_value - staff_cost) |>
+  summarise(avg_diff = median(diff), .by = season) |>
+  ggplot(aes(forcats::as_factor(season), avg_diff)) +
+  geom_col(position = "dodge", colour = "#343a40") +
+  geom_hline(yintercept = 0, colour = "#343a40") +
+  scale_fill_manual(
+    values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  labs(
+    # title = "Squad Value in the Big Five Leagues Over Time",
+    # subtitle = stringr::str_wrap(
+    #   glue::glue(
+    #     "Median average Transfermarkt squad market values per season in each of the ",
+    #     "Big Five leagues in Europe from 2012/13 - 2023/24."
+    #   ),
+    #   width = 93
+    # ),
+    x = NULL,
+    y = "Average Difference",
+    caption = "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+  )
+```
+
+## Testing the Correlations
+
+The relationship between staff costs and squad values is actually remarkably clean. It is clearly linear, and any variance is only minimal.
+
+There doesn't appear to be anything particularly systematic about the variance. At the lower end of staff costs it looks like squad values are a little undervalued, but the reverse is true as it increases. At the top end of staff costs, the squad values are all slightly undervalued. I think the top end of the staff costs will all be Bayern Munich (I'm not sure how much this matters).
+
+```{r}
+#| label: value-by-outcom
+#| fig-height: 7
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+buli_resources |>
+  ggplot(aes(x = staff_cost, y = squad_value)) +
+  geom_point(alpha = .4, size = 1, colour = "#343a40") +
+  geom_smooth(
+    method = lm,
+    colour = "#026E99",
+    # se = FALSE,
+    linewidth = 1.2
+  ) +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  labs(
+    # title = "League Outcomes by Squad Value in the Big Five Leagues",
+    # subtitle = stringr::str_wrap(
+    #   glue::glue(
+    #     "Comparing the association between squad values and league outcomes - ",
+    #     "points, goal difference, and xG difference - in the Big Five leagues ",
+    #     "in Europe across the 2012/13 - 2023/24 seasons."
+    #   ),
+    #   width = 93
+    # ),
+    x = "Staff Cost",
+    y = "Squad Value",
+    caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
+  ) +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75))
+```
+
+I guess I wonder how much the relationship between squad values and staff costs is a function of over/underperformance by a given team.
+
+```{r}
+#| label: value-by-outcome
+#| fig-height: 7
+#| fig-alt: |
+#|    A regression plot visualising the association between squad market values
+#|    and league outcomes. The data is subset by outcome (points, goal difference,
+#|    and xG difference) and league, producing 15 plots fit. Each plot shows a
+#|    positive association between squad values and outcomes. However, the
+#|    association appears to be non-linear. The regression line fit to each subset
+#|    of the data includes a log-transformed squad value as the predictor, which
+#|    fits the data relatively well, though to varying degrees.
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+buli_resources |>
+  ggplot(aes(x = staff_cost, y = squad_value)) +
+  geom_point(alpha = .4, size = 1) +
+  geom_smooth(
+    method = lm,
+    # formula = y ~ log(x),
+    colour = "#343a40",
+    se = FALSE,
+    linewidth = 1,
+    alpha = .6
+  ) +
+  facet_wrap(facets = vars(season), scales = "free") +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  labs(
+    # title = "League Outcomes by Squad Value in the Big Five Leagues",
+    # subtitle = stringr::str_wrap(
+    #   glue::glue(
+    #     "Comparing the association between squad values and league outcomes - ",
+    #     "points, goal difference, and xG difference - in the Big Five leagues ",
+    #     "in Europe across the 2012/13 - 2023/24 seasons."
+    #   ),
+    #   width = 93
+    # ),
+    x = "Staff Cost",
+    y = "Squad Value",
+    caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
+  ) +
+  theme(
+    panel.spacing.x = unit(.3, units = "cm"),
+    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75)
+  )
+```
+
+```{r}
+#| label: value-by-season
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+buli_resources |>
+  ggplot(aes(x = staff_cost, y = squad_value, colour = season)) +
+  geom_point(alpha = .4, size = 3) +
+  geom_smooth(
+    method = lm,
+    se = FALSE,
+    linewidth = 1,
+    alpha = .6
+  ) +
+  scale_colour_manual(
+    values = c(
+      "#026E99",
+      "#3881A6",
+      "#699CB7",
+      "#9BB8C7",
+      "#D2D2D2"
+    ),
+    guide = FALSE
+  ) +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  labs(
+    # title = "League Points by Squad Value Over Time",
+    # subtitle = glue::glue(
+    #   "Comparing the association between squad market values and total league ",
+    #   "points across<br>the Big Five leagues in Europe, in each season from ",
+    #   "<b style='color:#00537C;'>2012/13</b> - <b style='color:#D2D2D2;'>2023/24</b>."
+    # ),
+    x = "Staff Cost",
+    y = "Squad Value",
+    caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
+  ) +
+  theme(
+    plot.subtitle = ggtext::element_markdown(lineheight = .7)
+  )
+```
+
+## Acknowledgments {.appendix}
+
+Preview image by [Tobias Rehbein](https://unsplash.com/@tobiasrehbein) on [Unsplash](https://unsplash.com/photos/a-soccer-ball-sitting-on-top-of-a-lush-green-field-CZ_HwDtvEus).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.
