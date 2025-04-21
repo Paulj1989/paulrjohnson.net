@@ -4,7 +4,7 @@ subtitle: |
   Configuring Netlify redirects when building Quarto websites using continuous deployment.
 description-meta: |
   Automating Netlify redirect rules for a Quarto website that is using continuous
-  deployment and Netlify's build tools, ensuring that blog posts are easy to find, 
+  deployment and Netlify's build tools, ensuring that blog posts are easy to find,
   easy to share, and never go missing.
 date: 2024-03-01
 image: netlify.webp
@@ -15,7 +15,7 @@ eval: false
 
 If you are using Netlify to host your Quarto website there is a ton of helpful functionality that can smooth out the process. They even give you a fancy deployment status badge, and who among us can really claim they're better than a nice status badge?
 
-One of the features that Netlify offers is a simple process for handling redirects. Whether you need to redirect traffic from old URLs from your previous site URL structure (it's me) or you want to shorten URLs to make it easier to share links to your blog posts, Netlify's `_redirects` [handles all of this very easily](https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/). 
+One of the features that Netlify offers is a simple process for handling redirects. Whether you need to redirect traffic from old URLs from your previous site URL structure (it's me) or you want to shorten URLs to make it easier to share links to your blog posts, Netlify's `_redirects` [handles all of this very easily](https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/).
 
 It's pretty easy to add a `_redirects` file to your site if you manually publish from your local machine or link your Netlify site to a Git repository. However, if you have continuous deployment setup with GitHub and/or Netlify or if you want to automate the process of grabbing URLs and generating their redirects (or both), then it's not immediately obvious how to do this in a painfully manual way with a Quarto website.
 
@@ -60,7 +60,7 @@ There are multiple sources from which redirect rules will be derived, which requ
 ```{r}
 #| label: manual-redirects
 
-# import redirects 
+# import redirects
 manual_redirects <- readr::read_lines(here::here("assets", "_manualredirects"))
 ```
 
@@ -102,7 +102,7 @@ blog_posts <-
   )
 
 blog_redirects <-
-  blog_posts |> 
+  blog_posts |>
   dplyr::pull(redirects)
 ```
 
@@ -127,7 +127,7 @@ get_categories <-
       stringr::str_subset("^categories:") |>
       stringr::str_extract("\\[.*\\]") |>
       stringr::str_remove_all("[\\[\\]]") |>
-      stringr::str_split(", ") |> 
+      stringr::str_split(", ") |>
       purrr::list_c()
   }
 
@@ -136,7 +136,7 @@ categories <-
   # blog post categories
   purrr::map(blog_posts |> dplyr::pull(path), get_categories) |>
   # concatenate categories into a vector
-  purrr::list_c() |> 
+  purrr::list_c() |>
   unique() |>
   stringr::str_replace_all(" ", "%20")
 
@@ -181,12 +181,12 @@ This is an imperfect solution because freezing this code means that it won't run
 
 ## Summary
 
-Netlify offers some valuable features. Netlify's build tools and redirect capabilities are great, but they don't necessarily play nice with Quarto, depending on how you want to combine them. 
+Netlify offers some valuable features. Netlify's build tools and redirect capabilities are great, but they don't necessarily play nice with Quarto, depending on how you want to combine them.
 
-There are guides available online for getting redirects working with Quarto, but things get a little trickier if you want to use continuous deployment with Netlify's build tools. This post sought to build on the good work others have done and explain how I got redirects working for my particular use case. I suspect there are better ways to approach this. My solution is very much cobbled together. However, it addresses a slightly different problem than the resources I've found about setting up Netlify's redirects with Quarto. 
+There are guides available online for getting redirects working with Quarto, but things get a little trickier if you want to use continuous deployment with Netlify's build tools. This post sought to build on the good work others have done and explain how I got redirects working for my particular use case. I suspect there are better ways to approach this. My solution is very much cobbled together. However, it addresses a slightly different problem than the resources I've found about setting up Netlify's redirects with Quarto.
 
 If you have come up with a better way of doing this than me, please let me know!
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

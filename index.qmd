@@ -4,8 +4,8 @@ subtitle: Using Causal Inference & Machine Learning to Confirm My Priors
 image: assets/img/paul/paul.webp
 image-alt: Me looking handsome as hell
 description-meta: |
-  I am a data scientist interested in using my knowledge of causal inference, 
-  statistics, probabilistic thinking, and machine learning to understand human 
+  I am a data scientist interested in using my knowledge of causal inference,
+  statistics, probabilistic thinking, and machine learning to understand human
   behaviour.
 twitter-card:
     title: Paul Johnson
@@ -30,7 +30,7 @@ about:
     - text: "{{< iconify fa6-brands kaggle >}}"
       aria-label: Kaggle
       href: https://kaggle.com/paulrjohnson
-    - text: "{{< iconify fa6-brands google-scholar >}}" 
+    - text: "{{< iconify fa6-brands google-scholar >}}"
       aria-label: Google Scholar
       href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en
     - icon: cup-hot-fill
@@ -57,7 +57,7 @@ At heart, I want to understand how the world works, and I enjoy telling stories 
 ```{r}
 #| label: manual-redirects
 
-# import redirects 
+# import redirects
 manual_redirects <- readr::read_lines(here::here("assets", "_manualredirects"))
 ```
 
@@ -93,7 +93,7 @@ blog_posts <-
   )
 
 blog_redirects <-
-  blog_posts |> 
+  blog_posts |>
   dplyr::pull(redirects)
 ```
 
@@ -112,7 +112,7 @@ get_categories <-
       stringr::str_subset("^categories:") |>
       stringr::str_extract("\\[.*\\]") |>
       stringr::str_remove_all("[\\[\\]]") |>
-      stringr::str_split(", ") |> 
+      stringr::str_split(", ") |>
       purrr::list_c()
   }
 
@@ -121,7 +121,7 @@ categories <-
   # blog post categories
   purrr::map(blog_posts |> dplyr::pull(path), get_categories) |>
   # concatenate categories into a vector
-  purrr::list_c() |> 
+  purrr::list_c() |>
   unique() |>
   stringr::str_replace_all(" ", "%20")
 
