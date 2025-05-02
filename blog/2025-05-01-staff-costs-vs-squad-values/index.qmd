@@ -1,5 +1,5 @@
 ---
-title: Comparing Staff Costs & Squad Values
+title: Are Transfermarkt Squad Values a Reliable Proxy?
 subtitle: |
   Using the Bundesliga's financial reports to test Transfermarkt's squad values
   as a proxy for squad costs.
@@ -10,7 +10,7 @@ date: 2025-05-01
 image: ball.webp
 image-alt: |
   A Derbystar Bundesliga match ball sitting on the turf of a football pitch.
-categories: [Football Analytics, Statistics, R]
+categories: [Football Analytics, Statistics, Machine Learning, R]
 bibliography: references.bib
 ---
 
@@ -25,6 +25,7 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(gt)
   library(ggplot2)
+  library(tidymodels)
 })
 
 # setup fonts
@@ -92,7 +93,7 @@ tbl_theme <-
   function(data, width = 100, alignment = "center") {
     data |>
       tab_source_note(
-        source_note = "Source: FBref & Transfermarkt Via {worldfootballR}"
+        source_note = "Source: DFL & Transfermarkt Via {worldfootballR}"
       ) |>
       tab_options(
         footnotes.marks = "standard",
@@ -120,26 +121,105 @@ buli_resources <-
   )
 ```
 
-I found out the staff costs data was easily available from the DFL site: https://www.dfl.de/de/hintergrund/lizenzierungsverfahren/finanzkennzahlen-der-proficlubs/
+Last year, I wrote a [blog post](https://paulrjohnson.net/blog/analysing-money-in-football/) that modeled the effect that money has on outcomes in the Europe's five biggest football leagues. The key explanatory variable in my model was Transfermarkt's squad values, serving as a proxy for a club's financial clout. While research has shown that Transfermarkt's player market values have strong associations with transfer fees [@herm2014; @muller2017; @coates2022], the existing literature regarding player salaries is promising but the volume is much more limited [@prockl2018]. Further, research has also identified that player values vary in predictive value by league [@muller2017; @coates2022]. All this considered, I concluded that Transfermarkt's squad market values were an effective proxy for squad spending[^Spending]. But what if I was wrong?
 
-## Exploring the Variance
+I used a proxy for the same reason everyone uses a proxy — because I didn't have data for the variables I would have otherwise used. Unlike many other cases, I think my own laziness is the missing data culprit. I think the best way to capture financial clout is using squad costs. This could either be **just** a club's wage spending, or it could be all spending on the squad (wages + transfer fees). While this data isn't exactly readily available, I'm pretty sure I could track down the wage spending from annual financial reports. So I took the easy way out.
 
-There is significant difference between squad values and staff costs, which is to be expected because they're not claiming to be the same thing. But the difference doesn't appear to change all that much from season-to-season.
+A few weeks ago, [Ansgar Wolsing](https://bsky.app/profile/ansgarw.bsky.social) made me aware of the Deutsche Fussball Liga (DFL)'s [published reports](https://www.dfl.de/de/hintergrund/lizenzierungsverfahren/finanzkennzahlen-der-proficlubs/) detailing the annual financial accounts for every club in the Bundesliga (and 2. Bundesliga). Those accounts include each club's spending on "staff costs", which is all staff, including the playing squad.
+
+Never one to miss an opportunity to make _content_, I went right to work and grabbed six seasons of data, from 2017/18 to 2022/23. Now, we can find out whether or not Transfermarkt's squad values are a reasonable proxy for the data I was too lazy to go looking for (until someone basically dropped it in my lap). Lesbeavenue!
+
+[^Spending]:
+
+Which is itself effectively a proxy for a club's financial resources, since the assumption is that clubs will spend close to the maximum they can on their squad.
+
+## Exploring the Data
+
+While the majority of clubs report their staff costs on a season-basis, there are some that report staff costs for the financial year. In those cases, the costs don't perfectly align to a single season, but I don't think the change in costs from season-to-season is large enough to be a huge concern.
+
+However, I did have to drop Frankfurt's 2022/23 season from the data. This was because Frankfurt were one of the teams that have been reporting their costs for the financial year, but in 2023 they made the switch to reporting costs over a season. In order to line their reports up, this meant the 2023 report is just the costs for the first six months of 2023 (so that the following season is on the correct schedule). I did think about doubling the Frankfurt figures, and I'm sure this would be approximately right in reality, but it feels a little too icky so I just dropped them.
+
+Another discrepancy in the data occurs in the 2021/22 season. The figures published in 2024 refer to the 2022/23 season, but the reports are organised by division, with all teams in the Bundesliga in the 2024/25 season in one report, and the same for the 2. Bundesliga. I have absolutely no idea why the figures are organised like this, but I'm sure there's some logic that I'm just too stupid to see. For the most part it was just an inconvenience, creating a lot more work for me to pull the costs together for the right teams in the right season. In 2022/23, however, Paderborn were relegated from the Bundesliga, followed by another relegation down to the 3. Liga in 2023/24. The trouble is, while the top two tiers in Germany are governed by the DFL, the third tier is governed by the DFB. Paderborn's consecutive relegations mean that they aren't included in these reports. It's despicable. The real victim here is me. No one has been hurt more by Paderborn plummeting down the German football pyramid.
+
+### Variance
+
+To start with, it's probably worth comparing the squad values and staff costs directly, to get some sense of what we are working with. I will start by capturing the difference between the two and exploring how this figure varies across the dataset.
+
+If we take the difference between squad values and staff costs, plotted below, we see that the gap between the two is pretty large, with squad values usually the larger of the two (though occasionally the difference is negative because a team's staff costs are higher than their squad values).
 
 ```{r}
-#| label: value-diff
+#| label: difference-distribution
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
 buli_resources |>
   mutate(diff = squad_value - staff_cost) |>
-  summarise(avg_diff = median(diff), .by = season) |>
-  ggplot(aes(forcats::as_factor(season), avg_diff)) +
+  ggplot(aes(diff)) +
+  geom_histogram() +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      prefix = "€"
+    )
+  ) +
+  labs(
+    title = "Difference Between Squad Values & Staff Costs in the Bundesliga",
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The distribution of differences between Bundesliga clubs' squad values ",
+        "and staff costs per season from 2017/18 to 2022/23."
+      ),
+      width = 93
+    ),
+    x = "Difference",
+    y = NULL,
+    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
+  )
+```
+
+The fact there is a big difference between the two values is not a problem. Of course they are different. They are not claiming to be the same thing. This doesn't render squad values useless as a proxy, as long as squad values is directionally approximate with staff cost.
+
+The question is whether there is any bias between the two across the Bundesliga. One way of looking at this is taking the average difference in squad values and staff costs by team, below, to see how the differences tend to differ by club. When calculating the average differences I've used the median since it is very skewed.
+
+```{r}
+#| label: tbl-team-difference
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+buli_resources |>
+  mutate(diff = squad_value - staff_cost) |>
+  add_count(team) |>
+  filter(n >= 3) |>
+  summarise(club_diff = median(diff), .by = team) |>
+  arrange(desc(club_diff)) |>
+  gt(rowname_col = "team") |>
+  cols_label(
+    club_diff = "Average Difference"
+  ) |>
+  fmt_currency(columns = club_diff, currency = "euro", suffixing = TRUE) |>
+  cols_align(align = "center", columns = club_diff) |>
+  tbl_theme()
+```
+
+I've filtered for teams that appear in three or more seasons in the data. I've mostly done this to reduce the list down a bit, but it also takes out the noisiest observations (though all are obviously pretty small sample, since the max is just six).
+
+When you compare the average difference between market value and squad costs between clubs, it is pretty obvious that the differences are a function of the quality of the team, or perhaps of the resources available to teams. I suspect this is probably picking up an issue with the squad values data. Squad values are updated regularly and will be responsive to player (and team) performances. Good teams play better and this leads to better teams seeing their values increase.
+
+Another explanation could be that this is just a product of scales. The squad values are generally larger than the staff costs, but perhaps they are a certain percentage higher, on average, and for teams with larger staff costs that's inherently going to mean a bigger difference.
+
+I also considered the possibility that this might be driven by underlying temporal differences, plotted below.
+
+```{r}
+#| label: season-difference
+#| code-fold: true
+#| code-summary: 'Plot Code (Click to Expand)'
+
+buli_resources |>
+  mutate(diff = squad_value - staff_cost) |>
+  summarise(season_diff = median(diff), .by = season) |>
+  ggplot(aes(forcats::as_factor(season), season_diff)) +
   geom_col(position = "dodge", colour = "#343a40") +
   geom_hline(yintercept = 0, colour = "#343a40") +
-  scale_fill_manual(
-    values = c("#7AB5CC", "#026E99", "#FFA600", "#D93649", "#8C3431")
-  ) +
   scale_y_continuous(
     labels = scales::label_number(
       scale_cut = scales::cut_short_scale(),
@@ -147,29 +227,30 @@ buli_resources |>
     )
   ) +
   labs(
-    # title = "Squad Value in the Big Five Leagues Over Time",
-    # subtitle = stringr::str_wrap(
-    #   glue::glue(
-    #     "Median average Transfermarkt squad market values per season in each of the ",
-    #     "Big Five leagues in Europe from 2012/13 - 2023/24."
-    #   ),
-    #   width = 93
-    # ),
+    title = "Average Difference Between Bundesliga Clubs' Squad Values & Staff Costs",
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Median average difference between Transfermarkt squad market values and ",
+        "squad staff costs per season in the Bundesliga from 2017/18 - 2022/23."
+      ),
+      width = 93
+    ),
     x = NULL,
-    y = "Average Difference",
-    caption = "Visualisation: Paul Johnson | Data: Transfermarkt Via {worldfootballR}"
+    y = "Difference\n(Value - Cost)",
+    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
   )
 ```
 
-## Testing the Correlations
+The difference doesn't appear to change all that much from season-to-season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
 
-The relationship between staff costs and squad values is actually remarkably clean. It is clearly linear, and any variance is only minimal.
+### Correlations
 
-There doesn't appear to be anything particularly systematic about the variance. At the lower end of staff costs it looks like squad values are a little undervalued, but the reverse is true as it increases. At the top end of staff costs, the squad values are all slightly undervalued. I think the top end of the staff costs will all be Bayern Munich (I'm not sure how much this matters).
+Initial exploration suggests that squad values are an effective proxy for staff costs (which are themselves a proxy for squad spending). The correlation between the two variables paints an even clearer picture. There is a **`{r} round(cor(buli_resources$staff_cost, buli_resources$squad_value), 2)`** correlation between squad values and staff costs, which is pretty remarkable.
+
+When we visualise the association between the two, below, this further illustrates how closely tied together they are.
 
 ```{r}
-#| label: value-by-outcom
-#| fig-height: 7
+#| label: costs-by-value
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
@@ -179,7 +260,6 @@ buli_resources |>
   geom_smooth(
     method = lm,
     colour = "#026E99",
-    # se = FALSE,
     linewidth = 1.2
   ) +
   scale_x_continuous(
@@ -195,15 +275,14 @@ buli_resources |>
     )
   ) +
   labs(
-    # title = "League Outcomes by Squad Value in the Big Five Leagues",
-    # subtitle = stringr::str_wrap(
-    #   glue::glue(
-    #     "Comparing the association between squad values and league outcomes - ",
-    #     "points, goal difference, and xG difference - in the Big Five leagues ",
-    #     "in Europe across the 2012/13 - 2023/24 seasons."
-    #   ),
-    #   width = 93
-    # ),
+    title = "Association Between Staff Costs & Squad Values in the Bundesliga",
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Comparing the association between staff costs and squad values in the ",
+        "Bundesliga from 2017/18 - 2022/23."
+      ),
+      width = 93
+    ),
     x = "Staff Cost",
     y = "Squad Value",
     caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
@@ -211,46 +290,68 @@ buli_resources |>
   theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75))
 ```
 
-I guess I wonder how much the relationship between squad values and staff costs is a function of over/underperformance by a given team.
+The relationship between staff costs and squad values is incredibly clean. It is clearly linear, and any variance is only minimal.
+
+There doesn't appear to be anything particularly systematic about the variance. At the lower end of staff costs it looks like squad values are a little undervalued, but the reverse is true as it increases. At the top end of staff costs, the squad values are all slightly undervalued. I think the top end of the staff costs will all be Bayern Munich (I'm not sure how much this matters).
+
+All this paints a pretty clear picture. Squad values seem to be a very good approximation of staff costs.
+
+## Predictive Performance
+
+The final test of squad values as an appropriate proxy for staff costs is to compare their predictive performance.
 
 ```{r}
-#| label: value-by-outcome
+#| label: outcome-diffs
 #| fig-height: 7
-#| fig-alt: |
-#|    A regression plot visualising the association between squad market values
-#|    and league outcomes. The data is subset by outcome (points, goal difference,
-#|    and xG difference) and league, producing 15 plots fit. Each plot shows a
-#|    positive association between squad values and outcomes. However, the
-#|    association appears to be non-linear. The regression line fit to each subset
-#|    of the data includes a log-transformed squad value as the predictor, which
-#|    fits the data relatively well, though to varying degrees.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
 buli_resources |>
-  ggplot(aes(x = staff_cost, y = squad_value)) +
+  tidyr::pivot_longer(
+    cols = c(pts, xgd, gd),
+    names_to = "outcome",
+    values_to = "outcome_value"
+  ) |>
+  tidyr::pivot_longer(
+    cols = c(squad_value, staff_cost),
+    names_to = "metric",
+    values_to = "metric_value"
+  ) |>
+  mutate(
+    outcome = case_when(
+      outcome == "pts" ~ "Points",
+      outcome == "gd" ~ "Goal Difference",
+      outcome == "xgd" ~ "xG Difference",
+      .default = outcome
+    ),
+    metric = case_when(
+      metric == "squad_value" ~ "Squad Value",
+      metric == "staff_cost" ~ "Staff Cost",
+    )
+  ) |>
+  ggplot(aes(x = metric_value, y = outcome_value)) +
   geom_point(alpha = .4, size = 1) +
   geom_smooth(
     method = lm,
-    # formula = y ~ log(x),
+    formula = y ~ log(x),
     colour = "#343a40",
     se = FALSE,
     linewidth = 1,
     alpha = .6
   ) +
-  facet_wrap(facets = vars(season), scales = "free") +
+  facet_grid(rows = vars(outcome), cols = vars(metric), scales = "free") +
   scale_x_continuous(
     labels = scales::label_number(
       scale_cut = scales::cut_short_scale(),
       prefix = "€"
     )
   ) +
-  scale_y_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
+  # scale_y_continuous(
+  #   labels = scales::label_number(
+  #     scale_cut = scales::cut_short_scale(),
+  #     prefix = "€"
+  #   )
+  # ) +
   labs(
     # title = "League Outcomes by Squad Value in the Big Five Leagues",
     # subtitle = stringr::str_wrap(
@@ -261,8 +362,8 @@ buli_resources |>
     #   ),
     #   width = 93
     # ),
-    x = "Staff Cost",
-    y = "Squad Value",
+    x = NULL,
+    y = NULL,
     caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
   ) +
   theme(
@@ -271,57 +372,198 @@ buli_resources |>
   )
 ```
 
-```{r}
-#| label: value-by-season
-#| code-fold: true
-#| code-summary: 'Plot Code (Click to Expand)'
 
-buli_resources |>
-  ggplot(aes(x = staff_cost, y = squad_value, colour = season)) +
-  geom_point(alpha = .4, size = 3) +
-  geom_smooth(
-    method = lm,
-    se = FALSE,
-    linewidth = 1,
-    alpha = .6
-  ) +
-  scale_colour_manual(
-    values = c(
-      "#026E99",
-      "#3881A6",
-      "#699CB7",
-      "#9BB8C7",
-      "#D2D2D2"
-    ),
-    guide = FALSE
-  ) +
-  scale_x_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
-  scale_y_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
-  labs(
-    # title = "League Points by Squad Value Over Time",
-    # subtitle = glue::glue(
-    #   "Comparing the association between squad market values and total league ",
-    #   "points across<br>the Big Five leagues in Europe, in each season from ",
-    #   "<b style='color:#00537C;'>2012/13</b> - <b style='color:#D2D2D2;'>2023/24</b>."
-    # ),
-    x = "Staff Cost",
-    y = "Squad Value",
-    caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
-  ) +
-  theme(
-    plot.subtitle = ggtext::element_markdown(lineheight = .7)
+### Fit XGBoost Models
+
+<!-- * Next step is combining all the code below into helper functions, and then running them together for each of the outcomes. -->
+<!-- * Also need to check the code and see how it can be made more efficient/updated to recent tidymodels conventions. -->
+
+```{r}
+#| label: fit-models
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+#| cache: true
+
+set.seed(42)
+splits <- initial_split(buli_resources, prop = 0.8)
+
+train <- training(splits)
+test <- testing(splits)
+
+set.seed(42)
+folds <- vfold_cv(train, v = 10, repeats = 5)
+
+preprocess_data <- function(rec) {
+  rec |>
+    step_log(
+      case_when(
+        rec$var_info$variable[[1]] == "squad_value" ~ "squad_value",
+        rec$var_info$variable[[1]] == "staff_cost" ~ "staff_cost"
+      )
+    ) |>
+    step_novel(team) |>
+    step_dummy(all_factor_predictors()) |>
+    step_zv()
+}
+
+rec_value_pts <-
+  recipe(pts ~ squad_value + season + team, data = train) |>
+  preprocess_data()
+
+rec_cost_pts <-
+  recipe(pts ~ staff_cost + season + team, data = train) |>
+  preprocess_data()
+
+rec_value_gd <-
+  recipe(gd ~ squad_value + season + team, data = train) |>
+  preprocess_data()
+
+rec_cost_gd <-
+  recipe(gd ~ staff_cost + season + team, data = train) |>
+  preprocess_data()
+
+rec_value_xgd <-
+  recipe(xgd ~ squad_value + season + team, data = train) |>
+  preprocess_data()
+
+rec_cost_xgd <-
+  recipe(xgd ~ staff_cost + season + team, data = train) |>
+  preprocess_data()
+
+TREES <- 1200
+LEARN_RATE <- 0.005
+
+spec <- boost_tree(
+  trees = !!TREES,
+  learn_rate = !!LEARN_RATE,
+  # min_n = tune(),
+  tree_depth = tune(),
+  loss_reduction = tune(),
+  sample_size = tune(),
+  # mtry = tune(),
+  stop_iter = tune()
+) |>
+  set_engine("xgboost") |>
+  set_mode("regression")
+
+wf_sets <- workflow_set(
+  preproc = list(
+    value_pts = rec_value_pts,
+    cost_pts = rec_cost_pts,
+    value_gd = rec_value_gd,
+    cost_gd = rec_cost_gd,
+    value_xgd = rec_value_xgd,
+    cost_xgd = rec_cost_xgd
+  ),
+  models = list(model = spec),
+  cross = TRUE
+)
+
+control <-
+  finetune::control_sim_anneal(
+    save_pred = TRUE,
+    parallel_over = "everything",
+    save_workflow = TRUE,
+    verbose = TRUE
   )
+
+tuned_results <- workflow_map(
+  wf_sets,
+  fn = "tune_sim_anneal",
+  control = control,
+  metrics = metric_set(rmse, rsq),
+  resamples = folds,
+  seed = 42
+)
+
+MODELS <- c(
+  "value_pts_model" = "Squad Value (Points)",
+  "cost_pts_model" = "Staff Cost (Points)",
+  "value_gd_model" = "Squad Value (Goal Diff)",
+  "cost_gd_model" = "Staff Cost (Goal Diff)",
+  "value_xgd_model" = "Squad Value (xG Diff)",
+  "cost_xgd_model" = "Staff Cost (xG Diff)"
+)
+
+select_best_model <- function(tuned_results, mod) {
+  tuned_results |>
+    extract_workflow_set_result(mod) |>
+    select_best(metric = "rmse") |>
+    transmute(
+      model_type = MODELS[mod],
+      # mtry,
+      tree_depth,
+      loss_reduction,
+      sample_size,
+      stop_iter
+    )
+}
+
+# best_value_pts <- select_best_model(tuned_results, "value_pts_model")
+# best_cost_pts <- select_best_model(tuned_results, "cost_pts_model")
+# best_value_gd <- select_best_model(tuned_results, "value_gd_model")
+# best_cost_gd <- select_best_model(tuned_results, "cost_gd_model")
+# best_value_xgd <- select_best_model(tuned_results, "value_xgd_model")
+# best_cost_xgd <- select_best_model(tuned_results, "cost_xgd_model")
+
+# bind_rows(
+#   best_value_pts,
+#   best_cost_pts,
+#   best_value_gd,
+#   best_cost_gd,
+#   best_value_xgd,
+#   best_cost_xgd
+# ) |>
+#   transmute(
+#     model_type,
+#     # mtry,
+#     tree_depth,
+#     loss_reduction,
+#     sample_size,
+#     stop_iter
+#   )
+
+finalize_model <- function(tuned_results, model_type) {
+  best_set <- select_best_model(tuned_results, model_type)
+  tuned_results |>
+    extract_workflow(model_type) |>
+    finalize_workflow(best_set) |>
+    last_fit(
+      splits,
+      metrics = metric_set(rmse, rsq)
+    )
+}
+
+value_pts_final <- finalize_model(tuned_results, "value_pts_model")
+cost_pts_final <- finalize_model(tuned_results, "cost_pts_model")
+value_gd_final <- finalize_model(tuned_results, "value_xgd_model")
+cost_gd_final <- finalize_model(tuned_results, "cost_xgd_model")
+value_xgd_final <- finalize_model(tuned_results, "value_xgd_model")
+cost_xgd_final <- finalize_model(tuned_results, "cost_xgd_model")
 ```
+
+I won't bother to walk through the code to fit the models since that isn't the focus of the post here, but I've fit and tuned XGBoost models for each of the three outcomes that I used in my original model — points, goal difference, xG difference — with season and team included as features, as well as squad values or staff costs. In total, this results in six different models.
+
+The goal isn't to go to great lengths to fit perfect models. I've done a little tuning just for the hell of it, but the focus is really on just comparing the performance of the squad values and staff costs models.
+
+```{r}
+#| label: model-performance
+#| code-fold: true
+#| code-summary: 'Model Code (Click to Expand)'
+
+value_pts_final |> collect_metrics()
+cost_pts_final |> collect_metrics()
+value_gd_final |> collect_metrics()
+cost_gd_final |> collect_metrics()
+value_xgd_final |> collect_metrics()
+cost_xgd_final |> collect_metrics()
+```
+
+The results only serve to further confirm how well-aligned these two variables are. The squad values outperform the staff costs, but what is more important is that the performance is generally only a little better. It is consistently better, and I think the only reasonable conclusion is that this is because some performance bias is getting baked in, but the fact the performance is only slightly improved is a good sign.
+
+## Wrapping Up
+
+There is very little difference between the two, and while it does seem like squad values are a little biased by performance, I don't think it is making such a difference that it's a big problem. It's just something to be aware of if using them as a proxy for something like squad costs.
 
 ## Acknowledgments {.appendix}
 

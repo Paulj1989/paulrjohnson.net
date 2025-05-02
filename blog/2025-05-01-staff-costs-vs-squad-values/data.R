@@ -27,10 +27,19 @@ buli_resources <-
   squad_values |>
   dplyr::filter(league == "Bundesliga") |>
   dplyr::filter(
-    season %in% c("2022/23", "2021/22", "2020/21", "2019/20", "2018/19")
+    season %in%
+      c("2022/23", "2021/22", "2020/21", "2019/20", "2018/19", "2017/18")
   ) |>
-  dplyr::select("team", "season", "squad_value", "pts", "gd", "xgd") |>
-  dplyr::right_join(staff_costs)
+  dplyr::select(
+    "team",
+    "season",
+    "squad_value",
+    "pts",
+    "gd",
+    "xgd"
+  ) |>
+  dplyr::right_join(staff_costs) |>
+  dplyr::mutate(season = forcats::as_factor(season))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Save Final Dataset ----
