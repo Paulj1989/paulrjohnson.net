@@ -1,8 +1,8 @@
 ---
-title: How Reliable are Transfermarkt's Squad Values?
+title: Testing Transfermarkt's Squad Values
 subtitle: |
-  Using the DFL's financial reports to compare Transfermarkt's squad values with
-  Bundesliga staff costs.
+  Using Bundesliga staff costs to evaluate Transfermarkt's squad values as a
+  proxy for Bundesliga club spending
 description-meta: |
   Using the Bundesliga's financial reports to test Transfermarkt's squad values
   as a proxy for squad costs.
@@ -52,7 +52,7 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
       size = rel(1.05)
     ),
     axis.text = element_text(color = "grey50", size = rel(1)),
-    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75),
+    # axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75),
     axis.ticks = element_line(color = "grey90", linewidth = .4),
     axis.ticks.length = unit(.2, "lines"),
     legend.position = "top",
@@ -141,11 +141,54 @@ However, I did have to drop Frankfurt's 2022/23 season from the data. This was b
 
 Another discrepancy in the data occurs in the 2021/22 season. The figures published in 2024 refer to the 2022/23 season, but the reports are organised by division, with all teams in the Bundesliga in the 2024/25 season in one report, and the same for the 2. Bundesliga. I have absolutely no idea why the figures are organised like this, but I'm sure there's some logic that I'm just too stupid to see. For the most part it was just an inconvenience, creating a lot more work for me to pull the costs together for the right teams in the right season. In 2022/23, however, Paderborn were relegated from the Bundesliga, followed by another relegation down to the 3. Liga in 2023/24. The trouble is, while the top two tiers in Germany are governed by the DFL, the third tier is governed by the DFB. Paderborn's consecutive relegations mean that they aren't included in these reports. It's despicable. The real victim here is me. No one has been hurt more by Paderborn plummeting down the German football pyramid.
 
-### Differences Between Squad Values & Staff Costs
+### The Value-Cost Gap (Difference)
 
 To start with, it's probably worth comparing the squad values and staff costs directly, to get some sense of what we are working with. I will start by capturing the difference between the two and exploring how this figure varies across the dataset.
 
 If we take the difference between squad values and staff costs, plotted below, we see that the gap between the two is pretty large, with squad values usually the larger of the two (though occasionally the difference is negative because a team's staff costs are higher than their squad values).
+
+```{r}
+#| label: scale-function
+#| code-fold: true
+#| code-summary: 'Helper Function Code (Click to Expand)'
+
+scale_euros <-
+  function(axes = c("both", "x", "y"), expand = c(0.01, 0)) {
+    scales <- list()
+
+    if (axes[1] %in% c("both", "x")) {
+      scales <- append(
+        scales,
+        list(
+          scale_x_continuous(
+            labels = scales::label_number(
+              scale_cut = scales::cut_short_scale(),
+              prefix = "€"
+            ),
+            expand = expand
+          )
+        )
+      )
+    }
+
+    if (axes[1] %in% c("both", "y")) {
+      scales <- append(
+        scales,
+        list(
+          scale_y_continuous(
+            labels = scales::label_number(
+              scale_cut = scales::cut_short_scale(),
+              prefix = "€"
+            ),
+            expand = expand
+          )
+        )
+      )
+    }
+
+    return(scales)
+  }
+```
 
 ```{r}
 #| label: difference-distribution
@@ -154,26 +197,22 @@ If we take the difference between squad values and staff costs, plotted below, w
 
 buli_resources |>
   mutate(diff = squad_value - staff_cost) |>
-  ggplot(aes(diff)) +
-  geom_histogram() +
-  scale_x_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
+  ggplot(aes(x = diff)) +
+  geom_histogram(color = "#343a40", bins = 30) +
+  geom_hline(yintercept = 0, colour = "#343a40") +
+  scale_euros(axes = "x") +
   labs(
-    title = "Difference Between Squad Values & Staff Costs in the Bundesliga",
+    title = "Median Difference Squad Value vs. Staff Cost in the Bundesliga",
     subtitle = stringr::str_wrap(
       glue::glue(
-        "The distribution of differences between Bundesliga clubs' squad values ",
-        "and staff costs per season from 2017/18 to 2022/23."
+        "Distribution of differences between club squad values and staff costs ",
+        "per season in the Bundesliga from 2017/18 to 2022/23."
       ),
       width = 93
     ),
-    x = "Difference",
+    x = "Value Difference\n(Squad Value - Staff Cost)",
     y = NULL,
-    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
+    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt via {worldfootballR}"
   )
 ```
 
@@ -183,7 +222,7 @@ The question is whether there is any bias between the two across the Bundesliga.
 
 ```{r}
 #| label: tbl-team-difference
-#| tbl-cap: Average Difference Between Squad Values & Staff Costs in the Bundesliga
+#| tbl-cap: Median Difference Squad Values vs. Staff Cost
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
@@ -195,10 +234,19 @@ buli_resources |>
   arrange(desc(club_diff)) |>
   gt(rowname_col = "team") |>
   cols_label(
-    club_diff = "Average Difference"
+    club_diff = md("Value Difference<br>(Squad Value - Staff Cost)")
   ) |>
-  fmt_currency(columns = club_diff, currency = "euro", suffixing = TRUE) |>
+  fmt_currency(
+    columns = club_diff,
+    currency = "EUR",
+    suffixing = TRUE,
+    decimals = 1
+  ) |>
   cols_align(align = "center", columns = club_diff) |>
+  tab_style(
+    style = list(cell_fill(color = "#f8f9fa")),
+    locations = cells_body(rows = everything())
+  ) |>
   tbl_theme()
 ```
 
@@ -210,40 +258,7 @@ Another explanation could be that this is just a product of scales. The squad va
 
 I also considered the possibility that this might be driven by underlying temporal differences. The difference doesn't appear to change all that much from season-to-season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
 
-```{r}
-#| label: season-difference
-#| code-fold: true
-#| code-summary: 'Plot Code (Click to Expand)'
-#| include: false
-
-buli_resources |>
-  mutate(diff = squad_value - staff_cost) |>
-  summarise(season_diff = median(diff), .by = season) |>
-  ggplot(aes(forcats::as_factor(season), season_diff)) +
-  geom_col(position = "dodge", colour = "#343a40") +
-  geom_hline(yintercept = 0, colour = "#343a40") +
-  scale_y_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
-  labs(
-    title = "Average Difference Between Bundesliga Clubs' Squad Values & Staff Costs",
-    subtitle = stringr::str_wrap(
-      glue::glue(
-        "Median average difference between Transfermarkt squad market values and ",
-        "squad staff costs per season in the Bundesliga from 2017/18 - 2022/23."
-      ),
-      width = 93
-    ),
-    x = NULL,
-    y = "Difference\n(Value - Cost)",
-    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
-  )
-```
-
-### Similarities (Correlation) Between Squad Values & Staff Costs
+### When Value Meets Reality (Correlation)
 
 Initial exploration suggests that squad values are an effective proxy for staff costs (which are themselves a proxy for squad spending). The correlation between the two variables paints an even clearer picture. There is a **`{r} round(cor(buli_resources$staff_cost, buli_resources$squad_value), 2)`** correlation between squad values and staff costs, which is pretty remarkable.
 
@@ -256,38 +271,28 @@ When we visualise the association between the two, below, this further illustrat
 
 buli_resources |>
   ggplot(aes(x = staff_cost, y = squad_value)) +
-  geom_point(alpha = .4, size = 1, colour = "#343a40") +
+  geom_point(alpha = 0.5, size = 2, colour = "#343a40") +
   geom_smooth(
     method = lm,
     colour = "#026E99",
-    linewidth = 1.2
+    # fill = "#026E99",
+    linewidth = 1.2,
+    alpha = 0.15
   ) +
-  scale_x_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
-  scale_y_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
-  ) +
+  scale_euros() +
   labs(
-    title = "Relationship Between Staff Costs & Squad Values in the Bundesliga",
+    title = "Staff Costs vs. Squad Market Values in the Bundesliga",
     subtitle = stringr::str_wrap(
       glue::glue(
-        "Comparing the association between staff costs and squad values in the ",
-        "Bundesliga from 2017/18 - 2022/23."
+        "Relationship between staff costs and squad values in the Bundesliga ",
+        "from 2017/18 - 2022/23."
       ),
       width = 93
     ),
     x = "Staff Cost",
     y = "Squad Value",
     caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
-  ) +
-  theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75))
+  )
 ```
 
 The relationship between staff costs and squad values is incredibly clean. It is clearly linear, and any variance is only minimal.
@@ -324,35 +329,33 @@ buli_resources |>
       outcome == "xgd" ~ "xG Difference",
       .default = outcome
     ),
-    metric = case_when(
-      metric == "squad_value" ~ "Squad Value",
-      metric == "staff_cost" ~ "Staff Cost",
-    )
+    metric = if_else(metric == "squad_value", "Squad Value", "Staff Cost")
   ) |>
   ggplot(aes(x = metric_value, y = outcome_value)) +
-  geom_point(alpha = .4, size = 1) +
+  geom_point(alpha = 0.5, size = 1.2, color = "#343a40") +
   geom_smooth(
     method = lm,
     formula = y ~ log(x),
-    colour = "#343a40",
-    se = FALSE,
+    colour = "#026E99",
+    # fill = "#026E99",
+    se = TRUE,
     linewidth = 1,
-    alpha = .6
+    alpha = 0.2
   ) +
-  facet_grid(rows = vars(outcome), cols = vars(metric), scales = "free") +
-  scale_x_continuous(
-    labels = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      prefix = "€"
-    )
+  facet_grid(
+    rows = vars(outcome),
+    cols = vars(metric),
+    scales = "free",
+    switch = "y"
   ) +
+  scale_euros(axes = "x") +
   labs(
-    title = "League Outcomes by Squad Value & Staff Cost in the Bundesliga",
+    title = "Bundesliga Outcomes vs. Squad Value & Staff Cost",
     subtitle = stringr::str_wrap(
       glue::glue(
-        "Comparing the association between squad values and staff costs and league ",
-        "outcomes - points, goal difference, and xG difference - in the Bundesliga ",
-        "across the 2017/18 - 2022/23 seasons."
+        "Impact of squad values and staff costs on performance metrics and ",
+        "outcomes —— points, goal difference, and xG difference —— in the ",
+        "Bundesliga across the 2017/18 - 2022/23 seasons."
       ),
       width = 93
     ),
@@ -361,12 +364,14 @@ buli_resources |>
     caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
   ) +
   theme(
-    panel.spacing.x = unit(.3, units = "cm"),
-    axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75)
+    panel.spacing = unit(1, "lines"),
+    strip.placement = "outside",
+    # panel.spacing.x = unit(.3, units = "cm"),
+    axis.text.x = element_text(angle = 30, vjust = 1, hjust = 0.8)
   )
 ```
 
-### Fit XGBoost Models
+### XGBoost Models
 
 ```{r}
 #| label: fit-functions
@@ -529,7 +534,7 @@ best_params
 
 ```{r}
 #| label: tbl-model-performance
-#| tbl-cap: Comparing the Predictive Performance of Squad Values & Staff Costs
+#| tbl-cap: Predictive Performance of Squad Values & Staff Costs
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
@@ -573,12 +578,24 @@ summary_table |>
   cols_align(align = "left", columns = outcome) |>
   cols_align(align = "center", columns = c(rmse, rsq)) |>
   tab_spanner(label = "Evaluation Metrics", columns = c(rmse, rsq)) |>
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_column_spanners()
+  ) |>
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_row_groups()
+  ) |>
   tbl_theme()
 ```
 
-The results only serve to further confirm how well-aligned these two variables are. The squad values outperform the staff costs, but what is more important is that the performance is generally only a little better. It is consistently better, and I think the only reasonable conclusion is that this is because some performance bias is getting baked in, but the fact the performance is only slightly improved is a good sign.
+These results do broadly demonstrate how well aligned staff costs and squad values are, but the fact that squad values consistently outperform staff costs is interesting. The squad values models have marginally better root mean squared errors (RMSEs), but they significantly outperform the staff costs models according to R<sup>2</sup>.
 
-## Wrapping Up
+It's worth noting that the models are tuned on RMSE, so the variance in R<sup>2</sup> is perhaps a function of this. What is most important is that the performance is generally only a little better, according to the metric being tuned.
+
+I think the only reasonable conclusion is that this is because some performance bias is getting baked in, but the fact the performance is only slightly improved is a good sign.
+
+## How Reliable are Squad Values?
 
 There is very little difference between the two, and while it does seem like squad values are a little biased by performance, I don't think it is making such a difference that it's a big problem. It's just something to be aware of if using them as a proxy for something like squad costs.
 
