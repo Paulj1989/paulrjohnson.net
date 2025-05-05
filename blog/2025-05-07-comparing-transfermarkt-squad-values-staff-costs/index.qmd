@@ -1,12 +1,12 @@
 ---
-title: Are Transfermarkt Squad Values a Reliable Proxy?
+title: How Reliable are Transfermarkt's Squad Values?
 subtitle: |
-  Using the Bundesliga's financial reports to test Transfermarkt's squad values
-  as a proxy for squad costs.
+  Using the DFL's financial reports to compare Transfermarkt's squad values with
+  Bundesliga staff costs.
 description-meta: |
   Using the Bundesliga's financial reports to test Transfermarkt's squad values
   as a proxy for squad costs.
-date: 2025-05-01
+date: 2025-05-07
 image: ball.webp
 image-alt: |
   A Derbystar Bundesliga match ball sitting on the turf of a football pitch.
@@ -114,7 +114,7 @@ buli_resources <-
   readr::read_rds(
     here::here(
       "blog",
-      "2025-05-01-staff-costs-vs-squad-values",
+      "2025-05-07-comparing-transfermarkt-squad-values-staff-costs",
       "data",
       "buli_resources.rds"
     )
@@ -141,7 +141,7 @@ However, I did have to drop Frankfurt's 2022/23 season from the data. This was b
 
 Another discrepancy in the data occurs in the 2021/22 season. The figures published in 2024 refer to the 2022/23 season, but the reports are organised by division, with all teams in the Bundesliga in the 2024/25 season in one report, and the same for the 2. Bundesliga. I have absolutely no idea why the figures are organised like this, but I'm sure there's some logic that I'm just too stupid to see. For the most part it was just an inconvenience, creating a lot more work for me to pull the costs together for the right teams in the right season. In 2022/23, however, Paderborn were relegated from the Bundesliga, followed by another relegation down to the 3. Liga in 2023/24. The trouble is, while the top two tiers in Germany are governed by the DFL, the third tier is governed by the DFB. Paderborn's consecutive relegations mean that they aren't included in these reports. It's despicable. The real victim here is me. No one has been hurt more by Paderborn plummeting down the German football pyramid.
 
-### Variance
+### Differences Between Squad Values & Staff Costs
 
 To start with, it's probably worth comparing the squad values and staff costs directly, to get some sense of what we are working with. I will start by capturing the difference between the two and exploring how this figure varies across the dataset.
 
@@ -183,6 +183,7 @@ The question is whether there is any bias between the two across the Bundesliga.
 
 ```{r}
 #| label: tbl-team-difference
+#| tbl-cap: Average Difference Between Squad Values & Staff Costs in the Bundesliga
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
@@ -207,12 +208,13 @@ When you compare the average difference between market value and squad costs bet
 
 Another explanation could be that this is just a product of scales. The squad values are generally larger than the staff costs, but perhaps they are a certain percentage higher, on average, and for teams with larger staff costs that's inherently going to mean a bigger difference.
 
-I also considered the possibility that this might be driven by underlying temporal differences, plotted below.
+I also considered the possibility that this might be driven by underlying temporal differences. The difference doesn't appear to change all that much from season-to-season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
 
 ```{r}
 #| label: season-difference
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
+#| include: false
 
 buli_resources |>
   mutate(diff = squad_value - staff_cost) |>
@@ -241,9 +243,7 @@ buli_resources |>
   )
 ```
 
-The difference doesn't appear to change all that much from season-to-season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
-
-### Correlations
+### Similarities (Correlation) Between Squad Values & Staff Costs
 
 Initial exploration suggests that squad values are an effective proxy for staff costs (which are themselves a proxy for squad spending). The correlation between the two variables paints an even clearer picture. There is a **`{r} round(cor(buli_resources$staff_cost, buli_resources$squad_value), 2)`** correlation between squad values and staff costs, which is pretty remarkable.
 
@@ -275,7 +275,7 @@ buli_resources |>
     )
   ) +
   labs(
-    title = "Association Between Staff Costs & Squad Values in the Bundesliga",
+    title = "Relationship Between Staff Costs & Squad Values in the Bundesliga",
     subtitle = stringr::str_wrap(
       glue::glue(
         "Comparing the association between staff costs and squad values in the ",
@@ -285,7 +285,7 @@ buli_resources |>
     ),
     x = "Staff Cost",
     y = "Squad Value",
-    caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
+    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
   ) +
   theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = .75))
 ```
@@ -296,7 +296,7 @@ There doesn't appear to be anything particularly systematic about the variance. 
 
 All this paints a pretty clear picture. Squad values seem to be a very good approximation of staff costs.
 
-## Predictive Performance
+## Comparing Predictive Performance
 
 The final test of squad values as an appropriate proxy for staff costs is to compare their predictive performance.
 
@@ -346,25 +346,19 @@ buli_resources |>
       prefix = "€"
     )
   ) +
-  # scale_y_continuous(
-  #   labels = scales::label_number(
-  #     scale_cut = scales::cut_short_scale(),
-  #     prefix = "€"
-  #   )
-  # ) +
   labs(
-    # title = "League Outcomes by Squad Value in the Big Five Leagues",
-    # subtitle = stringr::str_wrap(
-    #   glue::glue(
-    #     "Comparing the association between squad values and league outcomes - ",
-    #     "points, goal difference, and xG difference - in the Big Five leagues ",
-    #     "in Europe across the 2012/13 - 2023/24 seasons."
-    #   ),
-    #   width = 93
-    # ),
+    title = "League Outcomes by Squad Value & Staff Cost in the Bundesliga",
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Comparing the association between squad values and staff costs and league ",
+        "outcomes - points, goal difference, and xG difference - in the Bundesliga ",
+        "across the 2017/18 - 2022/23 seasons."
+      ),
+      width = 93
+    ),
     x = NULL,
     y = NULL,
-    caption = "Visualisation: Paul Johnson | Data: FBref & Transfermarkt Via {worldfootballR}"
+    caption = "Visualisation: Paul Johnson | Data: DFL & Transfermarkt Via {worldfootballR}"
   ) +
   theme(
     panel.spacing.x = unit(.3, units = "cm"),
@@ -372,174 +366,118 @@ buli_resources |>
   )
 ```
 
-
 ### Fit XGBoost Models
 
-<!-- * Next step is combining all the code below into helper functions, and then running them together for each of the outcomes. -->
-<!-- * Also need to check the code and see how it can be made more efficient/updated to recent tidymodels conventions. -->
+```{r}
+#| label: fit-functions
+#| code-fold: true
+#| code-summary: 'Helper Functions Code (Click to Expand)'
+
+# preprocessing function
+preprocess_data <- function(recipe_obj) {
+  recipe_obj |>
+    step_log(any_of(c("squad_value", "staff_cost"))) |>
+    step_novel(all_nominal_predictors()) |>
+    step_dummy(all_nominal_predictors()) |>
+    step_zv()
+}
+
+# target/predictor combination recipes function
+create_recipes <- function(targets, predictors) {
+  combos <- tidyr::crossing(target = targets, predictor = predictors)
+
+  # set seed
+  furrr_opts <- furrr::furrr_options(seed = 42)
+
+  # create recipe list
+  recipes <- furrr::future_pmap(
+    combos,
+    function(target, predictor) {
+      recipe(
+        formula = as.formula(glue::glue(
+          "{target} ~ {predictor} + season + team"
+        )),
+        data = train
+      ) |>
+        preprocess_data()
+    },
+    .options = furrr_opts
+  )
+
+  # name list elements
+  names(recipes) <-
+    furrr::future_pmap_chr(
+      combos,
+      ~ glue::glue("{..1}_{..2}"),
+      .options = furrr_opts
+    )
+
+  recipes
+}
+```
 
 ```{r}
-#| label: fit-models
+#| label: train-and-tune-models
 #| code-fold: true
 #| code-summary: 'Model Code (Click to Expand)'
 #| cache: true
 
+# set seed for reproducibility
 set.seed(42)
-splits <- initial_split(buli_resources, prop = 0.8)
 
+# set up parallel backend
+future::plan(future::multisession, workers = parallel::detectCores() - 1)
+
+# split train/test data and specify folds
+splits <- initial_split(buli_resources, prop = 0.8)
 train <- training(splits)
 test <- testing(splits)
-
-set.seed(42)
 folds <- vfold_cv(train, v = 10, repeats = 5)
 
-preprocess_data <- function(rec) {
-  rec |>
-    step_log(
-      case_when(
-        rec$var_info$variable[[1]] == "squad_value" ~ "squad_value",
-        rec$var_info$variable[[1]] == "staff_cost" ~ "staff_cost"
-      )
-    ) |>
-    step_novel(team) |>
-    step_dummy(all_factor_predictors()) |>
-    step_zv()
-}
+# generate recipes
+recipes <- create_recipes(
+  targets = c("pts", "gd", "xgd"),
+  predictors = c("squad_value", "staff_cost")
+)
 
-rec_value_pts <-
-  recipe(pts ~ squad_value + season + team, data = train) |>
-  preprocess_data()
-
-rec_cost_pts <-
-  recipe(pts ~ staff_cost + season + team, data = train) |>
-  preprocess_data()
-
-rec_value_gd <-
-  recipe(gd ~ squad_value + season + team, data = train) |>
-  preprocess_data()
-
-rec_cost_gd <-
-  recipe(gd ~ staff_cost + season + team, data = train) |>
-  preprocess_data()
-
-rec_value_xgd <-
-  recipe(xgd ~ squad_value + season + team, data = train) |>
-  preprocess_data()
-
-rec_cost_xgd <-
-  recipe(xgd ~ staff_cost + season + team, data = train) |>
-  preprocess_data()
-
-TREES <- 1200
-LEARN_RATE <- 0.005
-
-spec <- boost_tree(
-  trees = !!TREES,
-  learn_rate = !!LEARN_RATE,
-  # min_n = tune(),
+# xgboost model spec (with tuning)
+xgb_spec <- boost_tree(
+  trees = 1200,
+  learn_rate = 0.005,
   tree_depth = tune(),
   loss_reduction = tune(),
   sample_size = tune(),
-  # mtry = tune(),
   stop_iter = tune()
 ) |>
   set_engine("xgboost") |>
   set_mode("regression")
 
+# workflow set from recipes and model
 wf_sets <- workflow_set(
-  preproc = list(
-    value_pts = rec_value_pts,
-    cost_pts = rec_cost_pts,
-    value_gd = rec_value_gd,
-    cost_gd = rec_cost_gd,
-    value_xgd = rec_value_xgd,
-    cost_xgd = rec_cost_xgd
-  ),
-  models = list(model = spec),
-  cross = TRUE
+  preproc = recipes,
+  models = list(xgb = xgb_spec)
 )
 
-control <-
-  finetune::control_sim_anneal(
-    save_pred = TRUE,
-    parallel_over = "everything",
-    save_workflow = TRUE,
-    verbose = TRUE
-  )
+# tuning control
+ctrl <- finetune::control_sim_anneal(
+  save_pred = TRUE,
+  parallel_over = "everything",
+  save_workflow = TRUE,
+  verbose = TRUE
+)
 
+# tune all workflows
 tuned_results <- workflow_map(
   wf_sets,
   fn = "tune_sim_anneal",
-  control = control,
+  control = ctrl,
   metrics = metric_set(rmse, rsq),
   resamples = folds,
   seed = 42
 )
 
-MODELS <- c(
-  "value_pts_model" = "Squad Value (Points)",
-  "cost_pts_model" = "Staff Cost (Points)",
-  "value_gd_model" = "Squad Value (Goal Diff)",
-  "cost_gd_model" = "Staff Cost (Goal Diff)",
-  "value_xgd_model" = "Squad Value (xG Diff)",
-  "cost_xgd_model" = "Staff Cost (xG Diff)"
-)
-
-select_best_model <- function(tuned_results, mod) {
-  tuned_results |>
-    extract_workflow_set_result(mod) |>
-    select_best(metric = "rmse") |>
-    transmute(
-      model_type = MODELS[mod],
-      # mtry,
-      tree_depth,
-      loss_reduction,
-      sample_size,
-      stop_iter
-    )
-}
-
-# best_value_pts <- select_best_model(tuned_results, "value_pts_model")
-# best_cost_pts <- select_best_model(tuned_results, "cost_pts_model")
-# best_value_gd <- select_best_model(tuned_results, "value_gd_model")
-# best_cost_gd <- select_best_model(tuned_results, "cost_gd_model")
-# best_value_xgd <- select_best_model(tuned_results, "value_xgd_model")
-# best_cost_xgd <- select_best_model(tuned_results, "cost_xgd_model")
-
-# bind_rows(
-#   best_value_pts,
-#   best_cost_pts,
-#   best_value_gd,
-#   best_cost_gd,
-#   best_value_xgd,
-#   best_cost_xgd
-# ) |>
-#   transmute(
-#     model_type,
-#     # mtry,
-#     tree_depth,
-#     loss_reduction,
-#     sample_size,
-#     stop_iter
-#   )
-
-finalize_model <- function(tuned_results, model_type) {
-  best_set <- select_best_model(tuned_results, model_type)
-  tuned_results |>
-    extract_workflow(model_type) |>
-    finalize_workflow(best_set) |>
-    last_fit(
-      splits,
-      metrics = metric_set(rmse, rsq)
-    )
-}
-
-value_pts_final <- finalize_model(tuned_results, "value_pts_model")
-cost_pts_final <- finalize_model(tuned_results, "cost_pts_model")
-value_gd_final <- finalize_model(tuned_results, "value_xgd_model")
-cost_gd_final <- finalize_model(tuned_results, "cost_xgd_model")
-value_xgd_final <- finalize_model(tuned_results, "value_xgd_model")
-cost_xgd_final <- finalize_model(tuned_results, "cost_xgd_model")
+# stop future plan
+future::plan(future::sequential)
 ```
 
 I won't bother to walk through the code to fit the models since that isn't the focus of the post here, but I've fit and tuned XGBoost models for each of the three outcomes that I used in my original model — points, goal difference, xG difference — with season and team included as features, as well as squad values or staff costs. In total, this results in six different models.
@@ -547,16 +485,95 @@ I won't bother to walk through the code to fit the models since that isn't the f
 The goal isn't to go to great lengths to fit perfect models. I've done a little tuning just for the hell of it, but the focus is really on just comparing the performance of the squad values and staff costs models.
 
 ```{r}
-#| label: model-performance
+#| label: eval-functions
 #| code-fold: true
-#| code-summary: 'Model Code (Click to Expand)'
+#| code-summary: 'Helper Functions Code (Click to Expand)'
 
-value_pts_final |> collect_metrics()
-cost_pts_final |> collect_metrics()
-value_gd_final |> collect_metrics()
-cost_gd_final |> collect_metrics()
-value_xgd_final |> collect_metrics()
-cost_xgd_final |> collect_metrics()
+# select the best parameters
+select_best_model <- function(results, model_id) {
+  results |>
+    extract_workflow_set_result(model_id) |>
+    select_best(metric = "rmse")
+}
+
+# finalize and refit on full training data
+finalize_and_fit_model <- function(results, model_id, data_split) {
+  best_params <- select_best_model(results, model_id)
+
+  results |>
+    extract_workflow(model_id) |>
+    finalize_workflow(best_params) |>
+    last_fit(split = data_split, metrics = metric_set(rmse, rsq))
+}
+
+# extract test performance metrics
+get_test_metrics <- function(results, model_id, data_split) {
+  finalize_and_fit_model(results, model_id, data_split) |>
+    collect_metrics()
+}
+```
+
+```{r}
+#| label: best-params
+#| include: false
+
+# get best hyperparameters for each model
+best_params <- purrr::map(
+  tuned_results$wflow_id,
+  ~ select_best_model(tuned_results, .x)
+)
+names(best_params) <- tuned_results$wflow_id
+
+best_params
+```
+
+```{r}
+#| label: tbl-model-performance
+#| tbl-cap: Comparing the Predictive Performance of Squad Values & Staff Costs
+#| code-fold: true
+#| code-summary: 'Table Code (Click to Expand)'
+
+# get test performance for all models
+summary_table <-
+  tuned_results |>
+  mutate(
+    test_metrics = map(wflow_id, ~ get_test_metrics(tuned_results, .x, splits)),
+    feature_set = if_else(
+      stringr::str_detect(wflow_id, "_squad"),
+      "Squad Value",
+      "Staff Costs"
+    ),
+    outcome = case_when(
+      stringr::str_starts(wflow_id, "pts") ~ "Points",
+      stringr::str_starts(wflow_id, "gd") ~ "Goal Difference",
+      stringr::str_starts(wflow_id, "xgd") ~ "xG Difference"
+    ),
+    outcome = forcats::fct(
+      outcome,
+      levels = c("Points", "Goal Difference", "xG Difference")
+    )
+  ) |>
+  arrange(outcome) |>
+  unnest(test_metrics) |>
+  pivot_wider(names_from = .metric, values_from = .estimate) |>
+  select(feature_set, outcome, rmse, rsq)
+
+# display metrics table
+summary_table |>
+  gt(groupname_col = "feature_set", rowname_col = "outcome") |>
+  cols_label(
+    rmse = "RMSE",
+    rsq = html("R<sup>2</sup>")
+  ) |>
+  fmt_number(
+    columns = c(rmse, rsq),
+    decimals = 2,
+    drop_trailing_zeros = TRUE
+  ) |>
+  cols_align(align = "left", columns = outcome) |>
+  cols_align(align = "center", columns = c(rmse, rsq)) |>
+  tab_spanner(label = "Evaluation Metrics", columns = c(rmse, rsq)) |>
+  tbl_theme()
 ```
 
 The results only serve to further confirm how well-aligned these two variables are. The squad values outperform the staff costs, but what is more important is that the performance is generally only a little better. It is consistently better, and I think the only reasonable conclusion is that this is because some performance bias is getting baked in, but the fact the performance is only slightly improved is a good sign.
@@ -564,6 +581,8 @@ The results only serve to further confirm how well-aligned these two variables a
 ## Wrapping Up
 
 There is very little difference between the two, and while it does seem like squad values are a little biased by performance, I don't think it is making such a difference that it's a big problem. It's just something to be aware of if using them as a proxy for something like squad costs.
+
+Perhaps I am underestimating how much of a difference it makes that I'm using staff costs here?
 
 ## Acknowledgments {.appendix}
 
