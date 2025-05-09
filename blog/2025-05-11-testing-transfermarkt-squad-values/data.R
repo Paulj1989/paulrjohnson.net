@@ -34,10 +34,12 @@ buli_resources <-
     "team",
     "season",
     "squad_value",
+    "mp",
     "pts",
     "gd",
     "xgd"
   ) |>
+  dplyr::mutate(dplyr::across(.cols = c("pts", "gd", "xgd"), ~ .x / mp)) |>
   dplyr::right_join(staff_costs) |>
   dplyr::mutate(season = forcats::as_factor(season))
 
@@ -49,7 +51,7 @@ readr::write_rds(
   buli_resources,
   file = here::here(
     "blog",
-    "2025-05-01-staff-costs-vs-squad-values",
+    "2025-05-11-testing-transfermarkt-squad-values",
     "data",
     "buli_resources.rds"
   )

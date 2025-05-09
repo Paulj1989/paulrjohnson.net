@@ -114,38 +114,48 @@ buli_resources <-
   readr::read_rds(
     here::here(
       "blog",
-      "2025-05-07-comparing-transfermarkt-squad-values-staff-costs",
+      "2025-05-11-testing-transfermarkt-squad-values",
       "data",
       "buli_resources.rds"
     )
   )
 ```
 
-Last year, I wrote a [blog post](https://paulrjohnson.net/blog/analysing-money-in-football/) that modeled the effect that money has on outcomes in the Europe's five biggest football leagues. The key explanatory variable in my model was Transfermarkt's squad values, serving as a proxy for a club's financial clout. While research has shown that Transfermarkt's player market values have strong associations with transfer fees [@herm2014; @muller2017; @coates2022], the existing literature regarding player salaries is promising but the volume is much more limited [@prockl2018]. Further, research has also identified that player values vary in predictive value by league [@muller2017; @coates2022]. All this considered, I concluded that Transfermarkt's squad market values were an effective proxy for squad spending[^Spending]. But what if I was wrong?
+Last year, I wrote a [blog post](https://paulrjohnson.net/blog/analysing-money-in-football/) that modelled the effect that money has on outcomes in Europe's five biggest football leagues. The key explanatory variable in my model was Transfermarkt's squad values, which served as a proxy for a club's financial clout. I used a proxy because data capturing a club's investment in their squad, like squad costs[^Costs], is challenging to source. Research shows that Transfermarkt's player market values are strongly associated with transfer fees [@herm2014; @muller2017; @coates2022] and player salaries [@prockl2018]. Considering this, I concluded that Transfermarkt's squad market values were an adequate proxy for squad spending[^Spending]. But what if I was wrong?
 
-I used a proxy for the same reason everyone uses a proxy — because I didn't have data for the variables I would have otherwise used. Unlike many other cases, I think my own laziness is the missing data culprit. I think the best way to capture financial clout is using squad costs. This could either be **just** a club's wage spending, or it could be all spending on the squad (wages + transfer fees). While this data isn't exactly readily available, I'm pretty sure I could track down the wage spending from annual financial reports. So I took the easy way out.
+A few weeks ago, [Ansgar Wolsing](https://bsky.app/profile/ansgarw.bsky.social) made me aware of the Deutsche Fussball Liga (DFL)'s [published reports](https://www.dfl.de/de/hintergrund/lizenzierungsverfahren/finanzkennzahlen-der-proficlubs/) detailing the annual financial accounts for every club in the Bundesliga (and 2. Bundesliga). Those accounts include each club's spending on "staff costs", which is all staff, including the playing squad. Never one to miss an opportunity to make _content_, I went to work and grabbed six seasons of data from 2017/18 to 2022/23. Now, we can determine whether Transfermarkt's squad values are a reasonable proxy for the data I was too lazy to go and find myself. And more importantly, we can find out if I was wrong[^Wrong].
 
-A few weeks ago, [Ansgar Wolsing](https://bsky.app/profile/ansgarw.bsky.social) made me aware of the Deutsche Fussball Liga (DFL)'s [published reports](https://www.dfl.de/de/hintergrund/lizenzierungsverfahren/finanzkennzahlen-der-proficlubs/) detailing the annual financial accounts for every club in the Bundesliga (and 2. Bundesliga). Those accounts include each club's spending on "staff costs", which is all staff, including the playing squad.
+[^Costs]:
 
-Never one to miss an opportunity to make _content_, I went right to work and grabbed six seasons of data, from 2017/18 to 2022/23. Now, we can find out whether or not Transfermarkt's squad values are a reasonable proxy for the data I was too lazy to go looking for (until someone basically dropped it in my lap). Lesbeavenue!
+This could be **just** a club's wage spending, or it could be all spending on the squad (wages + transfer fees).
 
 [^Spending]:
 
 Which is itself effectively a proxy for a club's financial resources, since the assumption is that clubs will spend close to the maximum they can on their squad.
 
+[^Wrong]:
+
+It is actually illegal to tell me I'm wrong.
+
 ## Exploring the Data
 
-While the majority of clubs report their staff costs on a season-basis, there are some that report staff costs for the financial year. In those cases, the costs don't perfectly align to a single season, but I don't think the change in costs from season-to-season is large enough to be a huge concern.
+The data is pretty solid, but it comes with some caveats. While most clubs report their staff costs on a seasonal basis, some report staff costs for the financial year. In those cases, the costs don't perfectly align with a single season, but I don't think the change in costs from season to season is significant enough to be a huge concern. I also had to drop Frankfurt's 2022/23 season[^Frankfurt] and Paderborn's 2021/22 season[^Paderborn] from the data.
 
-However, I did have to drop Frankfurt's 2022/23 season from the data. This was because Frankfurt were one of the teams that have been reporting their costs for the financial year, but in 2023 they made the switch to reporting costs over a season. In order to line their reports up, this meant the 2023 report is just the costs for the first six months of 2023 (so that the following season is on the correct schedule). I did think about doubling the Frankfurt figures, and I'm sure this would be approximately right in reality, but it feels a little too icky so I just dropped them.
+I'm not too worried that these caveats will cause any significant problems. Although the sample size is relatively small, the data seem sufficient for the question I'm trying to answer here.
 
-Another discrepancy in the data occurs in the 2021/22 season. The figures published in 2024 refer to the 2022/23 season, but the reports are organised by division, with all teams in the Bundesliga in the 2024/25 season in one report, and the same for the 2. Bundesliga. I have absolutely no idea why the figures are organised like this, but I'm sure there's some logic that I'm just too stupid to see. For the most part it was just an inconvenience, creating a lot more work for me to pull the costs together for the right teams in the right season. In 2022/23, however, Paderborn were relegated from the Bundesliga, followed by another relegation down to the 3. Liga in 2023/24. The trouble is, while the top two tiers in Germany are governed by the DFL, the third tier is governed by the DFB. Paderborn's consecutive relegations mean that they aren't included in these reports. It's despicable. The real victim here is me. No one has been hurt more by Paderborn plummeting down the German football pyramid.
+[^Frankfurt]:
+
+Frankfurt were one of the teams reporting their costs for the financial year, but in 2023, they switched to reporting costs over a season. To line their reports up, this meant the 2023 report is just the costs for the first six months of 2023 (so that the following season is on the correct schedule).
+
+[^Paderborn]:
+
+The figures published in 2024 refer to the 2022/23 season, but the reports are organised by division, with all teams in the Bundesliga in the 2024/25 season in one report and the same for the 2. Bundesliga. For the most part, this was just an inconvenience. In 2022/23, however, Paderborn were relegated from the Bundesliga, followed by another relegation down to the 3. Liga in 2023/24. The trouble is, while the top two tiers in Germany are governed by the DFL, the third tier is governed by the DFB. Paderborn's consecutive relegations mean that they aren't included in these reports. It's despicable. The real victim here is me.
 
 ### The Value-Cost Gap (Difference)
 
-To start with, it's probably worth comparing the squad values and staff costs directly, to get some sense of what we are working with. I will start by capturing the difference between the two and exploring how this figure varies across the dataset.
+First, it's probably worth comparing the squad values and staff costs directly to understand what we are working with. I will start by capturing the difference between the two and exploring how this figure varies across the dataset.
 
-If we take the difference between squad values and staff costs, plotted below, we see that the gap between the two is pretty large, with squad values usually the larger of the two (though occasionally the difference is negative because a team's staff costs are higher than their squad values).
+Plotting the difference between squad values and staff costs below, we see that the gap between the two is sizeable, with squad values usually (but not always) larger.
 
 ```{r}
 #| label: scale-function
@@ -202,7 +212,7 @@ buli_resources |>
   geom_hline(yintercept = 0, colour = "#343a40") +
   scale_euros(axes = "x") +
   labs(
-    title = "Median Difference Squad Value vs. Staff Cost in the Bundesliga",
+    title = "Difference Squad Value vs. Staff Cost in the Bundesliga",
     subtitle = stringr::str_wrap(
       glue::glue(
         "Distribution of differences between club squad values and staff costs ",
@@ -216,9 +226,9 @@ buli_resources |>
   )
 ```
 
-The fact there is a big difference between the two values is not a problem. Of course they are different. They are not claiming to be the same thing. This doesn't render squad values useless as a proxy, as long as squad values is directionally approximate with staff cost.
+The difference between the two isn't an issue. Squad value and staff cost are different things. If squad value and staff cost generally vary together, that will suffice.
 
-The question is whether there is any bias between the two across the Bundesliga. One way of looking at this is taking the average difference in squad values and staff costs by team, below, to see how the differences tend to differ by club. When calculating the average differences I've used the median since it is very skewed.
+It's also worth considering the team-level variance[^Time]. @tbl-team-difference shows the median difference between squad value and staff cost per season for clubs that have played three or more seasons in the data[^Filter].
 
 ```{r}
 #| label: tbl-team-difference
@@ -250,19 +260,23 @@ buli_resources |>
   tbl_theme()
 ```
 
-I've filtered for teams that appear in three or more seasons in the data. I've mostly done this to reduce the list down a bit, but it also takes out the noisiest observations (though all are obviously pretty small sample, since the max is just six).
+Looking at @tbl-team-difference, it is obvious that the differences are at least partially a function of the team's quality or the resources available to teams. This probably identifies an issue with Transfermarkt's values. Squad values are updated regularly and will be responsive to player (and team) performances. Good teams play better, leading to better teams seeing their values increase.
 
-When you compare the average difference between market value and squad costs between clubs, it is pretty obvious that the differences are a function of the quality of the team, or perhaps of the resources available to teams. I suspect this is probably picking up an issue with the squad values data. Squad values are updated regularly and will be responsive to player (and team) performances. Good teams play better and this leads to better teams seeing their values increase.
+Another explanation could be that this is just a product of scales. The squad values are generally larger than the staff costs, but perhaps they are a certain percentage higher, on average, and for teams with higher staff costs, that's inherently going to mean a bigger difference.
 
-Another explanation could be that this is just a product of scales. The squad values are generally larger than the staff costs, but perhaps they are a certain percentage higher, on average, and for teams with larger staff costs that's inherently going to mean a bigger difference.
+[^Time]:
 
-I also considered the possibility that this might be driven by underlying temporal differences. The difference doesn't appear to change all that much from season-to-season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
+I also looked at variance over time. The difference doesn't appear to change much from season to season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
+
+[^Filter]:
+
+My main reason for filtering the data this way was to reduce the list of clubs included and make the table a little smaller. It also removes the noisiest observations (though all are obviously small samples since the maximum seasons are just six).
 
 ### When Value Meets Reality (Correlation)
 
-Initial exploration suggests that squad values are an effective proxy for staff costs (which are themselves a proxy for squad spending). The correlation between the two variables paints an even clearer picture. There is a **`{r} round(cor(buli_resources$staff_cost, buli_resources$squad_value), 2)`** correlation between squad values and staff costs, which is pretty remarkable.
+If the differences between squad values and staff costs are a mixed bag, the correlation between the two paints a clearer picture. There is a **`{r} round(cor(buli_resources$staff_cost, buli_resources$squad_value), 2)`** correlation between squad values and staff costs, which is pretty remarkable.
 
-When we visualise the association between the two, below, this further illustrates how closely tied together they are.
+When we visualise the association between the two below, it further illustrates how closely tied they are.
 
 ```{r}
 #| label: costs-by-value
@@ -297,9 +311,9 @@ buli_resources |>
 
 The relationship between staff costs and squad values is incredibly clean. It is clearly linear, and any variance is only minimal.
 
-There doesn't appear to be anything particularly systematic about the variance. At the lower end of staff costs it looks like squad values are a little undervalued, but the reverse is true as it increases. At the top end of staff costs, the squad values are all slightly undervalued. I think the top end of the staff costs will all be Bayern Munich (I'm not sure how much this matters).
+There doesn't appear to be anything particularly systematic about the variance. Squad values are undervalued at the lower end of staff costs, but the reverse is true, as it increases. At the top end of staff costs, the squad values are all slightly undervalued.
 
-All this paints a pretty clear picture. Squad values seem to be a very good approximation of staff costs.
+Squad values seem to be an excellent approximation of staff costs.
 
 ## Comparing Predictive Performance
 
@@ -434,7 +448,7 @@ set.seed(42)
 future::plan(future::multisession, workers = parallel::detectCores() - 1)
 
 # split train/test data and specify folds
-splits <- initial_split(buli_resources, prop = 0.8)
+splits <- initial_split(buli_resources, prop = 0.7)
 train <- training(splits)
 test <- testing(splits)
 folds <- vfold_cv(train, v = 10, repeats = 5)
@@ -485,9 +499,9 @@ tuned_results <- workflow_map(
 future::plan(future::sequential)
 ```
 
-I won't bother to walk through the code to fit the models since that isn't the focus of the post here, but I've fit and tuned XGBoost models for each of the three outcomes that I used in my original model — points, goal difference, xG difference — with season and team included as features, as well as squad values or staff costs. In total, this results in six different models.
+I won't bother walking through the code to fit the models since that isn't the focus of this post. Still, I've fit and tuned XGBoost models for the outcomes I used in my original model—points, goal difference, and xG difference—with squad values or staff costs, plus season and team, included as features. In total, this results in six different models.
 
-The goal isn't to go to great lengths to fit perfect models. I've done a little tuning just for the hell of it, but the focus is really on just comparing the performance of the squad values and staff costs models.
+The goal isn't to go to great lengths to fit perfect models. I've done a little tuning just for the hell of it[^Fit], but the focus is on comparing the performance of the squad value and staff cost models.
 
 ```{r}
 #| label: eval-functions
@@ -589,17 +603,23 @@ summary_table |>
   tbl_theme()
 ```
 
-These results do broadly demonstrate how well aligned staff costs and squad values are, but the fact that squad values consistently outperform staff costs is interesting. The squad values models have marginally better root mean squared errors (RMSEs), but they significantly outperform the staff costs models according to R<sup>2</sup>.
+These results broadly demonstrate how well-aligned staff costs and squad values are, but the fact that squad values consistently outperform staff costs is interesting. The squad values models have marginally better root mean squared errors (RMSEs), but they significantly outperform the staff cost models according to R<sup>2</sup>.
 
 It's worth noting that the models are tuned on RMSE, so the variance in R<sup>2</sup> is perhaps a function of this. What is most important is that the performance is generally only a little better, according to the metric being tuned.
 
-I think the only reasonable conclusion is that this is because some performance bias is getting baked in, but the fact the performance is only slightly improved is a good sign.
+I think it is reasonable to assume that squad values consistently beat staff costs because some performance bias is being baked in, but the fact that the performance is only slightly improved is a good sign.
+
+[^Fit]:
+
+I used this post as an excuse to play around with [**future**](https://future.futureverse.org) and [**furrr**](https://furrr.futureverse.org), so I ended up going to greater lengths to tune the models, but only as a way to make better use of parallel processing.
 
 ## How Reliable are Squad Values?
 
-There is very little difference between the two, and while it does seem like squad values are a little biased by performance, I don't think it is making such a difference that it's a big problem. It's just something to be aware of if using them as a proxy for something like squad costs.
+There is very little difference between the two, and while it does seem like squad values are a little biased by performance, I don't think it makes such a difference that it's a big problem. However, it's something to be aware of if using them as a proxy for squad costs.
 
-Perhaps I am underestimating how much of a difference it makes that I'm using staff costs here?
+It's also worth noting that I'm using a small sample of data limited only to the Bundesliga, which reduces how much we can infer from this. Evidence shows that player values vary in predictive value by league [@muller2017; @coates2022], so the findings here should be understood within their limited scope.
+
+Still, I think the results support the idea that Transfermarkt's squad values are a valuable proxy for squad spending.
 
 ## Acknowledgments {.appendix}
 
