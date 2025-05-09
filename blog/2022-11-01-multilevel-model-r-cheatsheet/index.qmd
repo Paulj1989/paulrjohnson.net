@@ -1,11 +1,11 @@
 ---
 title: A Cheatsheet for Building Multilevel Models in R
 subtitle: |
-  A short introduction to basic multilevel modelling syntax in R (using **lme4**, 
+  A short introduction to basic multilevel modelling syntax in R (using **lme4**,
   **brms** or **rstanarm**).
 description-meta: |
-  Demystifying multilevel regression using consistent and clear R syntax and 
-  model terminology, making this method more accessible to analysts interested 
+  Demystifying multilevel regression using consistent and clear R syntax and
+  model terminology, making this method more accessible to analysts interested
   in modelling multilevel data.
 date: 2022-11-01
 date-modified: 2024-04-28
@@ -39,8 +39,8 @@ A common feature of many real-world questions that practitioners might study is 
 ```{mermaid}
 %%| label: fig-multilevel-data
 %%| fig-alt: |
-%%|   A diagram illustrating data with a hierarchical structure, showing three 
-%%|   different nodes (groups) each with three different nodes (units) branching 
+%%|   A diagram illustrating data with a hierarchical structure, showing three
+%%|   different nodes (groups) each with three different nodes (units) branching
 %%|   out from them.
 %%| fig-cap: A Hierarchical Grouping Structure
 %%| eval: true
@@ -57,7 +57,7 @@ graph TB
   I --> L[Unit 9]
 ```
 
-Assuming that the grouping variable is relevant to the outcome being studied, this means that some observations will be correlated with each other, or clustered around the groups they belong to, which invites bias into any model that doesn't account for this clustering. Multilevel models are regression models that handle data which is structured in groups[^clustering].
+Assuming that the grouping variable is relevant to the outcome being studied, this means that some observations will be correlated with each other, or clustered around the groups they belong to, which invites bias into any model that doesn't account for this clustering. Multilevel models are regression models that handle data which is structured in groups[^Clustering].
 
 <details>
 
@@ -73,13 +73,9 @@ However, I think it is generally easier to think about multilevel models in term
 
 </details>
 
-[^clustering]:
+[^Clustering]:
 
-    There are alternative ways to handle clustered data, such as cluster-robust standard errors, but I won't cover that here. 
-    If you're interested in learning about these methods, I'd recommend the discussion in [Chapter 3 of Introduction to 
-    Multilevel Modelling](https://www.learn-mlms.com/03-module-3.html#cluster-robust-standard-errors), or this 
-    [overview](https://mldscenter.maryland.gov/egov/Publications/ResearchSeries/Clustered Data, Are Multilevel Models Really Necessary.pdf) 
-    that is linked in the discussion.
+There are alternative ways to handle clustered data, such as cluster-robust standard errors, but I won't cover that here. If you're interested in learning about these methods, I'd recommend the discussion in [Chapter 3 of Introduction to Multilevel Modelling](https://www.learn-mlms.com/03-module-3.html#cluster-robust-standard-errors), or this [overview](https://mldscenter.maryland.gov/egov/Publications/ResearchSeries/Clustered Data, Are Multilevel Models Really Necessary.pdf) that is linked in the discussion.
 
 ### It's MLMs All The Way Down
 
@@ -97,13 +93,17 @@ For the remainder of this blog post I will use this population- and group-level 
 
 #### Linear Mixed Models vs Multilevel Models
 
-There are some slight differences between what a linear mixed model might refer to[^lmm], and what a hierarchical or multilevel model[^mlm] might refer to, but on the whole I think it is safe to treat them (generally speaking) as the same thing, with an understanding that multilevel models are any models where there are grouping structures that lead to the data violating the independence assumption, and hierarchical grouping structures are just one type of such structure.
+There are some slight differences between what a linear mixed model might refer to[^LMM], and what a hierarchical or multilevel model[^MLM] might refer to, but on the whole I think it is safe to treat them (generally speaking) as the same thing, with an understanding that multilevel models are any models where there are grouping structures that lead to the data violating the independence assumption, and hierarchical grouping structures are just one type of such structure.
 
 An example of a context where you might see a grouping structure that isn't hierarchical/nested is data where individuals are measured repeatedly, like, for example, a dataset containing repeated polling of individual's views on a political candidate or issue (panel data). In this case, there is no hierarchical structure, but the grouping structure is the individual.
 
-[^lmm]: A linear mixed model can refer to any model that contains a group/clustering structure, and it does not have to be a group that is organised hierarchically, or nested.
+[^LMM]:
 
-[^mlm]: Hierarchical/multilevel models suggest that there might be a vertical hierarchy that explains the grouping structure in the data, for example, student test results are nested within a class or school grouping structure.
+A linear mixed model can refer to any model that contains a group/clustering structure, and it does not have to be a group that is organised hierarchically, or nested.
+
+[^MLM]:
+
+Hierarchical/multilevel models suggest that there might be a vertical hierarchy that explains the grouping structure in the data, for example, student test results are nested within a class or school grouping structure.
 
 ## Multilevel Model Syntax in R
 
@@ -129,7 +129,7 @@ This can be specified as such:
 ```{r}
 #| label: intercept-only
 
-y ~ 1 + (1|g)
+y ~ 1 + (1 | g)
 
 ```
 
@@ -156,7 +156,7 @@ While the previous model only included a group-level effect that caused deviance
 ```{r}
 #| label: varying-intercepts
 
-y ~ x + (1|g)
+y ~ x + (1 | g)
 
 ```
 
@@ -189,7 +189,7 @@ Sometimes there will be an expectation that the grouping structure has no effect
 ```{r}
 #| label: varying-slopes
 
-y ~ x + (0 + x|g)
+y ~ x + (0 + x | g)
 
 ```
 
@@ -229,10 +229,10 @@ The syntax for this kind of structured madness is as follows:
 #| label: varying-intercepts-and-slopes
 
 # correlated intercepts and slopes
-y ~ x + (1 + x|g)
+y ~ x + (1 + x | g)
 
 # uncorrelated intercepts and slopes
-y ~ x + (x||g)
+y ~ x + (x || g)
 
 ```
 
@@ -246,11 +246,11 @@ As you might expect, the formula for a multilevel model with both varying interc
 
 $$y_{ij} = \alpha_{j} + \beta_{1j}x_i + \epsilon_{ij}$$
 
-where $\alpha_{j}$ (the intercept) can be expanded as: 
+where $\alpha_{j}$ (the intercept) can be expanded as:
 
 $$\alpha_{j} = \gamma_{00} + \mu_{0j}$$
 
-and where $\beta_{1j}$ (the slope) can be expanded as: 
+and where $\beta_{1j}$ (the slope) can be expanded as:
 
 $$\beta_{1j} = \gamma_{10} + \mu_{1j}$$
 
@@ -268,13 +268,15 @@ Given how complex things can get with MLMs, this cheatsheet is obviously only sc
 
 -   [Shaw & Flake - Introduction to Multilevel Modelling](https://www.learn-mlms.com/)
 -   [Gelman & Hill - Data Analysis Using Regression and Multilevel/Hierarchical Models](http://www.stat.columbia.edu/~gelman/arm/)
--   [Gelman et al. - Applied Regression and Multilevel Models](http://www.stat.columbia.edu/~gelman/armm/)[^armm]
+-   [Gelman et al. - Applied Regression and Multilevel Models](http://www.stat.columbia.edu/~gelman/armm/)[^ARMM]
 -   [**brms** Vignettes](https://paul-buerkner.github.io/brms/articles/index.html)
 -   [Heiss - A Guide to Working with Country-Year Panel Data and Bayesian Multilevel Models](https://www.andrewheiss.com/blog/2021/12/01/multilevel-models-panel-data-guide/)
 -   [Clark - Mixed Models with R](https://m-clark.github.io/mixed-models-with-R)
 -   [Magnusson - Using R and lme/lmer to Fit Different Two- and Three-Level Longitudinal Models](https://rpsychologist.com/r-guide-longitudinal-lme-lmer)
 
-[^armm]: ARMM hasn't been published (released?) yet, but it is billed as the updated and expanded second edition of Gelman & Hill's book. It's worth keeping an eye out for when this is released, because I'm sure it will be an excellent resource.
+[^ARMM]:
+
+ARMM hasn't been published (released?) yet, but it is billed as the updated and expanded second edition of Gelman & Hill's book. It's worth keeping an eye out for when this is released, because I'm sure it will be an excellent resource.
 
 ## Acknowledgments {.appendix}
 
@@ -282,4 +284,4 @@ Preview image by [Patrick Baum](https://unsplash.com/@gecko81de) on [Unsplash](h
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

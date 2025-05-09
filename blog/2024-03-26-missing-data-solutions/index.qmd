@@ -1,18 +1,18 @@
 ---
 title: Missing Data Matters (Part II) - Solutions
 subtitle: |
-  Dealing with your missing data is like eating your greens. You only do it so 
+  Dealing with your missing data is like eating your greens. You only do it so
   you can judge others that don't.
 description-meta: |
-  Exploring the available methods for handling different missing data 
-  mechanisms, including listwise deletion, mean imputation, regression 
+  Exploring the available methods for handling different missing data
+  mechanisms, including listwise deletion, mean imputation, regression
   imputation, and multiple imputation.
 author: Paul Johnson
 date: 2024-03-26
 image: missing_data.webp
 image-alt: |
-  An AI generated image of a small boy's silhouette, stood in a field facing a 
-  large sign that appears to say Missing Data (but is distorted as is typically 
+  An AI generated image of a small boy's silhouette, stood in a field facing a
+  large sign that appears to say Missing Data (but is distorted as is typically
   the case with text produced by generative models).
 categories: [Missing Data, Imputation, Statistics, R]
 bibliography: references.bib
@@ -51,14 +51,20 @@ attrition <-
   as_tibble() |>
   janitor::clean_names() |>
   select(
-    starts_with("job_"), ends_with("_satisfaction"), 
-    age, attrition, education, monthly_income, 
-    total_working_years, num_companies_worked
-    ) |> 
+    starts_with("job_"),
+    ends_with("_satisfaction"),
+    age,
+    attrition,
+    education,
+    monthly_income,
+    total_working_years,
+    num_companies_worked
+  ) |>
   mutate(
     across(
-      where(is.factor), 
-      ~ str_titlecase_fct(.x, "_", " "))
+      where(is.factor),
+      ~ str_titlecase_fct(.x, "_", " ")
+    )
   )
 
 # setup fonts
@@ -73,11 +79,15 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     panel.grid.major = element_line(color = "grey90", linewidth = .4),
     panel.grid.minor = element_blank(),
     axis.title.x = element_text(
-      color = "grey30", margin = margin(t = 5), size = rel(1.05)
-      ),
+      color = "grey30",
+      margin = margin(t = 5),
+      size = rel(1.05)
+    ),
     axis.title.y = element_text(
-      color = "grey30", margin = margin(r = 5), size = rel(1.05)
-      ),
+      color = "grey30",
+      margin = margin(r = 5),
+      size = rel(1.05)
+    ),
     axis.text = element_text(color = "grey50", size = rel(1)),
     axis.ticks = element_line(color = "grey90", linewidth = .4),
     axis.ticks.length = unit(.2, "lines"),
@@ -86,17 +96,25 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     legend.text = element_text(size = rel(1)),
     legend.box.margin = margin(0, 0, -15, 0),
     plot.title = element_text(
-      hjust = 0, color = "black", family = "Lora",
-      size = rel(1.5), margin = margin(t = 5, b = 5)
+      hjust = 0,
+      color = "black",
+      family = "Lora",
+      size = rel(1.5),
+      margin = margin(t = 5, b = 5)
     ),
     plot.subtitle = element_text(
-      hjust = 0, color = "grey30", family = "Lora",
-      lineheight = 0.5, size = rel(1.1), 
+      hjust = 0,
+      color = "grey30",
+      family = "Lora",
+      lineheight = 0.5,
+      size = rel(1.1),
       margin = margin(5, 0, 5, 0)
     ),
     plot.title.position = "plot",
     plot.caption = element_text(
-      color = "grey50", size = rel(0.8), hjust = 1,
+      color = "grey50",
+      size = rel(0.8),
+      hjust = 1,
       margin = margin(10, 0, 0, 0)
     ),
     plot.caption.position = "plot",
@@ -109,11 +127,14 @@ tbl_theme <-
   function(tbl, width = 100) {
     tbl |>
       gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
-      gt::tab_options(table.width = gt::pct(width), table.font.names = "Poppins") |> 
+      gt::tab_options(
+        table.width = gt::pct(width),
+        table.font.names = "Poppins"
+      ) |>
       gt::tab_style(
         style = gt::cell_text(align = "left"),
         locations = list(gt::cells_source_notes(), gt::cells_footnotes())
-        )
+      )
   }
 ```
 
@@ -123,30 +144,25 @@ I will use the same [employee attrition](https://modeldata.tidymodels.org/refere
 
 ## Have You Considered Not Having Missing Data?
 
-The maximally optimal approach to missing data is to not have any, so if you have missing data, the best thing you can do is stop having it. The only way to do that is to go and find it! This may seem glib, but it's important to highlight this point before looking at the other options. All of the strategies that are detailed below have drawbacks. If you can find your missing values, this is a much better choice than trying to model some solution. This may involve further data collection, identifying bugs/issues in your data processing pipeline, or theory-driven inference[^inference].
+The maximally optimal approach to missing data is to not have any, so if you have missing data, the best thing you can do is stop having it. The only way to do that is to go and find it! This may seem glib, but it's important to highlight this point before looking at the other options. All of the strategies that are detailed below have drawbacks. If you can find your missing values, this is a much better choice than trying to model some solution. This may involve further data collection, identifying bugs/issues in your data processing pipeline, or theory-driven inference[^Inference].
 
-However, when this is not possible, there are two broad approaches to dealing with missing values. The first approach is to delete missing values, and the second is to replace them. The right approach is highly dependent on the nature of the missing data. Generally speaking, data that is MCAR is the most flexible, and simple methods like deletion can work without problems, but more complex methods like imputation are necessary when data is MAR. Finally, when dealing with MNAR data, it is required to model the missingness mechanism explicitly [@gelman2006]. 
+However, when this is not possible, there are two broad approaches to dealing with missing values. The first approach is to delete missing values, and the second is to replace them. The right approach is highly dependent on the nature of the missing data. Generally speaking, data that is MCAR is the most flexible, and simple methods like deletion can work without problems, but more complex methods like imputation are necessary when data is MAR. Finally, when dealing with MNAR data, it is required to model the missingness mechanism explicitly [@gelman2006].
 
-[^inference]:
-    
-    If you know the data well and can identify precisely why the data is missing, you may also be able 
-    to plug in the missing values. However, you should be pretty sure when doing this because otherwise, 
-    you have personally taken the time to add some error to your data. This is bad for all but the most 
-    graft-thirsty High Performance Podcast listening maniacs. If you would take the [$500k over dinner 
-    with Jay-Z](https://i.kym-cdn.com/entries/icons/original/000/038/686/jayz.jpg), you should make sure 
-    your theory is sound!
+[^Inference]:
+
+If you know the data well and can identify precisely why the data is missing, you may also be able to plug in the missing values. However, you should be pretty sure when doing this because otherwise, you have personally taken the time to add some error to your data. This is bad for all but the most graft-thirsty High Performance Podcast listening maniacs. If you would take the [$500k over dinner with Jay-Z](https://i.kym-cdn.com/entries/icons/original/000/038/686/jayz.jpg), you should make sure your theory is sound!
 
 ### A Quick Note on MNAR Data
 
-Although we may touch on MNAR data in passing in this second post, the focus will be on MCAR and MAR data. The process for modelling MNAR data is complicated, and I am a massive coward. Cramming the suite of potential MNAR solutions into an already complex post would not do them justice. 
+Although we may touch on MNAR data in passing in this second post, the focus will be on MCAR and MAR data. The process for modelling MNAR data is complicated, and I am a massive coward. Cramming the suite of potential MNAR solutions into an already complex post would not do them justice.
 
 However, as a quick summary, there are two main approaches to modelling MNAR data - selection modelling and pattern mixture modelling. Selection models treat missingness as the outcome in a regression, similar to a more precise version of the logistic regression fit in the previous post, while pattern mixture models treat the missingness as an explanatory variable.
 
-For more information about MNAR modelling processes, I'd recommend @enders2022's _Applied Missing Data Analysis_. 
+For more information about MNAR modelling processes, I'd recommend @enders2022's _Applied Missing Data Analysis_.
 
 ### And Another on Likelihood Methods for Good Measure
 
-One group of methods I haven't discussed here is likelihood methods, such as full information maximum likelihood (FIML). In simple terms, likelihood methods borrow information from complete cases to improve the estimation of parameters with missing data [@peters2002]. Maximum likelihood uses the available information to estimate a log-likelihood function most likely to have produced the observed data [@enders2022]. In particular, FIML considers only complete cases when calculating the log-likelihood function and maximises it using an expectation-maximisation algorithm [@xu2022]. 
+One group of methods I haven't discussed here is likelihood methods, such as full information maximum likelihood (FIML). In simple terms, likelihood methods borrow information from complete cases to improve the estimation of parameters with missing data [@peters2002]. Maximum likelihood uses the available information to estimate a log-likelihood function most likely to have produced the observed data [@enders2022]. In particular, FIML considers only complete cases when calculating the log-likelihood function and maximises it using an expectation-maximisation algorithm [@xu2022].
 
 However, implementing methods like FIML in R is a little tricky^[Or is at least sufficiently distinct from the implementation of the methods discussed below that it would be significant work to include likelihood methods in this post.], so these methods are out of scope for my rubbish little blog post. If you want to learn more about the implementation of FIML in R, I'd recommend the ["Full Information Maximum Likelihood"](https://www.statistical-thinking.com/fiml) section of William Murrah's _Statistical Thinking_ site and there the [**lavaan** package documentation](https://lavaan.ugent.be/) can also help figure out how to compute FIML to deal with missing data. If I am feeling like a total mad lad later on, I may write another post about implementing FIML.
 
@@ -154,7 +170,7 @@ However, implementing methods like FIML in R is a little tricky^[Or is at least 
 
 The most straightforward and most common approach to handling missing data is to delete it. There are two different approaches to deleting missing values: listwise and pairwise deletion^[As I type this, it occurs to me that there are probably more than two methods for deleting missing values. Maybe someone out there advocates deleting the whole dataset and smashing your laptop with a hammer whenever you encounter NAs.].
 
-Listwise deletion, sometimes called complete case analysis, is the most common. It removes any rows containing missing values for relevant variables. This means that the analysis is carried out on all complete cases. This is the default approach that almost every statistical tool in any language uses. It is the mechanism by which the plots in [Part I](/blog/missing-data-mechanisms) of the series are visualising the different types of missing data^[**ggplot2** removes NAs by default, so the plots in the previous post are working by creating missing values and letting **ggplot2** do the rest.]. When you choose not to resolve the missing data in your dataset, you are passing the buck and letting whatever statistical tool you are using do it for you, and they are usually carrying out listwise deletion. 
+Listwise deletion, sometimes called complete case analysis, is the most common. It removes any rows containing missing values for relevant variables. This means that the analysis is carried out on all complete cases. This is the default approach that almost every statistical tool in any language uses. It is the mechanism by which the plots in [Part I](/blog/missing-data-mechanisms) of the series are visualising the different types of missing data^[**ggplot2** removes NAs by default, so the plots in the previous post are working by creating missing values and letting **ggplot2** do the rest.]. When you choose not to resolve the missing data in your dataset, you are passing the buck and letting whatever statistical tool you are using do it for you, and they are usually carrying out listwise deletion.
 
 Pairwise deletion, or available case analysis, is less common. It involves removing any missing values but not the entire row. Instead, the available observations for each variable are used to calculate their means and covariances, which can be used to build statistical models [@vanbuuren2018]. This process is a little more involved and cannot be applied to as many use cases, so you should see pairwise deletion far less often in the wild.
 
@@ -164,9 +180,9 @@ Deletion-based methods can be robust under the right conditions. When data is MC
 
 If we are not deleting missing values, we have to replace them. Imputation involves using a statistical procedure to replace missing values with values estimated from the rest of the data.
 
-Imputation methods can be divided into single imputation and multiple imputation. Single imputation replaces missing values with a single value, while multiple imputation creates $m$ datasets, each replacing missing values with plausible estimated values and pooling estimates from analyses carried out on each dataset. 
+Imputation methods can be divided into single imputation and multiple imputation. Single imputation replaces missing values with a single value, while multiple imputation creates $m$ datasets, each replacing missing values with plausible estimated values and pooling estimates from analyses carried out on each dataset.
 
-Imputation is appropriate under the starting assumption that the data is MAR. It is also suitable when dealing with MCAR data, but deletion methods are usually most appropriate unless dealing with large volumes of missingness. 
+Imputation is appropriate under the starting assumption that the data is MAR. It is also suitable when dealing with MCAR data, but deletion methods are usually most appropriate unless dealing with large volumes of missingness.
 
 In addition to **mice**'s exploratory capabilities, it is also the go-to option for carrying out imputation in R^[For anyone that prefers to use Python, [**statsmodels**](https://www.statsmodels.org/stable/imputation.html) also has the functionality for multiple imputation by chained equations, while [**fancyimpute**](https://github.com/iskandr/fancyimpute) and [**sklearn.impute**](https://scikit-learn.org/stable/modules/classes.html#module-sklearn.impute) offer further imputation functionality.]. While I will briefly overview these methods, there is much more to imputation than could be covered here. To learn just about all there is to know about imputation, @vanbuuren2018's [_Flexible Imputation of Missing Data_](https://stefvanbuuren.name/fimd/) will have you covered.
 
@@ -186,11 +202,13 @@ We can look at the effects of imputation by visualising imputation methods. I ha
 set.seed(123)
 
 missing_years <-
-  attrition |> 
+  attrition |>
   mutate(
     total_working_years = replace(
-      total_working_years, runif(n()) < 0.75 & 
-        relationship_satisfaction %in% c("High", "Very High") , NA
+      total_working_years,
+      runif(n()) < 0.75 &
+        relationship_satisfaction %in% c("High", "Very High"),
+      NA
     ),
     missingness = ifelse(is.na(total_working_years), "Imputed", "Observed")
   )
@@ -203,8 +221,8 @@ missing_years <-
 ```{r}
 #| label: original-data
 #| fig-alt: |
-#|    A scatterplot visualising the association between total working years and 
-#|    monthly income, without any missing data and therefore no imputation 
+#|    A scatterplot visualising the association between total working years and
+#|    monthly income, without any missing data and therefore no imputation
 #|    carried out. The plot shows a strong positive association between career
 #|    length and monthly income.
 #| code-fold: true
@@ -216,12 +234,18 @@ plot_regression <-
       data |>
         ggplot(aes(x = total_working_years, y = monthly_income)) +
         geom_point(aes(colour = missingness), size = 1.5, alpha = .6) +
-        geom_smooth(method = lm, colour = "#026E99", fill = "#026E99", alpha = .6) +
-        scale_colour_manual(values = c("#D93649", "#343A40")) + 
+        geom_smooth(
+          method = lm,
+          colour = "#026E99",
+          fill = "#026E99",
+          alpha = .6
+        ) +
+        scale_colour_manual(values = c("#D93649", "#343A40")) +
         scale_y_continuous(labels = scales::label_currency()) +
         guides(colour = guide_legend(override.aes = list(size = 3))) +
         labs(
-          x = "Total Working Years", y = "Monthly Income",
+          x = "Total Working Years",
+          y = "Monthly Income",
           caption = "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
         )
     } else {
@@ -229,12 +253,15 @@ plot_regression <-
         ggplot(aes(x = total_working_years, y = monthly_income)) +
         geom_point(colour = "#343A40", size = 1.5, alpha = .6) +
         geom_smooth(
-          method = lm, colour = "#026E99",
-          fill = "#026E99", alpha = .6
+          method = lm,
+          colour = "#026E99",
+          fill = "#026E99",
+          alpha = .6
         ) +
         scale_y_continuous(labels = scales::label_currency()) +
         labs(
-          x = "Total Working Years", y = "Monthly Income",
+          x = "Total Working Years",
+          y = "Monthly Income",
           caption = "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
         )
     }
@@ -244,15 +271,14 @@ attrition |>
   plot_regression() +
   labs(
     title = "No Missing Data & No Imputation",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "Employee's monthly income by total length of their career, without ",
-          "missing values and without imputation."
-          ),
-        width = 90
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Employee's monthly income by total length of their career, without ",
+        "missing values and without imputation."
+      ),
+      width = 90
     )
+  )
 ```
 
 #### Simple Imputation
@@ -260,32 +286,33 @@ attrition |>
 ```{r}
 #| label: mean-imputation
 #| fig-alt: |
-#|    A scatterplot visualising the association between total working years and 
-#|    monthly income, with missing data resolved using mean imputation. The plot 
-#|    shows a strong positive association between career length and monthly 
-#|    income, with a large number of points imputed at the mean value of career 
+#|    A scatterplot visualising the association between total working years and
+#|    monthly income, with missing data resolved using mean imputation. The plot
+#|    shows a strong positive association between career length and monthly
+#|    income, with a large number of points imputed at the mean value of career
 #|    length, just over 10 years.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
 missing_years |>
   mice::mice(
-    method = "mean", m = 1,
-    maxit = 1, print = FALSE
+    method = "mean",
+    m = 1,
+    maxit = 1,
+    print = FALSE
   ) |>
   mice::complete() |>
   plot_regression() +
   labs(
     title = "Mean Imputation",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "Employee's monthly income by total length of their career, with ",
-          "missing values replaced using mean imputation."
-        ),
-        width = 90
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Employee's monthly income by total length of their career, with ",
+        "missing values replaced using mean imputation."
+      ),
+      width = 90
     )
+  )
 ```
 
 #### Regression Imputation
@@ -293,38 +320,39 @@ missing_years |>
 ```{r}
 #| label: regression-imputation
 #| fig-alt: |
-#|    A scatterplot visualising the association between total working years and 
-#|    monthly income, with missing data resolved using linear regression 
-#|    imputation. The plot shows a strong positive association between career 
-#|    length and monthly income, but imputed values appear to follow a less 
+#|    A scatterplot visualising the association between total working years and
+#|    monthly income, with missing data resolved using linear regression
+#|    imputation. The plot shows a strong positive association between career
+#|    length and monthly income, but imputed values appear to follow a less
 #|    structured pattern than the observed values.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
-missing_years |> 
+missing_years |>
   mice::mice(
-    method = "norm.predict", m = 1,
-    maxit = 1, print = FALSE
+    method = "norm.predict",
+    m = 1,
+    maxit = 1,
+    print = FALSE
   ) |>
   mice::complete() |>
   plot_regression() +
   labs(
     title = "Linear Regression Imputation",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "Employee's monthly income by total length of their career, with ",
-          "missing values replaced using regression imputation with linear ",
-          "regression."
-        ),
-        width = 90
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Employee's monthly income by total length of their career, with ",
+        "missing values replaced using regression imputation with linear ",
+        "regression."
+      ),
+      width = 90
     )
+  )
 ```
 
 :::
 
-Imputing missing values using simple mean imputation is quick and easy, but the results clearly leave much to be desired. However, estimates can sometimes be useful even if they are imprecise. That's not the case here either because mean imputation narrows the distribution of total working years. The confidence intervals around the regression line are narrower around the mean but significantly wider at the higher end of total working years. 
+Imputing missing values using simple mean imputation is quick and easy, but the results clearly leave much to be desired. However, estimates can sometimes be useful even if they are imprecise. That's not the case here either because mean imputation narrows the distribution of total working years. The confidence intervals around the regression line are narrower around the mean but significantly wider at the higher end of total working years.
 
 The regression imputation is okay at first inspection, but it imputes values of total working years to six decimal points while the actual values are all integers. The imputation also thinks that some people have worked negative years! These issues can be fixed by giving **mice** the necessary details to impute more realistic values. However, the razor-thin error bars, particularly at the lower values of total working years, cannot be fixed using single imputation.
 
@@ -341,8 +369,8 @@ Multiple imputation attempts to address the fundamental flaw in single imputatio
 @enders2022 splits the multiple imputation process into three phases - imputation, analysis, and pooling.
 
 1. Imputation Phase - generates multiple, $m$, complete datasets, estimating the missing values plus a random component to capture the uncertainty in the estimate,
-2. Analysis Phase - computes parameter estimates using typical statistical methods, but computed $m$ times and applied to the $m$ completed datasets, 
-3. Pooling Phase - combines these estimates[^pooling] and calculates the pooled estimates and their standard errors.
+2. Analysis Phase - computes parameter estimates using typical statistical methods, but computed $m$ times and applied to the $m$ completed datasets,
+3. Pooling Phase - combines these estimates[^Pooling] and calculates the pooled estimates and their standard errors.
 
 While there are multiple ways to approach each phase, the three phases are typical across multiple imputation.
 
@@ -355,46 +383,40 @@ The plot below shows the results of the imputation phase of the multiple imputat
 ```{r}
 #| label: multiple-imputation
 #| fig-alt: |
-#|    A scatterplot visualising the association between total working years and 
+#|    A scatterplot visualising the association between total working years and
 #|    monthly income, with missing data resolved using multiple imputation with
-#|    predictive mean matching. The plot shows a strong positive association 
-#|    between career length and monthly income. Imputed values appear to follow 
+#|    predictive mean matching. The plot shows a strong positive association
+#|    between career length and monthly income. Imputed values appear to follow
 #|    a very similar pattern to observed values, and the multiple imputation plot
 #|    looks very similar to the plot of the original data.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
-missing_years |> 
+missing_years |>
   mice::mice(method = "pmm", print = FALSE, seed = 123) |>
-  mice::complete(action = "long") |> 
+  mice::complete(action = "long") |>
   summarise(
-    across(c(total_working_years, monthly_income), ~ round(mean(.x), 0)), 
+    across(c(total_working_years, monthly_income), ~ round(mean(.x), 0)),
     .by = c(.id, missingness)
-    ) |> 
+  ) |>
   plot_regression() +
   labs(
     title = "Multiple Imputation with Predictive Mean Matching",
-    subtitle =
-      stringr::str_wrap(
-        glue::glue(
-          "Employee's monthly income by total length of their career, with missing ",
-          "values replaced using multiple imputation with predictive mean matching."
-        ),
-        width = 90
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "Employee's monthly income by total length of their career, with missing ",
+        "values replaced using multiple imputation with predictive mean matching."
+      ),
+      width = 90
     )
+  )
 ```
 
 The confidence intervals don't capture the baked-in uncertainty, a significant advantage of multiple imputation. The plot only shows the final mean values calculated from the five imputed datasets. However, the multiple imputation process results follow a similar distribution to the original data, which should reduce the risk of imputations producing biased parameter estimates. Further, the imputed values appear to be structured similarly to the observed data, making the multiple imputation plot look very similar to the original data plot. This is generally a good sign because the closer you are to replicating the data-generating process, the better your chance of making accurate inferences. The structural similarities are primarily due to the method used to carry out the multiple imputation, predictive mean matching.
 
-[^pooling]:
-  
-    @rubin1987 devised formulas for pooling parameter estimates and standard errors, where the pooled 
-    parameter estimate is the arithmetic mean of the individual estimates, while pooled standard errors 
-    follow a similar logic but a slightly more complex process [@enders2022]. There are also methods for 
-    calculating statistical significance, but things are getting much more complicated now, and this is 
-    not the time or the place. I'd recommend reading "The Analysis and Pooling Phases of Multiple 
-    Imputation" in @enders2022's _Applied Missing Data Analysis_ if you want to get in the weeds.
+[^Pooling]:
+
+@rubin1987 devised formulas for pooling parameter estimates and standard errors, where the pooled parameter estimate is the arithmetic mean of the individual estimates, while pooled standard errors follow a similar logic but a slightly more complex process [@enders2022]. There are also methods for calculating statistical significance, but things are getting much more complicated now, and this is not the time or the place. I'd recommend reading "The Analysis and Pooling Phases of Multiple Imputation" in @enders2022's _Applied Missing Data Analysis_ if you want to get in the weeds.
 
 #### Predictive Mean Matching
 
@@ -402,7 +424,7 @@ The method used for modelling plausible values is predictive mean matching (PMM)
 
 There are several advantages to using PMM. Implementation is simple; it relies on imputations that are observed elsewhere in the data (which ensures it is realistic and won't produce nonsensical imputations), and because the imputation process is implicit, it doesn't require explicit modelling of the missingness distribution and, therefore reduces the risk of misspecification [@vanbuuren2018]. A more detailed discussion of PMM can be found in the ["Predictive Mean Matching"](https://stefvanbuuren.name/fimd/sec-pmm.html) section of @vanbuuren2018's _Flexible Imputation of Missing Data_.
 
-While I've used PMM here, **mice** offers [functionality for various methods](https://amices.org/mice/reference/mice.html) for multiple imputation. In this case, the missing values are all numeric, for which **mice** uses PMM as the default imputation method. However, for binary factor variables, logistic regression is used by default, and where a factor variable has more than two levels, proportional odds regression is used when it is ordered, and polytomous logistic regression is used when it is unordered. 
+While I've used PMM here, **mice** offers [functionality for various methods](https://amices.org/mice/reference/mice.html) for multiple imputation. In this case, the missing values are all numeric, for which **mice** uses PMM as the default imputation method. However, for binary factor variables, logistic regression is used by default, and where a factor variable has more than two levels, proportional odds regression is used when it is ordered, and polytomous logistic regression is used when it is unordered.
 
 ## Comparing Model Estimates
 
@@ -418,22 +440,29 @@ I have fit a series of logistic regressions that measure the association between
 set.seed(123)
 
 missing_income <-
-  attrition |> 
+  attrition |>
   mutate(
     monthly_income = arm::rescale(
       replace(
-        monthly_income, runif(n()) < 0.75 & 
-          (education %in% c("Bachelor", "Master", "Doctor") &
-             job_role %in% c("Research Scientist", "Sales Executive")), NA
-        )
-      ),
+        monthly_income,
+        runif(n()) < 0.75 &
+          (education %in%
+            c("Bachelor", "Master", "Doctor") &
+            job_role %in% c("Research Scientist", "Sales Executive")),
+        NA
+      )
+    ),
     total_working_years = replace(
-      total_working_years, runif(n()) < 0.75 & 
-        between(age, 50, 60), NA
+      total_working_years,
+      runif(n()) < 0.75 &
+        between(age, 50, 60),
+      NA
     ),
     num_companies_worked = replace(
-      num_companies_worked, runif(n()) < 0.25 & 
-        job_satisfaction %in% c("Low"), NA
+      num_companies_worked,
+      runif(n()) < 0.25 &
+        job_satisfaction %in% c("Low"),
+      NA
     )
   )
 ```
@@ -447,42 +476,58 @@ I have used the defaults for most imputation processes, but I have increased the
 
 get_pooled_estimates <-
   function(data, method, m, maxit) {
-    if(m > 1) {
+    if (m > 1) {
       data |>
         mice::mice(
-          method = method, m = m, maxit = maxit, 
-          print = FALSE, seed = 123
-          ) |>
+          method = method,
+          m = m,
+          maxit = maxit,
+          print = FALSE,
+          seed = 123
+        ) |>
         with(
-          glm(attrition ~ monthly_income + total_working_years +
-                num_companies_worked, family = "binomial")
-             ) |>
+          glm(
+            attrition ~
+              monthly_income + total_working_years + num_companies_worked,
+            family = "binomial"
+          )
+        ) |>
         mice::pool()
     } else {
-        data |>
+      data |>
         mice::mice(method = method, m = m, maxit = maxit, print = FALSE) |>
         mice::complete() |>
-        glm(attrition ~ monthly_income + total_working_years +
-                num_companies_worked, family = "binomial", data = _)
-    } 
+        glm(
+          attrition ~
+            monthly_income + total_working_years + num_companies_worked,
+          family = "binomial",
+          data = _
+        )
+    }
   }
 
-original_glm <- 
-  attrition |> 
+original_glm <-
+  attrition |>
   mutate(monthly_income = arm::rescale(monthly_income)) |>
-  glm(attrition ~ monthly_income + total_working_years + 
-        num_companies_worked, family = "binomial", data = _)
+  glm(
+    attrition ~ monthly_income + total_working_years + num_companies_worked,
+    family = "binomial",
+    data = _
+  )
 
 listwise_deletion <-
-  missing_income |> 
-  glm(attrition ~ monthly_income + total_working_years + 
-        num_companies_worked, family = "binomial", data = _)
+  missing_income |>
+  glm(
+    attrition ~ monthly_income + total_working_years + num_companies_worked,
+    family = "binomial",
+    data = _
+  )
 
 mean_imputation <-
-  missing_income |> 
+  missing_income |>
   get_pooled_estimates(method = "mean", m = 1, maxit = 1)
 
-regression_imputation <- 
+regression_imputation <-
   missing_income |>
   get_pooled_estimates(method = "norm.predict", m = 1, maxit = 1)
 
@@ -491,7 +536,7 @@ multiple_imputation <-
   get_pooled_estimates(method = "pmm", m = 50, maxit = 10)
 ```
 
-More can be done to tailor and tighten up **mice**'s imputations, but the intention here is only to demonstrate how different missing data methods perform out of the box. 
+More can be done to tailor and tighten up **mice**'s imputations, but the intention here is only to demonstrate how different missing data methods perform out of the box.
 
 While the imputations visualised in @sec-multiple-imputation are only an approximation of the process, the outputs displayed in @tbl-regression below fully demonstrate the multiple imputation method.
 
@@ -511,15 +556,16 @@ modelsummary::modelsummary(
     "Multiple" = multiple_imputation
   ),
   coef_rename = modelsummary::coef_rename,
-  exponentiate = TRUE, gof_omit = "IC|Log|F|RMSE", 
+  exponentiate = TRUE,
+  gof_omit = "IC|Log|F|RMSE",
   output = "gt"
-  ) |>
+) |>
   gt::tab_spanner(label = "Imputation", columns = 4:6) |>
-  gt::tab_spanner(label = "Outcome: Job Attrition", columns = 2:6) |> 
+  gt::tab_spanner(label = "Outcome: Job Attrition", columns = 2:6) |>
   tbl_theme()
 ```
 
-@tbl-regression highlights how impressive multiple imputation can be and why it is often ill-advised to use deletion or single imputation methods. While there are one or two coefficients where the deletion or single imputation methods are close to or even marginally outperform the multiple imputation process, the multiple imputation results are significantly better overall. 
+@tbl-regression highlights how impressive multiple imputation can be and why it is often ill-advised to use deletion or single imputation methods. While there are one or two coefficients where the deletion or single imputation methods are close to or even marginally outperform the multiple imputation process, the multiple imputation results are significantly better overall.
 
 It's not only that the coefficient estimates are generally closer to the estimates on the original data but also that the standard errors account for the greater uncertainty that should be factored in when imputing missing values. This is good. We do not want to be overconfident in conclusions drawn on data that includes imputed values, and multiple imputation guards against this.
 
@@ -539,4 +585,4 @@ The preview image was generated using StabilityAI's [DreamStudio](https://beta.d
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

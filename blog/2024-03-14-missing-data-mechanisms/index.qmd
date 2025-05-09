@@ -2,20 +2,20 @@
 title: |
   Missing Data Matters (Part I): Mechanisms
 subtitle: |
-  Missing values hate him! See how this data scientist turned NAs into NOs using 
+  Missing values hate him! See how this data scientist turned NAs into NOs using
   this one simple trick!
 description-meta: |
-  Exploring the different types of missing data - MCAR, MAR, and MNAR - and the 
-  implications for your analysis of finding these different types of missing data 
+  Exploring the different types of missing data - MCAR, MAR, and MNAR - and the
+  implications for your analysis of finding these different types of missing data
   in your dataset.
 author: Paul Johnson
 date: 2024-03-14
 image: missing_data.webp
 image-alt: |
-  An AI generated image of a red milk carton that has a creepy, slightly distorted 
+  An AI generated image of a red milk carton that has a creepy, slightly distorted
   outline of a face on the side of the carton, with text underneath the person's
-  face appearing to say Data Missing (in the typically gibberish way that generative 
-  models draw text). The carton stands in front of a white-tiled wall and casts 
+  face appearing to say Data Missing (in the typically gibberish way that generative
+  models draw text). The carton stands in front of a white-tiled wall and casts
   an ominous shadow on a white countertop.
 categories: [Missing Data, Statistics, R]
 bibliography: references.bib
@@ -55,8 +55,9 @@ attrition <-
   janitor::clean_names() |>
   mutate(
     across(
-      where(is.factor), 
-      ~ str_titlecase_fct(.x, "_", " "))
+      where(is.factor),
+      ~ str_titlecase_fct(.x, "_", " ")
+    )
   )
 
 # setup fonts
@@ -71,11 +72,15 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     panel.grid.major = element_line(color = "grey90", linewidth = .4),
     panel.grid.minor = element_blank(),
     axis.title.x = element_text(
-      color = "grey30", margin = margin(t = 5), size = rel(1.05)
-      ),
+      color = "grey30",
+      margin = margin(t = 5),
+      size = rel(1.05)
+    ),
     axis.title.y = element_text(
-      color = "grey30", margin = margin(r = 5), size = rel(1.05)
-      ),
+      color = "grey30",
+      margin = margin(r = 5),
+      size = rel(1.05)
+    ),
     axis.text = element_text(color = "grey50", size = rel(1)),
     axis.ticks = element_line(color = "grey90", linewidth = .4),
     axis.ticks.length = unit(.2, "lines"),
@@ -84,17 +89,25 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     legend.text = element_text(size = rel(1)),
     legend.box.margin = margin(0, 0, -15, 0),
     plot.title = element_text(
-      hjust = 0, color = "black", family = "Lora",
-      size = rel(1.5), margin = margin(t = 5, b = 5)
+      hjust = 0,
+      color = "black",
+      family = "Lora",
+      size = rel(1.5),
+      margin = margin(t = 5, b = 5)
     ),
     plot.subtitle = element_text(
-      hjust = 0, color = "grey30", family = "Lora",
-      lineheight = 0.5, size = rel(1.1), 
+      hjust = 0,
+      color = "grey30",
+      family = "Lora",
+      lineheight = 0.5,
+      size = rel(1.1),
       margin = margin(5, 0, 5, 0)
     ),
     plot.title.position = "plot",
     plot.caption = element_text(
-      color = "grey50", size = rel(0.8), hjust = 1,
+      color = "grey50",
+      size = rel(0.8),
+      hjust = 1,
       margin = margin(10, 0, 0, 0)
     ),
     plot.caption.position = "plot",
@@ -107,17 +120,20 @@ tbl_theme <-
   function(tbl, width = 100) {
     tbl |>
       gt::tab_source_note(source_note = "Source: IBM Watson Analytics Lab") |>
-      gt::tab_options(table.width = gt::pct(width), table.font.names = "Poppins") |> 
+      gt::tab_options(
+        table.width = gt::pct(width),
+        table.font.names = "Poppins"
+      ) |>
       gt::tab_style(
         style = gt::cell_text(align = "left"),
         locations = list(gt::cells_source_notes(), gt::cells_footnotes())
-        )
+      )
   }
 ```
 
 I recently presented a talk about missing data, discussing the different types of missing data and their appropriate solutions. As a modern man who understands that the posting never ends, I figured I could turn this talk into a series of blog posts. Resources discussing missing data often offer either brief overviews or incredible depth, but there are fewer resources out there that thread the needle between the two. My goal is to do that with this series.
 
-It turns out that missing data is a rich field. There is far more to it than simply pretending you didn't see it, like seeing a friend's child misbehaving. It's not my problem unless I make it my problem, right? Wrong. Unlike your friend's child, there are consequences to not taking some responsibility for missing data. This series will make a case for taking missing data seriously. This first post will introduce the key concepts in this area, focusing on identifying missing data and its types. The second blog post will look at solutions to these missing data problems, illustrating the when's and why's of these solutions. Please enjoy my regurgitated data slop. 
+It turns out that missing data is a rich field. There is far more to it than simply pretending you didn't see it, like seeing a friend's child misbehaving. It's not my problem unless I make it my problem, right? Wrong. Unlike your friend's child, there are consequences to not taking some responsibility for missing data. This series will make a case for taking missing data seriously. This first post will introduce the key concepts in this area, focusing on identifying missing data and its types. The second blog post will look at solutions to these missing data problems, illustrating the when's and why's of these solutions. Please enjoy my regurgitated data slop.
 
 The data used as an illustration in this series is a synthetic [employee attrition](https://modeldata.tidymodels.org/reference/attrition.html) dataset taken from the [**modeldata**](https://modeldata.tidymodels.org/) package, created by the IBM Watson Analytics Lab. The dataset contains 1,470 observations and is picture-perfect, containing nothing but observations that wouldn't dream of being missing. Instead, I will invoke missingness by replacing values with NAs.
 
@@ -139,7 +155,7 @@ Missing data is the drawer in your fridge filled with soggy vegetables you hope 
 
 - Missing Not at Random (MNAR) -- the probability of an observation being missing is not random, and the mechanism that underpins missing values is unknown. Missing values follow a pattern, but that pattern is a function of unobserved data, whether it be the variable's values themselves (for example, values over a certain threshold are all missing) or an unobserved variable.
 
-For a more detailed explanation of the differences between MCAR, MAR, and MNAR data, I'd recommend the ["Concepts of MCAR, MAR and MNAR"](https://stefvanbuuren.name/fimd/sec-MCAR.html) section of @vanbuuren2018's _Flexible Imputation of Missing Data_ to help make sense of the differences^[I would also recommend the ["Concepts in Incomplete Data"](https://stefvanbuuren.name/fimd/sec-idconcepts.html) section of his book if you are looking for more precise definitions of MCAR, MAR, and MNAR data.]. 
+For a more detailed explanation of the differences between MCAR, MAR, and MNAR data, I'd recommend the ["Concepts of MCAR, MAR and MNAR"](https://stefvanbuuren.name/fimd/sec-MCAR.html) section of @vanbuuren2018's _Flexible Imputation of Missing Data_ to help make sense of the differences^[I would also recommend the ["Concepts in Incomplete Data"](https://stefvanbuuren.name/fimd/sec-idconcepts.html) section of his book if you are looking for more precise definitions of MCAR, MAR, and MNAR data.].
 
 The plots below illustrate how the different missing data mechanisms might impact a variable's distribution.
 
@@ -151,8 +167,8 @@ The plots below illustrate how the different missing data mechanisms might impac
 #| label: original-dist
 #| fig-alt: |
 #|    A histogram visualising the distribution of the total years that employees
-#|    have worked at their company, conditional on their job satisfaction, 
-#|    without any missing data. The distribution is right-skewed, with the 
+#|    have worked at their company, conditional on their job satisfaction,
+#|    without any missing data. The distribution is right-skewed, with the
 #|    majority of employees' tenures falling below ten years, but some employees
 #|    working at their company for up to 40 years.
 #| code-fold: true
@@ -172,24 +188,24 @@ plot_satisfaction <-
         labels = snakecase::to_title_case
       ) +
       labs(
-        x = "Years at Company", y = NULL,
+        x = "Years at Company",
+        y = NULL,
         caption = "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
-        )
+      )
   }
 
 attrition |>
   plot_satisfaction() +
   labs(
     title = "No Missing Data",
-    subtitle =
-      stringr::str_wrap(
-        glue::glue(
-          "The distribution of Years at Company, conditional on Job Satisfaction, ",
-          "with no missing data."
-          ),
-        width = 95
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The distribution of Years at Company, conditional on Job Satisfaction, ",
+        "with no missing data."
+      ),
+      width = 95
     )
+  )
 ```
 
 ### MCAR
@@ -198,8 +214,8 @@ attrition |>
 #| label: mcar-dist
 #| fig-alt: |
 #|    A histogram visualising the distribution of the total years that employees
-#|    have worked at their company, conditional on their job satisfaction, 
-#|    with MCAR data. The shape of the distribution is similar to the original 
+#|    have worked at their company, conditional on their job satisfaction,
+#|    with MCAR data. The shape of the distribution is similar to the original
 #|    data distribution.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
@@ -210,22 +226,22 @@ attrition |>
   mutate(
     years_at_company = replace(
       years_at_company,
-      runif(n()) < 0.5, NA
+      runif(n()) < 0.5,
+      NA
     )
   ) |>
   plot_satisfaction() +
   labs(
     title = "Missing Completely at Random (MCAR)",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The distribution of Years at Company, conditional on Job Satisfaction, ",
-          "when Years at Company has been transformed to NA, at random, for 50% ",
-          "of all employees."
-        ),
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The distribution of Years at Company, conditional on Job Satisfaction, ",
+        "when Years at Company has been transformed to NA, at random, for 50% ",
+        "of all employees."
+      ),
       width = 95
-      )
     )
+  )
 ```
 
 ### MAR
@@ -234,8 +250,8 @@ attrition |>
 #| label: mar-dist
 #| fig-alt: |
 #|    A histogram visualising the distribution of the total years that employees
-#|    have worked at their company, conditional on their job satisfaction, 
-#|    with MAR data. The shape of the distribution is similar to the original 
+#|    have worked at their company, conditional on their job satisfaction,
+#|    with MAR data. The shape of the distribution is similar to the original
 #|    data distribution, but the share of employees with low job satisfaction is
 #|    significantly lower across the whole distribution.
 #| code-fold: true
@@ -245,24 +261,23 @@ set.seed(123)
 
 attrition |>
   mutate(
-    years_at_company =
-      replace(
-        years_at_company,
-        runif(n()) < 0.8 & job_satisfaction == "Low", NA
-      )
+    years_at_company = replace(
+      years_at_company,
+      runif(n()) < 0.8 & job_satisfaction == "Low",
+      NA
+    )
   ) |>
   plot_satisfaction() +
   labs(
     title = "Missing at Random (MAR)",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The distribution of Years at Company, grouped by Job satisfaction, ",
-          "when employee tenure has been transformed to NA, at random, for ",
-          "80% of all employees with low job satisfaction."
-          ),
-        width = 95
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The distribution of Years at Company, grouped by Job satisfaction, ",
+        "when employee tenure has been transformed to NA, at random, for ",
+        "80% of all employees with low job satisfaction."
+      ),
+      width = 95
+    )
   )
 ```
 
@@ -272,7 +287,7 @@ attrition |>
 #| label: mnar-dist
 #| fig-alt: |
 #|    A histogram visualising the distribution of the total years that employees
-#|    have worked at their company, conditional on their job satisfaction, 
+#|    have worked at their company, conditional on their job satisfaction,
 #|    with MNAR data. The shape of the distribution is even more right-skewed than
 #|    the original data distribution, with the largest bar being the furthest left
 #|    bar. The distribution has a smaller range, with 5 being the minimum and 30
@@ -282,24 +297,23 @@ attrition |>
 
 attrition |>
   mutate(
-    years_at_company =
-      replace(
-        years_at_company,
-        !between(years_at_company, 5, 30), NA
-      )
+    years_at_company = replace(
+      years_at_company,
+      !between(years_at_company, 5, 30),
+      NA
+    )
   ) |>
   plot_satisfaction() +
   labs(
     title = "Missing Not at Random (MNAR)",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The distribution of Years at Company, conditional on Job Satisfaction, ",
-          "when Years at Company has been transformed to NA for all employees ",
-          "with less than five or more than thirty years at the company."
-        ),
-        width = 95
-      )
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The distribution of Years at Company, conditional on Job Satisfaction, ",
+        "when Years at Company has been transformed to NA for all employees ",
+        "with less than five or more than thirty years at the company."
+      ),
+      width = 95
+    )
   )
 ```
 
@@ -311,7 +325,7 @@ The type of missing data you're dealing with can significantly impact a variable
 
 Finding missing data is the first step, but understanding why it is missing matters most. I recognise I'm arguing in favour of creating more work for yourself, but there is good news - it is also hard to identify the missing data mechanism. The mechanism will not be explicitly detailed as it has been for the plots in @sec-mechanisms. In the wild, you can't observe the missing values or the population distribution for comparison, so you won't be able to identify the source of your missing values conclusively.
 
-To make matters worse, it is not possible to conclusively define the missing data mechanism because you cannot observe the missing values or the population distribution the observed values came from. It's not that I'm saying it is guesswork. But I'm not **not** saying that it's guesswork...^[I am, in fact, not saying that you should be guessing the missing data mechanism. Making evidence-based deductions is not guessing. It's just uncertain and noisy.] 
+To make matters worse, it is not possible to conclusively define the missing data mechanism because you cannot observe the missing values or the population distribution the observed values came from. It's not that I'm saying it is guesswork. But I'm not **not** saying that it's guesswork...^[I am, in fact, not saying that you should be guessing the missing data mechanism. Making evidence-based deductions is not guessing. It's just uncertain and noisy.]
 
 ### Exploring Missing Data
 
@@ -329,16 +343,21 @@ set.seed(123)
 missing_years <-
   attrition |>
   mutate(
-    across(starts_with("job") & !job_satisfaction, 
-           ~ replace(.x, runif(n()) < 0.01, NA)),
-    years_at_company =
-      replace(
-        years_at_company,
-        runif(n()) < 0.75 & 
-          (job_satisfaction == "Low" | monthly_income > 15000), NA
-        ),
-    relationship_satisfaction = 
-      replace(relationship_satisfaction, runif(n()) < 0.075, NA),
+    across(
+      starts_with("job") & !job_satisfaction,
+      ~ replace(.x, runif(n()) < 0.01, NA)
+    ),
+    years_at_company = replace(
+      years_at_company,
+      runif(n()) < 0.75 &
+        (job_satisfaction == "Low" | monthly_income > 15000),
+      NA
+    ),
+    relationship_satisfaction = replace(
+      relationship_satisfaction,
+      runif(n()) < 0.075,
+      NA
+    ),
     work_life_balance = replace(work_life_balance, runif(n()) < 0.05, NA)
   )
 ```
@@ -350,65 +369,71 @@ The starting point in any exploratory analysis of missing data is to get some id
 #| fig-alt: |
 #|    A bar chart visualising the proportion of missing values for each variable,
 #|    excluding any variables that do not have any missing values. There are six
-#|    variables with missing values - years at company (21%), relationship 
+#|    variables with missing values - years at company (21%), relationship
 #|    satisfaction (7.1%), work life balance (5.2%), job role (1.1%), job level
 #|    (0.9%), and job involvement (0.7%).
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
-missing_years |> 
-  summarise(across(everything(), ~ sum(is.na(.x))/n()) ) |> 
+missing_years |>
+  summarise(across(everything(), ~ sum(is.na(.x)) / n())) |>
   tidyr::pivot_longer(
-    cols = everything(), names_to = "variable", values_to = "value"
-    ) |> 
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) |>
   filter(value != 0) |>
   mutate(
-    variable = 
-      stringr::str_to_title(
-        stringr::str_replace_all(variable, "_", " ")
-        ),
+    variable = stringr::str_to_title(
+      stringr::str_replace_all(variable, "_", " ")
+    ),
     variable = forcats::fct_reorder(variable, -value, .desc = TRUE)
-    ) |> 
-  ggplot(aes(x = variable,  y = value)) +
+  ) |>
+  ggplot(aes(x = variable, y = value)) +
   geom_col(aes(fill = as.numeric(variable) == 6), colour = "grey20") +
   geom_text(
     aes(
       label = paste0(sprintf("%2.1f", value * 100), "%"),
-      colour = value > .03, hjust = if_else(value > .03, 1.2, -.2)
-      ),
-    size = 8, fontface = "bold", family = "Poppins"
+      colour = value > .03,
+      hjust = if_else(value > .03, 1.2, -.2)
+    ),
+    size = 8,
+    fontface = "bold",
+    family = "Poppins"
   ) +
   geom_hline(yintercept = 0, colour = "grey20", linewidth = 0.8) +
   coord_flip() +
   scale_x_discrete(
-    name = NULL, labels = scales::label_wrap(15)
-    ) +
-  scale_y_continuous(guide ="none", name = NULL, expand = c(1e-03, 1e-03)) +
+    name = NULL,
+    labels = scales::label_wrap(15)
+  ) +
+  scale_y_continuous(guide = "none", name = NULL, expand = c(1e-03, 1e-03)) +
   scale_fill_manual(values = c("grey50", "#026E99"), guide = "none") +
   scale_colour_manual(values = c("grey20", "white"), guide = "none") +
   labs(
     title = "Proportion of Values Missing for All Variables",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The percentage of missing values for variables that contain ",
-          "missingness. Relationship Satisfaction and Work Life Balance contain ",
-          "significant missing values, but Years at Company has ~3x as many as ",
-          "any other variable."
-        ),
-        width = 93
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The percentage of missing values for variables that contain ",
+        "missingness. Relationship Satisfaction and Work Life Balance contain ",
+        "significant missing values, but Years at Company has ~3x as many as ",
+        "any other variable."
       ),
-    caption = 
-      "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
+      width = 93
+    ),
+    caption = "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
   ) +
   theme(
     plot.subtitle = element_text(margin = margin(5, 0, 10, 0)),
     axis.text.y = element_text(
-      colour = "grey30", size = rel(1.2), hjust = 0.5, 
-      margin = margin(0, 0.5, 0, 0.5), lineheight = .4
-      ),
+      colour = "grey30",
+      size = rel(1.2),
+      hjust = 0.5,
+      margin = margin(0, 0.5, 0, 0.5),
+      lineheight = .4
+    ),
     axis.ticks = element_blank()
-    )
+  )
 ```
 
 Having already detailed what I did when adding missingness to the data, I feel a little silly not just visualising this but now describing the results. It turns out that there are a bunch of missing values spread across six variables, but the biggest culprit is an employee's tenure at the company. Astonishing. Whoever could have predicted this?
@@ -421,50 +446,52 @@ Generally speaking, MCAR data is rare. Missing values can occur for many reasons
 
 It is more plausible that the data is either MAR or MNAR [@nahhas2024]. However, dealing with MNAR data is particularly complicated^[It requires specifying a missing data model and doing difficult things like sensitivity analysis [@vanbuuren2018; @nahhas2024].]. It is reasonable to assume your data is MAR until you find enough evidence to suggest otherwise (in either direction).
 
-In practice, identifying the type of missingness you're dealing with requires exploratory analysis, domain expertise, and good judgment. Testing the assumption that your data is not MNAR involves exploring missing values and looking for evidence that missingness may not be random. For example, observed values may be constrained at a value lower than your expertise suggests should be the maximum, indicating some censoring of the variable. Simple summary functions and plotting distributions can uncover evidence that missing values are non-random. However, concluding that data is MNAR requires domain expertise and a good understanding of your data. 
+In practice, identifying the type of missingness you're dealing with requires exploratory analysis, domain expertise, and good judgment. Testing the assumption that your data is not MNAR involves exploring missing values and looking for evidence that missingness may not be random. For example, observed values may be constrained at a value lower than your expertise suggests should be the maximum, indicating some censoring of the variable. Simple summary functions and plotting distributions can uncover evidence that missing values are non-random. However, concluding that data is MNAR requires domain expertise and a good understanding of your data.
 
 It is a little easier to test the assumption data is not MCAR because any association between observed and missing values acts as evidence data is MAR. One way to look for associations is to create a binary variable that represents a variable's missingness using `naniar::bind_shadow()` and plotting the distribution of other variables conditional on missingness. Spikes in the distribution of missing values, relative to the distribution of observed values, indicate a correlation between that variable and the missing values.
 
-The plot below visualises the monthly income distribution, conditional on employee tenure's missingness. A thorough analysis would require digging to find associations, but I'm cheating and already know where to look. 
+The plot below visualises the monthly income distribution, conditional on employee tenure's missingness. A thorough analysis would require digging to find associations, but I'm cheating and already know where to look.
 
 ```{r}
 #| label: missingness-distribution
 #| fig-alt: |
-#|    A histogram visualising the distribution of employee monthly income, 
-#|    conditional on whether years at company is missing or not. The histogram 
+#|    A histogram visualising the distribution of employee monthly income,
+#|    conditional on whether years at company is missing or not. The histogram
 #|    shows a distribution in blue, representing the values that are not missing,
-#|    which is much larger than the red distribution, representing the missing 
+#|    which is much larger than the red distribution, representing the missing
 #|    values. While the scale of the distributions differ, the shapes are similar.
 #|    However, at the highest values of monthly income, over $15,000, there are
 #|    more missing values than not missing values.
 #| code-fold: true
-#| code-summary: 'Plot Code (Click to Expand)' 
+#| code-summary: 'Plot Code (Click to Expand)'
 
-missing_years |> 
-  naniar::bind_shadow() |> 
-  ggplot(aes(x = monthly_income, fill = forcats::fct_rev(years_at_company_NA))) + 
+missing_years |>
+  naniar::bind_shadow() |>
+  ggplot(aes(
+    x = monthly_income,
+    fill = forcats::fct_rev(years_at_company_NA)
+  )) +
   geom_histogram(position = "dodge", colour = "grey20") +
   geom_hline(yintercept = 0, colour = "grey20", linewidth = 0.8) +
   scale_fill_manual(
-    labels = c("Missing", "Not Missing"), 
+    labels = c("Missing", "Not Missing"),
     values = c("#D93649", "#026E99")
-    ) +
+  ) +
   scale_x_continuous(labels = scales::label_currency()) +
   labs(
     title = "Years at Company Missingness Distribution",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The distribution of Monthly Income conditional on the missingness of ",
-          "Years at Company. While the distribution of not missing values has a ",
-          "is much larger scale across the majority of the income range, ",
-          "there are more missing values from $15-20k."
-        ),
-        width = 95
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The distribution of Monthly Income conditional on the missingness of ",
+        "Years at Company. While the distribution of not missing values has a ",
+        "is much larger scale across the majority of the income range, ",
+        "there are more missing values from $15-20k."
       ),
-    x = "Monthly Income", y = NULL,
-    caption = 
-      "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
+      width = 95
+    ),
+    x = "Monthly Income",
+    y = NULL,
+    caption = "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
   )
 ```
 
@@ -475,41 +502,40 @@ We can also use `naniar::geom_miss_point()` to plot the association between empl
 ```{r}
 #| label: missingness-associations
 #| fig-alt: |
-#|    A grid of four scatter plots showing the association between years at 
-#|    company and monthly income, conditional on whether years at company is 
-#|    missing or not and split by job satisfaction. The four plots show a noisy 
-#|    but positive relationship between years at copany and monthly income, and 
-#|    for medium, high, and very high job satisfaction there is a cluster of 
-#|    missing values between $15000 and $20000. For low job satisfaction, there 
-#|    are much more missing values, making up the majority of the observations 
-#|    in this scatter plot, and they cover the full range of monthly incomes, 
+#|    A grid of four scatter plots showing the association between years at
+#|    company and monthly income, conditional on whether years at company is
+#|    missing or not and split by job satisfaction. The four plots show a noisy
+#|    but positive relationship between years at copany and monthly income, and
+#|    for medium, high, and very high job satisfaction there is a cluster of
+#|    missing values between $15000 and $20000. For low job satisfaction, there
+#|    are much more missing values, making up the majority of the observations
+#|    in this scatter plot, and they cover the full range of monthly incomes,
 #|    from below $5000 to $20000.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
-  
-missing_years |>  
+
+missing_years |>
   ggplot(aes(x = years_at_company, y = monthly_income)) +
-  naniar::geom_miss_point(size = 1, alpha = 0.8) + 
+  naniar::geom_miss_point(size = 1, alpha = 0.8) +
   facet_wrap(vars(job_satisfaction)) +
   scale_colour_manual(values = c("#D93649", "#026E99")) +
   scale_y_continuous(labels = scales::label_currency()) +
   guides(colour = guide_legend(override.aes = list(size = 3))) +
   labs(
     title = "Years at Company Missingness Associations",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The association between Years at Company and Monthly Income, ",
-          "conditional on Years at Company's missingness and split by Job ",
-          "Satisfaction. For low satisfaction, missing values are distributed ",
-          "across all values of monthly income. For all other levels of ",
-          "satisfaction, missing values are clustered between $15k and $20k."
-        ),
-        width = 92
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The association between Years at Company and Monthly Income, ",
+        "conditional on Years at Company's missingness and split by Job ",
+        "Satisfaction. For low satisfaction, missing values are distributed ",
+        "across all values of monthly income. For all other levels of ",
+        "satisfaction, missing values are clustered between $15k and $20k."
       ),
-    x = "Years at Company", y = "Monthly Income",
-    caption = 
-      "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
+      width = 92
+    ),
+    x = "Years at Company",
+    y = "Monthly Income",
+    caption = "Visualisation: Paul Johnson  |  Data: IBM Watson Analytics Lab"
   )
 ```
 
@@ -524,20 +550,23 @@ It is also possible to compute statistical tests of the association between miss
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-missing_years |> 
-  naniar::bind_shadow() |> 
-  select(years_at_company_NA | !years_at_company & !ends_with("NA")) |> 
+missing_years |>
+  naniar::bind_shadow() |>
+  select(years_at_company_NA | !years_at_company & !ends_with("NA")) |>
   mutate(
     across(where(is.factor) & !years_at_company_NA, as.numeric),
     monthly_income = arm::rescale(monthly_income),
-    monthly_rate = arm::rescale(monthly_rate)) |> 
-  glm(years_at_company_NA ~ ., family = "binomial", data = _) |> 
-  list("Years at Company Missingness" = _) |> 
+    monthly_rate = arm::rescale(monthly_rate)
+  ) |>
+  glm(years_at_company_NA ~ ., family = "binomial", data = _) |>
+  list("Years at Company Missingness" = _) |>
   modelsummary::modelsummary(
-    coef_rename = modelsummary::coef_rename, 
+    coef_rename = modelsummary::coef_rename,
     coef_omit = c(-7, -16, -18, -19, -26),
-    gof_omit =  "IC|Log", exponentiate = TRUE, 
-    stars = TRUE, output = "gt"
+    gof_omit = "IC|Log",
+    exponentiate = TRUE,
+    stars = TRUE,
+    output = "gt"
   ) |>
   tbl_theme()
 ```
@@ -547,7 +576,7 @@ I have only included statistically significant variables^[I used `coef_omit = c(
 Another option is to use **naniar**'s `mcar_test()` to calculate @little1988's test statistic for MCAR data^[@little1988's MCAR test tests for mean differences on all variables in the dataset, split by subgroups that share the same missing data pattern. Subgroup observed means are compared against expected means, calculated using the expectation-maximisation algorithm, and this difference forms the basis of the test. The null hypothesis is that the data is MCAR, and the computed test statistic is a chi-squared value.]. @tbl-mcar-test shows the results of running Little's MCAR test on our dataset.
 
 ```{css}
-#| label: rm-striping 
+#| label: rm-striping
 #| echo: false
 
 .rm-striping .gt_table tr.odd {
@@ -559,29 +588,29 @@ Another option is to use **naniar**'s `mcar_test()` to calculate @little1988's t
 #| label: tbl-mcar-test
 #| classes: rm-striping
 #| tbl-cap: |
-#|    Little's Little MCAR Test 
+#|    Little's Little MCAR Test
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-missing_years |>  
-  naniar::mcar_test() |> 
-  mutate(across(everything(), ~ round(.x))) |> 
+missing_years |>
+  naniar::mcar_test() |>
+  mutate(across(everything(), ~ round(.x))) |>
   rename(
     "Test Statistic" = statistic,
     "Degrees of Freedom" = df,
     "P-Value" = p.value,
     "Missing Patterns" = missing.patterns
-  ) |> 
-  gt::gt() |> 
+  ) |>
+  gt::gt() |>
   gt::cols_align(align = "center", columns = 1:4) |>
   tbl_theme(width = 80)
 ```
 
 A high test statistic value and a p-value of zero means we reject the null hypothesis. If the data is MCAR, the probability of observing mean differences as or more extreme than this is very low, suggesting the missing data is either MNAR or MAR. However, there are several limitations to Little's MCAR test. First, it tests all missing data across the entire dataset instead of testing specific missing patterns. Running logistic regressions on specific missingness is a lot more granular and can be more informative. Second, Little's MCAR test relies on a slightly backwards approach to hypothesis testing. The null hypothesis is that the data is MCAR. Failing to reject the null is not the same as being able to conclude that the null is true, so it isn't a test for MCAR data as much as it is a test to reject the hypothesis that the data is MCAR. I'd argue this is fine because the starting assumption is that data is MAR. Little's MCAR test provides a broad summary of the data. A high p-value suggests further investigation is needed because data might not be MAR, and a low p-value is evidence to support the assumption that the data is MAR. However, I think logistic regressions are more informative, robust, and equally easy to compute, so I would recommend this approach instead.
 
-Finally, another approach to identifying associations between missingness and observed values, which makes fewer assumptions of the data than either modelling approach, is calculating the mean difference of variables conditional on the missingness of the variable in question. 
+Finally, another approach to identifying associations between missingness and observed values, which makes fewer assumptions of the data than either modelling approach, is calculating the mean difference of variables conditional on the missingness of the variable in question.
 
-Ultimately, there are no shortcuts in this process. Whichever approach you take, it can only provide supporting evidence, not confirmation. A detailed exploratory analysis combined with domain expertise is the only way to understand how the data may have come to be missing. 
+Ultimately, there are no shortcuts in this process. Whichever approach you take, it can only provide supporting evidence, not confirmation. A detailed exploratory analysis combined with domain expertise is the only way to understand how the data may have come to be missing.
 
 ## Well, What Now?
 
@@ -597,4 +626,4 @@ Preview image generated using StabilityAI's [DreamStudio](https://beta.dreamstud
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

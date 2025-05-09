@@ -1,17 +1,19 @@
 ---
 title: Predicting Bob's Burgers Episode Ratings
 subtitle: |
-  Proving that machine learning can be effective for even the dumbest of problems.
+    Proving that machine learning can be effective for even the dumbest of problems.
 description-meta: |
-  Building a machine learning model in Python to predict the IMDb user ratings of 
-  Bob's Burgers episodes, using episode details and dialogue metrics.
+    Building a machine learning model in Python to predict the IMDb user ratings of
+    Bob's Burgers episodes, using episode details and dialogue metrics.
 date: 2025-02-07
 image: burgers.webp
 image-alt: |
-  A red sign outside a restaurant that has the outline of a burger, with 
-  Burgers written in place of the patty.
+    A red sign outside a restaurant that has the outline of a burger, with
+    Burgers written in place of the patty.
 categories: [Machine Learning, Hyperparameter Optimisation, Python]
 bibliography: references.bib
+execute:
+    freeze: true
 ---
 
 ```{python}
@@ -138,7 +140,7 @@ optuna.logging.set_verbosity(optuna.logging.CRITICAL)
 
 Biologists have been wrestling with the challenge of predicting the structure of proteins for over 50 years. Doing so would enable scientists to better understand diseases and accelerate the development of medications [@heaven2022]. Experimental methods for predicting protein structures can be arduous, proving inadequate for predicting the structure of the over 200 million proteins discovered in nature [@service2020]. On the other hand, the performance of computational methods fell short of the experimental. That was until DeepMind's [AlphaFold2](https://deepmind.google/technologies/alphafold/) was released at CASP14 [@jumper2021]. DeepMind combined a vast repository of training data from the [Protein Data Bank](https://www.wwpdb.org) with innovations in deep learning and immense computational resources, achieving landmark performance and solving one of science's grand challenges.
 
-AlphaFold is a testament to the potential value created by combining massive volumes of data and computational power (when incentives align and intentions are good). The right data can help us solve all kinds of problems, from predicting protein structures to less grand but no less important issues, such as predicting the IMDb user ratings of Bob's Burgers episodes. 
+AlphaFold is a testament to the potential value created by combining massive volumes of data and computational power (when incentives align and intentions are good). The right data can help us solve all kinds of problems, from predicting protein structures to less grand but no less important issues, such as predicting the IMDb user ratings of Bob's Burgers episodes.
 
 While the big brains at the world's best universities are busy trying to change the world, I'm creating models no one needs or asks for. I will make a machine learning model that predicts IMDb user ratings for Bob's Burgers episodes, using features that summarise the episode (episode and season number, date aired, writer, director, etc.) and metrics that describe the dialogue in the episode itself, seeing how far I can stretch the limited sample size.
 
@@ -259,9 +261,9 @@ Correlations Between Numeric Features & IMDb User Ratings
 
 :::
 
-Several features, including a couple dialogue metrics, appear to be making minimal contributions to the variance in episode ratings. However, ratings are moderately correlated with viewers, exclamation ratio, season, the overall episode number, and the year the episode was aired. 
+Several features, including a couple dialogue metrics, appear to be making minimal contributions to the variance in episode ratings. However, ratings are moderately correlated with viewers, exclamation ratio, season, the overall episode number, and the year the episode was aired.
 
-The remarkably similar correlations between ratings and the season, overall episode, and year suggest that those three features capture the same thing—time. The plot below visualises how ratings have changed over time. 
+The remarkably similar correlations between ratings and the season, overall episode, and year suggest that those three features capture the same thing—time. The plot below visualises how ratings have changed over time.
 
 ```{python}
 #| label: episode-ratings
@@ -287,7 +289,7 @@ The remarkably similar correlations between ratings and the season, overall epis
         x="Episode",
         y="IMDb Rating",
         caption="Visualisation: Paul Johnson | Data: {bobsburgersR} (via TidyTuesday)",
-    ) 
+    )
 )
 ```
 
@@ -416,7 +418,7 @@ Finally, in my desperation, I turn to the categorical features. Specifically, th
     .explode("wikipedia_directed_by")
     .groupby("wikipedia_directed_by")
     .agg(
-        episodes=("wikipedia_directed_by", "size"), 
+        episodes=("wikipedia_directed_by", "size"),
         average_rating=("rating", "mean")
         )
     .query("episodes >= 5")
@@ -426,7 +428,7 @@ Finally, in my desperation, I turn to the categorical features. Specifically, th
         lambda df: GT(df, rowname_col="wikipedia_directed_by")
         .fmt_number(columns="average_rating", decimals=2)
         .cols_label(
-            episodes="Total Episodes Directed", 
+            episodes="Total Episodes Directed",
             average_rating="Average Episode Rating"
         )
         .cols_align(columns=["episodes", "average_rating"], align="center")
@@ -458,7 +460,7 @@ IMDb User Ratings by Director
     .explode("wikipedia_written_by")
     .groupby("wikipedia_written_by")
     .agg(
-        episodes=("wikipedia_written_by", "size"), 
+        episodes=("wikipedia_written_by", "size"),
         average_rating=("rating", "mean")
         )
     .query("episodes >= 5")
@@ -468,7 +470,7 @@ IMDb User Ratings by Director
         lambda df: GT(df, rowname_col="wikipedia_written_by")
         .fmt_number(columns="average_rating", decimals=2)
         .cols_label(
-            episodes="Total Episodes Written", 
+            episodes="Total Episodes Written",
             average_rating="Average Episode Rating"
         )
         .cols_align(columns=["episodes", "average_rating"], align="center")
@@ -488,20 +490,15 @@ There is plenty of variance in the outcomes across directors and writers. It is 
 
 [^Viewers]:
 
-    My initial reaction to viewership's strong correlation with ratings was that this made 
-    sense, but as soon as I tried to explain why, I realised, I had the direction of causality 
-    mixed up. 
+My initial reaction to viewership's strong correlation with ratings was that this made sense, but as soon as I tried to explain why, I realised, I had the direction of causality mixed up.
 
 [^Cats]:
 
-    The other categorical features are the episode title and synopsis, which might include some 
-    helpful signal but would require some effort to extract. The date the episode aired is also 
-    categorical, but only because I haven't bothered to convert it (having done some digging and 
-    found that there doesn't appear to be any seasonality or anything to work with).
+The other categorical features are the episode title and synopsis, which might include some helpful signal but would require some effort to extract. The date the episode aired is also categorical, but only because I haven't bothered to convert it (having done some digging and found that there doesn't appear to be any seasonality or anything to work with).
 
 ## Data Preparation
 
-A brief exploration of the data has not given me confidence that it is sufficient for developing a cromulent predictive model (maybe the TidyTuesday folks were on to something). But I'm committed to the bit. I've never heard of sunken costs. 
+A brief exploration of the data has not given me confidence that it is sufficient for developing a cromulent predictive model (maybe the TidyTuesday folks were on to something). But I'm committed to the bit. I've never heard of sunken costs.
 
 I will carry out some basic preprocessing but won't do any feature engineering or add additional data from elsewhere. I will keep all the dialogue metrics in the model because meaningful interactions between them could add some value[^Interactions]. However, I will drop the season-episode number and year features because they offer minimal additional value over the season and overall episode number features. Finally, I'm following my instincts and dropping the viewership feature. I think it is just serving as another proxy for time and isn't needed.
 
@@ -509,18 +506,15 @@ There is a lot more that could be done here. Never underestimate how many differ
 
 [^Interactions]:
 
-    If I were spending more time on this, I would explore any interactions, but I think we can 
-    get away with chucking all the potentially valuable features into the mixer here and saving 
-    some time.
+If I were spending more time on this, I would explore any interactions, but I think we can get away with chucking all the potentially valuable features into the mixer here and saving some time.
 
 [^Features]:
 
-    I'd highly recommend Emil Hvitfeldt's [_Feature Engineering A-Z_](https://feaz-book.com/), a 
-    comprehensive resource on the endless possibilities of feature engineering.
+I'd highly recommend Emil Hvitfeldt's [_Feature Engineering A-Z_](https://feaz-book.com/), a comprehensive resource on the endless possibilities of feature engineering.
 
 ### Train/Test Split
 
-I should have split the data into [training and test sets](https://mlu-explain.github.io/train-test-validation/) before doing the exploratory work, but with only 271 observations, I don't think we have enough data to justify splitting it up beforehand. 
+I should have split the data into [training and test sets](https://mlu-explain.github.io/train-test-validation/) before doing the exploratory work, but with only 271 observations, I don't think we have enough data to justify splitting it up beforehand.
 
 ```{python}
 #| label: train-test-split
@@ -539,7 +533,7 @@ The data has been split 70/30 into training and testing. I also decided there wa
 
 ### Data Preprocessing
 
-The model pipeline includes several preprocessing steps. I have split the features into categorical and numeric, and missing values are imputed using slightly different methods depending on the data type. 
+The model pipeline includes several preprocessing steps. I have split the features into categorical and numeric, and missing values are imputed using slightly different methods depending on the data type.
 
 ```{python}
 #| label: explode-encode-class
@@ -693,14 +687,13 @@ To prevent the newly created binary features from markedly expanding the data's 
 
 [^Help]:
 
-    I haven't had much experience building custom transformers like this, so I needed a helping 
-    hand.
+I haven't had much experience building custom transformers like this, so I needed a helping hand.
 
 ## Model Training
 
 I'll start with a baseline model and then a relatively simple model to compare against. This is always a good starting point, especially when there's a reasonable chance your model will be garbage. You need to make sure you are at **least** able to build a model that performs better than taking the most basic baseline predictions.
 
-The baseline model predicts that all test set values will equal the mean IMDb ratings in the training set. 
+The baseline model predicts that all test set values will equal the mean IMDb ratings in the training set.
 
 ```{python}
 #| label: baseline-model
@@ -742,7 +735,7 @@ The linear regression returns a score of **`{python} f"{lm_rmse:.3f}"`**, which 
 
 I decided to stick with algorithms provided by scikit-learn, choosing [random forests](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) [@breiman2001], [extremely randomised trees](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html) (Extra Trees in scikit-learn) [@geurts2006], and [gradient boosting](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html) [@friedman2001].
 
-Random forests[^RF] and extra trees are bagging ensembles combining multiple decision trees by averaging their predictions. The key difference between the two is that random forests use bootstrapped samples of the data for each tree instead of the entire sample (though you can choose to use this feature in scikit-learn's extra trees implementation, too), and extra trees split tree nodes randomly, to induce more variance between trees. Gradient boosting[^GB] combines an ensemble of weak models (typically decision trees) in a sequential, additive fashion. The sequential process, called boosting, allows each model to learn from all that precede it. 
+Random forests[^RF] and extra trees are bagging ensembles combining multiple decision trees by averaging their predictions. The key difference between the two is that random forests use bootstrapped samples of the data for each tree instead of the entire sample (though you can choose to use this feature in scikit-learn's extra trees implementation, too), and extra trees split tree nodes randomly, to induce more variance between trees. Gradient boosting[^GB] combines an ensemble of weak models (typically decision trees) in a sequential, additive fashion. The sequential process, called boosting, allows each model to learn from all that precede it.
 
 I am testing the performance of these algorithms by tuning a couple key hyperparameters for each, split over five folds using [k-fold cross-validation](https://mlu-explain.github.io/cross-validation/). The goal is that this should identify the algorithm that gives us the best opportunity for maximising performance. I am using [Optuna](https://optuna.org) for [hyperparameter optimisation](https://maelfabien.github.io/machinelearning/Explorium4/) (here and throughout the rest of this post)[^Optuna]. Optuna's default optimisation strategy is Bayesian optimisation using [tree-structured parzen estimators](https://anna-ssi.github.io/blog/tpe/), and I've always had good luck with it.
 
@@ -795,25 +788,19 @@ select_model = optuna.create_study(direction="minimize")
 select_model.optimize(objective, n_trials=100)
 ```
 
-I'm not especially concerned with model performance during this step; it's just a comparison between algorithms. The study suggests **`{python} f"{select_model.best_params.get('regressor')}"`** is the best of the bunch. 
+I'm not especially concerned with model performance during this step; it's just a comparison between algorithms. The study suggests **`{python} f"{select_model.best_params.get('regressor')}"`** is the best of the bunch.
 
 [^RF]:
 
-    For an intuition into random forests (and, by extension, extra trees, too), I'd recommend 
-    [MLU-Explain](https://mlu-explain.github.io/random-forest/)'s explainer.
+For an intuition into random forests (and, by extension, extra trees, too), I'd recommend [MLU-Explain](https://mlu-explain.github.io/random-forest/)'s explainer.
 
 [^GB]:
 
-    For an intuition into gradient boosting (and all its variants), I'd recommend Terence Parr 
-    & Jeremy Howard's [_How to Explain Gradient Boosting_](https://explained.ai/gradient-boosting/)
+For an intuition into gradient boosting (and all its variants), I'd recommend Terence Parr & Jeremy Howard's [_How to Explain Gradient Boosting_](https://explained.ai/gradient-boosting/)
 
 [^Optuna]:
 
-    There are other hyperparameter optimisation libraries, such as HyerOpt, and scikit-learn, 
-    which offers tuning functionality of its own, but Optuna is the most 
-    [feature-rich](https://neptune.ai/blog/optuna-vs-hyperopt). Perhaps the focus should be on 
-    [methods, not libraries](https://trainindata.substack.com/p/choose-the-library-based-on-the-method), 
-    but in my experience, Optuna's methods also provide excellent performance. 
+There are other hyperparameter optimisation libraries, such as HyerOpt, and scikit-learn, which offers tuning functionality of its own, but Optuna is the most [feature-rich](https://neptune.ai/blog/optuna-vs-hyperopt). Perhaps the focus should be on [methods, not libraries](https://trainindata.substack.com/p/choose-the-library-based-on-the-method), but in my experience, Optuna's methods also provide excellent performance.
 
 ### Hyperparameter Tuning
 
@@ -891,11 +878,9 @@ Optimised Random Forest Hyperparameters
 
 The hyperparameters are mostly tailored to optimise the training data, with some thought towards what is appropriate given the sample size. I have constrained the maximum features and samples to make the model more generalisable.
 
-[^Validation]: 
+[^Validation]:
 
-    A validation set or a more involved process like nested cross-validation would add some value. 
-    I don't think we have enough data for a validation set, and I decided a fully nested pipeline 
-    was overkill, but I'm sure it would be beneficial.
+A validation set or a more involved process like nested cross-validation would add some value. I don't think we have enough data for a validation set, and I decided a fully nested pipeline was overkill, but I'm sure it would be beneficial.
 
 ## Model Evaluation
 
@@ -920,14 +905,11 @@ rf_preds = pipeline.predict(X_test)
 rf_rmse = root_mean_squared_error(np.ravel(y_test), rf_preds)
 ```
 
-The model improves on the baseline (**`{python} f"{baseline_rmse:.3f}"`**) and the linear regression (**`{python} f"{lm_rmse:.3f}"`**) to achieve an RMSE of **`{python} f"{rf_rmse:.3f}"`**. That is a ~`{python} f"{100 * ((baseline_rmse - rf_rmse)/baseline_rmse):.0f}"`% improvement on the baseline and ~`{python} f"{100 * ((lm_rmse - rf_rmse)/lm_rmse):.0f}"`% on the linear model[^LM]. This is not nothing! 
+The model improves on the baseline (**`{python} f"{baseline_rmse:.3f}"`**) and the linear regression (**`{python} f"{lm_rmse:.3f}"`**) to achieve an RMSE of **`{python} f"{rf_rmse:.3f}"`**. That is a ~`{python} f"{100 * ((baseline_rmse - rf_rmse)/baseline_rmse):.0f}"`% improvement on the baseline and ~`{python} f"{100 * ((lm_rmse - rf_rmse)/lm_rmse):.0f}"`% on the linear model[^LM]. This is not nothing!
 
-[^LM]: 
+[^LM]:
 
-    Some simple preprocessing steps could improve the linear regression, potentially making it 
-    competitive with our final model. If I intended to put this into production, I'd be tempted 
-    to run the linear regression alongside the random forest to see if a simpler model would 
-    ultimately come out on top.
+Some simple preprocessing steps could improve the linear regression, potentially making it competitive with our final model. If I intended to put this into production, I'd be tempted to run the linear regression alongside the random forest to see if a simpler model would ultimately come out on top.
 
 ### Visualising Model Error
 
@@ -978,7 +960,7 @@ The distribution of prediction error, plotted below, serves as a quick check tha
 
 With less than 100 observations in the test dataset, it requires a bit of squinting to make some assumptions about the distribution we'd see with a larger sample. Still, nothing concerning jumps out at a glance. The distribution peaks slightly above zero, but the negative errors have a longer tail. There appears to be one outlier that the model struggled with, underestimating the rating by more than one (which is quite a lot when considering the ratings are out of 10).
 
-We can also plot the predicted and actual ratings below to compare the model's misses more directly. 
+We can also plot the predicted and actual ratings below to compare the model's misses more directly.
 
 ```{python}
 #| label: predicted-vs-actual
@@ -1039,7 +1021,7 @@ Finally, we can visualise the relationship between prediction error and actual r
 )
 ```
 
-The model struggles with values at the extreme ends of the target distribution. Most observations in the dataset fall between 7 and 8, and the mean absolute error for episodes in this range in the test set is ~0.2. In fact, the trough in the prediction errors is between 7.5 and 8 and rises quickly once the rating value moves in either direction. 
+The model struggles with values at the extreme ends of the target distribution. Most observations in the dataset fall between 7 and 8, and the mean absolute error for episodes in this range in the test set is ~0.2. In fact, the trough in the prediction errors is between 7.5 and 8 and rises quickly once the rating value moves in either direction.
 
 The observation with a rating of over 9 is driving a big spike. The episode responsible is —_The Haunting_ (S6E3). I suspect an indicator that an episode is a "special" of some description (episodes relevant to public holidays, like Christmas and Halloween, extended episodes, or any one-off episodes) would minimise the issues the model seems to be having with very high ratings.
 
@@ -1061,4 +1043,4 @@ Preview image by [S. Tsuchiya](https://unsplash.com/@s_tsuchiya) on [Unsplash](h
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

@@ -3,9 +3,9 @@ title: Combining Tidymodels & Caret for Machine Learning in R
 subtitle: |
   Can you use **tidymodels** and **caret** together? Yes. But should you? Unclear.
 description-meta: |
-  Investigating the different ways {tidymodels} and {caret} can be combined when 
-  building machine learning models in R and whether bringing the two frameworks 
-  together is worthwhile. 
+  Investigating the different ways {tidymodels} and {caret} can be combined when
+  building machine learning models in R and whether bringing the two frameworks
+  together is worthwhile.
 date: 2022-05-07
 image: robot.webp
 image-alt: A light blue toy robot.
@@ -38,8 +38,8 @@ diabetes_raw <- MLDataR::diabetes_data
 
 # clean data
 df <-
-  diabetes_raw %>%
-  janitor::clean_names() %>%
+  diabetes_raw |>
+  janitor::clean_names() |>
   mutate(diabetic_class = as.factor(diabetic_class))
 ```
 
@@ -55,10 +55,7 @@ set.seed(456)
 
 # split train/test data
 train_test_split <-
-  rsample::initial_split(df,
-    strata = diabetic_class,
-    prop = 0.7
-  )
+  rsample::initial_split(df, strata = diabetic_class, prop = 0.7)
 
 # create train/test sets
 train_df <- rsample::training(train_test_split)
@@ -74,13 +71,13 @@ The next step is a little more involved, and is where I think **tidymodels** rea
 
 # preprocessing
 model_recipe <-
-  recipe(diabetic_class ~ ., data = train_df) %>%
+  recipe(diabetic_class ~ ., data = train_df) |>
   # combine low frequency factor levels
-  step_other(all_nominal(), threshold = 0.05) %>%
+  step_other(all_nominal(), threshold = 0.05) |>
   # remove predictors with zero variance
-  step_nzv(all_predictors()) %>%
+  step_nzv(all_predictors()) |>
   # normalize numeric variables (sigma = 1, mu = 0)
-  step_normalize(all_numeric()) %>%
+  step_normalize(all_numeric()) |>
   # convert nominal variables to numeric binary variables
   step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE)
 ```
@@ -91,9 +88,9 @@ You can check that all the preprocessing steps are working as expected by using 
 #| label: check-preprocessing
 
 # check preprocessing results
-model_recipe %>%
-  prep() %>%
-  juice() %>%
+model_recipe |>
+  prep() |>
+  juice() |>
   glimpse()
 ```
 
@@ -154,7 +151,7 @@ rf_predict <- predict(rf_mod, newdata = test_df, type = "prob")
 rf_class <- predict(rf_mod, newdata = test_df, type = "raw")
 
 preds <-
-  cbind(rf_predict, rf_class) %>%
+  cbind(rf_predict, rf_class) |>
   mutate(
     Positive = round(Positive, digits = 2),
     Negative = round(Negative, digits = 2)
@@ -169,10 +166,10 @@ Finally, we can produce a confidence matrix for a more intuitive look at how the
 cm_class <- test_df[, names(test_df) %in% c("diabetic_class")]
 
 confusionMatrix(
-    rf_class,
-    as.factor(cm_class$diabetic_class),
-    positive = "Positive"
-  )
+  rf_class,
+  as.factor(cm_class$diabetic_class),
+  positive = "Positive"
+)
 ```
 
 The results are pretty good for a very quick model. How exciting. Lets pretend that it's because I'm a brilliant data scientist rather than it being due to the very clean, balanced toy dataset we used.
@@ -191,4 +188,4 @@ Preview image by [Rock'n Roll Monkey](https://unsplash.com/@rocknrollmonkey) on 
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.

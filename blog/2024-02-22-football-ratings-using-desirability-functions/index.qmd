@@ -4,7 +4,7 @@ subtitle: |
   Ranking football players using **desirability2** and multivariate optimisation.
 description-meta: |
   Exploring a multivariate optimisation method called desirability functions for
-  creating rating systems, using FBref player data for the 2023/24 season in 
+  creating rating systems, using FBref player data for the 2023/24 season in
   Europe's big five leagues.
 date: 2024-02-22
 image: math.webp
@@ -12,6 +12,8 @@ image-alt: |
   A blackboard with a many diagrams and mathematical operations drawn on it.
 categories: [Optimisation, Football Analytics, R]
 bibliography: references.bib
+execute:
+  freeze: true
 ---
 
 ```{r}
@@ -42,11 +44,15 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     panel.grid.major = element_line(color = "grey90", linewidth = .4),
     panel.grid.minor = element_blank(),
     axis.title.x = element_text(
-      color = "grey30", margin = margin(t = 5), size = rel(1.05)
-      ),
+      color = "grey30",
+      margin = margin(t = 5),
+      size = rel(1.05)
+    ),
     axis.title.y = element_text(
-      color = "grey30", margin = margin(r = 5), size = rel(1.05)
-      ),
+      color = "grey30",
+      margin = margin(r = 5),
+      size = rel(1.05)
+    ),
     axis.text = element_text(color = "grey50", size = rel(1)),
     axis.ticks = element_line(color = "grey90", linewidth = .4),
     axis.ticks.length = unit(.2, "lines"),
@@ -54,17 +60,25 @@ theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
     legend.title = element_blank(),
     legend.text = element_text(size = rel(1)),
     plot.title = element_text(
-      hjust = 0, color = "black", family = "Lora",
-      size = rel(1.5), margin = margin(t = 5, b = 5)
+      hjust = 0,
+      color = "black",
+      family = "Lora",
+      size = rel(1.5),
+      margin = margin(t = 5, b = 5)
     ),
     plot.subtitle = element_text(
-      hjust = 0, color = "grey30", family = "Lora",
-      lineheight = 0.5, size = rel(1.1), 
+      hjust = 0,
+      color = "grey30",
+      family = "Lora",
+      lineheight = 0.5,
+      size = rel(1.1),
       margin = margin(5, 0, 5, 0)
     ),
     plot.title.position = "plot",
     plot.caption = element_text(
-      color = "grey50", size = rel(0.8), hjust = 1,
+      color = "grey50",
+      size = rel(0.8),
+      hjust = 1,
       margin = margin(10, 0, 0, 0)
     ),
     plot.caption.position = "plot",
@@ -97,9 +111,9 @@ format_table <-
   }
 ```
 
-Building rating systems for complex, multidimensional contexts is difficult, and the results are often underwhelming. There are many examples of this in sports, where rating systems are common. While many sports have metrics that accurately describe team and player performance in specific contexts, ratings that summarise performance are more limited. Football has expected goals (xG). xG is a relatively accurate proxy for team performance because it describes every team's primary objective - score more goals than the opponent. However, players help their team achieve this objective in many ways that xG does not capture. 
+Building rating systems for complex, multidimensional contexts is difficult, and the results are often underwhelming. There are many examples of this in sports, where rating systems are common. While many sports have metrics that accurately describe team and player performance in specific contexts, ratings that summarise performance are more limited. Football has expected goals (xG). xG is a relatively accurate proxy for team performance because it describes every team's primary objective - score more goals than the opponent. However, players help their team achieve this objective in many ways that xG does not capture.
 
-An accurate player rating system would help address this. Performance has multiple components, so rating players is a balancing act. While goals may be the most important part of the game, a player who scored two goals has not necessarily played better than their teammate who contributed a goal and an assist, because player performance is a combination of factors. Player ratings are a multivariate optimisation problem. 
+An accurate player rating system would help address this. Performance has multiple components, so rating players is a balancing act. While goals may be the most important part of the game, a player who scored two goals has not necessarily played better than their teammate who contributed a goal and an assist, because player performance is a combination of factors. Player ratings are a multivariate optimisation problem.
 
 In this blog post, I will use a simple but often overlooked method for multivariate optimisation - desirability functions - to develop a rating system for offensive players in football, using data from the big five leagues in the 2022/23 season. The ratings will attempt to identify the best players in Europe in the 2022/23 season because match-level ratings seem less fun (and more difficult).
 
@@ -109,64 +123,55 @@ As someone prone to seeing rabbit holes as a challenge, I have spent far too muc
 
 Desirability functions are a method for simultaneously optimising multiple variables [@kuhn2023; @harrington1965; @derringer1980]. If you have multiple variables, finding the optimal value of one may take you further away from the optimal value of the others. It is necessary to find an optimal combination of values instead, and desirability functions are a simple solution to this problem [@kuhn2023].
 
-Desirability functions are common in fields like genomics, and they are sometimes used in machine learning to optimise across multiple evaluation metrics or model parameters. The [**desirability2**](https://desirability2.tidymodels.org/) package is a part of the [**tidymodels**](https://www.tidymodels.org/) machine learning framework, but it is not limited to optimising evaluation metrics. While there are other ways of approaching this type of task, I like desirability functions for their relative simplicity. They are quick and easy, and they're pretty simple to explain to non-technical audiences. 
+Desirability functions are common in fields like genomics, and they are sometimes used in machine learning to optimise across multiple evaluation metrics or model parameters. The [**desirability2**](https://desirability2.tidymodels.org/) package is a part of the [**tidymodels**](https://www.tidymodels.org/) machine learning framework, but it is not limited to optimising evaluation metrics. While there are other ways of approaching this type of task, I like desirability functions for their relative simplicity. They are quick and easy, and they're pretty simple to explain to non-technical audiences.
 
 ### How Desirability Works
 
-Desirability functions optimise across multiple variables by mapping each variable onto a standard scale from one (maximally desirable) to zero (unacceptable) using a transformation function[^transformation], before calculating the weighted combination of these individual scores using the arithmetic or geometric mean[^mean] and optimising this overall desirability score [@kuhn2016; @kuhn2019; @kuhn2023].
+Desirability functions optimise across multiple variables by mapping each variable onto a standard scale from one (maximally desirable) to zero (unacceptable) using a transformation function[^Transformation], before calculating the weighted combination of these individual scores using the arithmetic or geometric mean[^Mean] and optimising this overall desirability score [@kuhn2016; @kuhn2019; @kuhn2023].
 
-Mapping each variable to a standard scale makes a direct comparison between variables easier. The transformation function depends on what desirability looks like for each variable. If higher values are more desirable, maximisation would be appropriate, or minimisation when lower values are more desirable. Other transformations are possible, such as a particular target value or a box function that specifies a desirable interval, and there are also mechanisms for making desirability easier or harder to achieve, using scaling features. Having transformed each variable onto a scale where values approaching one are more desirable, the observation that achieves the highest average value of all individual desirability scores is the observation that is the closest to being maximally desirable. 
+Mapping each variable to a standard scale makes a direct comparison between variables easier. The transformation function depends on what desirability looks like for each variable. If higher values are more desirable, maximisation would be appropriate, or minimisation when lower values are more desirable. Other transformations are possible, such as a particular target value or a box function that specifies a desirable interval, and there are also mechanisms for making desirability easier or harder to achieve, using scaling features. Having transformed each variable onto a scale where values approaching one are more desirable, the observation that achieves the highest average value of all individual desirability scores is the observation that is the closest to being maximally desirable.
 
-[^transformation]: 
+[^Transformation]:
 
-    With each variable $X_i$ being simultaneously optimised, where $i$ represents each individual variable, each must 
-    be individually optimised using a desirability function that approaches 1 when $X_i$ is optimal and approaches 0 
-    when $X_i$ is unacceptable. The optimisation function for minimising $X_i$ [@kuhn2016] is given by:
+With each variable $X_i$ being simultaneously optimised, where $i$ represents each individual variable, each must be individually optimised using a desirability function that approaches 1 when $X_i$ is optimal and approaches 0 when $X_i$ is unacceptable. The optimisation function for minimising $X_i$ [@kuhn2016] is given by:
 
-    $$
-    D_{X_i}^{min} = 
-    \begin{cases}
-      0 & \text{if } X_i > B_i \\
-      \left(\frac{B_i - X_i}{B_i - A_i}\right)^{s_i} & \text{if } A_i \leq X_i \leq B_i \\
-      1 & \text{if } X_i < A_i
-    \end{cases}
-    $$
-    
-    where $A_i$ and $B_i$ specify the minimum and maximum value that each variable $X_i$ can reach, and $s_i$ is a 
-    scaling feature that makes it easier ($s > 1$) or harder ($s < 1$) for each variable $X_i$ to achieve maximal 
-    desirability.
+$$
+D_{X_i}^{min} =
+\begin{cases}
+  0 & \text{if } X_i > B_i \\
+  \left(\frac{B_i - X_i}{B_i - A_i}\right)^{s_i} & \text{if } A_i \leq X_i \leq B_i \\
+  1 & \text{if } X_i < A_i
+\end{cases}
+$$
 
-    Similarly, the optimisation function for maximising variable $X_i$ [@kuhn2016] is:
+where $A_i$ and $B_i$ specify the minimum and maximum value that each variable $X_i$ can reach, and $s_i$ is a scaling feature that makes it easier ($s > 1$) or harder ($s < 1$) for each variable $X_i$ to achieve maximal desirability.
 
-    $$ 
-    D_{X_i}^{max} = 
-    \begin{cases}
-      0 & \text{if } X_i < A_i \\
-      \left(\frac{X_i - A_i}{B_i - A_i}\right)^{s_i} & \text{if } A_i \leq X_i \leq B_i \\
-      1 & \text{if } X_i > B_i
-    \end{cases}
-    $$
-    
-    where $A_i$, $B_i$, and $s_i$ are again the minimum and maximum values and the scaling feature.
+Similarly, the optimisation function for maximising variable $X_i$ [@kuhn2016] is:
 
-[^mean]: 
+$$
+D_{X_i}^{max} =
+\begin{cases}
+  0 & \text{if } X_i < A_i \\
+  \left(\frac{X_i - A_i}{B_i - A_i}\right)^{s_i} & \text{if } A_i \leq X_i \leq B_i \\
+  1 & \text{if } X_i > B_i
+\end{cases}
+$$
 
-    The arithmetic mean is the typical mean average value that people are used to seeing, which sums 
-    all values and divides the sum by the sample size, $n$, while the geometric mean multiplies all 
-    values, before taking the $n$th root (the $n$ being the number of values multiplied) of that 
-    product. Both arithmetic and geometric mean are measures of central tendency, but geometric mean
-    is more robust when dealing with non-independent values, less responsive to outliers, and more 
-    capable of handling skewed data.
+where $A_i$, $B_i$, and $s_i$ are again the minimum and maximum values and the scaling feature.
+
+[^Mean]:
+
+The arithmetic mean is the typical mean average value that people are used to seeing, which sums all values and divides the sum by the sample size, $n$, while the geometric mean multiplies all values, before taking the $n$th root (the $n$ being the number of values multiplied) of that product. Both arithmetic and geometric mean are measures of central tendency, but geometric mean is more robust when dealing with non-independent values, less responsive to outliers, and more capable of handling skewed data.
 
 ### The **desirability2** Package
 
-There are two main groups of functions in the [**desirability2**](https://desirability2.tidymodels.org/reference/index.html) package - the [transformation functions](https://desirability2.tidymodels.org/reference/inline_desirability.html) and the [overall desirability function](https://desirability2.tidymodels.org/reference/d_overall.html). 
+There are two main groups of functions in the [**desirability2**](https://desirability2.tidymodels.org/reference/index.html) package - the [transformation functions](https://desirability2.tidymodels.org/reference/inline_desirability.html) and the [overall desirability function](https://desirability2.tidymodels.org/reference/d_overall.html).
 
 While the most commonly used transformation functions will be `d_max()` and `d_min()`, there are several other transformations (`d_target()`, `d_box()`, and `d_category()`). Where none of these functions are sufficient, `d_custom()` offers functionality for specifying a custom transformation. Finally, `d_overall()` calculates the overall desirability score.
 
 All **desirability2** functions can be a part of a typical [**tidyverse**](https://www.tidyverse.org/) pipeline.
 
-## A Rating System for Offensive Football Players 
+## A Rating System for Offensive Football Players
 
 ```{r}
 #| label: get-data
@@ -197,11 +202,12 @@ standard_stats <-
   ) |>
   mutate(
     across(
-      starts_with("prg"), ~ round(.x/mins90, 2), 
+      starts_with("prg"),
+      ~ round(.x / mins90, 2),
       .names = "{.col}90"
-      ),
+    ),
     position = stringr::str_split_i(pos, pattern = ",", i = 1)
-    ) |> 
+  ) |>
   select(player, position, squad, comp, ends_with("90"))
 
 shooting_stats <-
@@ -209,13 +215,13 @@ shooting_stats <-
     season_end_year = 2023,
     stat_type = "shooting",
     team_or_player = "player"
-    ) |> 
+  ) |>
   janitor::clean_names(
     replace = c(
       "_Standard" = "",
       "_per_90" = "90"
-      )
-    ) |>
+    )
+  ) |>
   select(player, squad, sh90)
 
 passing_stats <-
@@ -223,23 +229,23 @@ passing_stats <-
     season_end_year = 2023,
     stat_type = "passing",
     team_or_player = "player"
-  ) |> 
+  ) |>
   janitor::clean_names(
     replace = c(
       "_Expected" = "",
       "xA" = "xa"
-      )
-    ) |>
-  mutate(xa90 = round(xa/mins_per_90, 2)) |> 
+    )
+  ) |>
+  mutate(xa90 = round(xa / mins_per_90, 2)) |>
   select(player, squad, xa90)
 
 gca_stats <-
   fb_big5_advanced_season_stats(
-    season_end_year = 2023, 
-    stat_type = "gca", 
+    season_end_year = 2023,
+    stat_type = "gca",
     team_or_player = "player"
   ) |>
-  janitor::clean_names(replace = c("_SCA" = "")) |> 
+  janitor::clean_names(replace = c("_SCA" = "")) |>
   select(player, squad, sca90)
 
 possession_stats <-
@@ -247,26 +253,26 @@ possession_stats <-
     season_end_year = 2023,
     stat_type = "possession",
     team_or_player = "player"
-  ) |> 
-  janitor::clean_names() |> 
-  mutate(pen_touches90 = round(att_pen_touches/90, 2)) |> 
+  ) |>
+  janitor::clean_names() |>
+  mutate(pen_touches90 = round(att_pen_touches / 90, 2)) |>
   select(player, squad, pen_touches90)
 
 # join full dataset
 big_five_stats <-
-  standard_stats |> 
-  full_join(shooting_stats) |> 
-  full_join(passing_stats) |> 
-  full_join(gca_stats) |> 
-  full_join(possession_stats) |> 
-  tibble() |> 
-  tidyr::drop_na() |> 
-  filter(mins90 > 15 & position != "GK") |> 
+  standard_stats |>
+  full_join(shooting_stats) |>
+  full_join(passing_stats) |>
+  full_join(gca_stats) |>
+  full_join(possession_stats) |>
+  tibble() |>
+  tidyr::drop_na() |>
+  filter(mins90 > 15 & position != "GK") |>
   rename(
-    team = squad, 
+    team = squad,
     league = comp,
     npg90 = g_minus_pk90
-    )
+  )
 ```
 
 Using the excellent [**worldfootballR**](https://jaseziv.github.io/worldfootballR) package, I have pulled together player-level [FBref](https://fbref.com/) data for the 2022/23 season across the big five leagues, for a variety of different offensive measures. The data represents multiple elements of team offense, and in order to capture this, I have split the data into three components - goal threat, chance creation, and ball progression.
@@ -279,14 +285,14 @@ The variables that make up each offensive component, and even the components the
 
 Perhaps it is stating the obvious to even the most "I'm only here for the stats" folks reading this blog post, but scoring goals is a very important part of football. Goals are good. Teams love them. Everyone loves players that do them. So it makes sense to start the rating system with the goal threat component.
 
-The four variables that make up the goal threat desirability function are npG, npxG, shots, and touches in the opponent's penalty area. All of these variables have relatively clear predictive value when trying to predict goals, though you could also include other variables like average shot distance if you wanted to be more precise. Each variable also has a positive association with performance, so the desirability functions are all seeking to maximise their values. 
+The four variables that make up the goal threat desirability function are npG, npxG, shots, and touches in the opponent's penalty area. All of these variables have relatively clear predictive value when trying to predict goals, though you could also include other variables like average shot distance if you wanted to be more precise. Each variable also has a positive association with performance, so the desirability functions are all seeking to maximise their values.
 
 The two most predictive variables are, perhaps unsurprisingly, npG and npxG, while shots and touches in the opponent's penalty area are more supplementary. As a result, goals and expected goals have been rescaled to give them greater weight in the overall desirability score, while shots and touches have been rescaled to downweight their value (discussed in greater detail in @sec-scaling). The code for computing the goal threat desirability function is below (`d_max()` is the function doing all the work) and @tbl-goal-threat shows the top ten players in terms of goal threat.
 
 ```{r}
 #| label: goal-threat
 
-goal_threat <- 
+goal_threat <-
   big_five_stats |>
   mutate(
     # maximise npg90 & npxg90 with higher scale
@@ -294,7 +300,7 @@ goal_threat <-
       .cols = c(npg90, npxg90),
       ~ d_max(.x, use_data = TRUE, scale = 2),
       .names = "d_{.col}"
-      ),
+    ),
     # maximise shots90 & pen_touches90 with lower scale
     across(
       .cols = c(sh90, pen_touches90),
@@ -304,10 +310,10 @@ goal_threat <-
     # overall desirability score for goal scoring
     # tolerance set to 0.1 so that lowest values are not 0
     d_goals = d_overall(across(starts_with("d_")), tolerance = 0.1)
-  ) |> 
-  select(player, position, team, league, starts_with("d_")) |> 
-  arrange(desc(d_goals)) |> 
-  rename_at(vars(player:league), snakecase::to_title_case) |> 
+  ) |>
+  select(player, position, team, league, starts_with("d_")) |>
+  arrange(desc(d_goals)) |>
+  rename_at(vars(player:league), snakecase::to_title_case) |>
   rename(
     "Non-Penalty Goals" = d_npg90,
     "Non-Penalty xG" = d_npxg90,
@@ -323,7 +329,7 @@ goal_threat <-
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-goal_threat |> 
+goal_threat |>
   head(10) |>
   format_table(cols = 5:9)
 ```
@@ -334,7 +340,7 @@ I was also a little surprised not to see Harry Kane making the top ten, and it t
 
 #### Scaling Desirability Functions {#sec-scaling}
 
-Each individual desirability function can be easily adjusted using the scaling feature, $s$, which can be increased in order to make maximal desirability harder to reach, and decreased to make it easier. The default value is 1 because $s$ is an exponent and a 1 effectively cancels this out. We're having fun. 
+Each individual desirability function can be easily adjusted using the scaling feature, $s$, which can be increased in order to make maximal desirability harder to reach, and decreased to make it easier. The default value is 1 because $s$ is an exponent and a 1 effectively cancels this out. We're having fun.
 
 In the goal threat desirability function, goals and expected goals have $s = 2$, while for shots and touches in the opponent's penalty area $s = 0.5$. This captures the fact that npG and npxG are very direct measures of goal threat (they are literally the actual goals and the probability of scoring actual goals!), while shots and touches are a lot less direct. I suspect we'd be better served giving shots greater weight in the function than touches, but in the interest of trying my hardest not to get bogged down in the domain context and focus on the method, let's just give them the same weight.
 
@@ -343,57 +349,58 @@ Given that $s$ is the exponent, the scaling feature transforms the desirability 
 ```{r}
 #| label: scaling-shots
 #| fig-alt: |
-#|   A line plot illustrating the effects of scaling features on desirability 
-#|   functions, using shots per 90 as the example. The plot demonstrates that 
-#|   values greater than 1 make it harder for desirability functions to reach 
+#|   A line plot illustrating the effects of scaling features on desirability
+#|   functions, using shots per 90 as the example. The plot demonstrates that
+#|   values greater than 1 make it harder for desirability functions to reach
 #|   maximal desirability, illustrated using a scaling feature of 5, where lower
-#|   values are given much lower desirability scores and as values increase 
-#|   desirability increases exponentially. It also demonstrates that values lower 
-#|   than 1 make it easier for desirability functions to reach maximal desirability, 
-#|   illustrated using a scaling feature of 0.2, where lower values are given much 
-#|   higher desirability scores but as values increase desirability does not 
+#|   values are given much lower desirability scores and as values increase
+#|   desirability increases exponentially. It also demonstrates that values lower
+#|   than 1 make it easier for desirability functions to reach maximal desirability,
+#|   illustrated using a scaling feature of 0.2, where lower values are given much
+#|   higher desirability scores but as values increase desirability does not
 #|   increase significantly.
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
-big_five_stats |> 
+big_five_stats |>
   mutate(
     # maximise shots90 without rescaling
     no_scale = d_max(sh90, use_data = TRUE),
     # maximise shots90 with lower scale
-    easier   = d_max(sh90, use_data = TRUE, scale = 0.2),
+    easier = d_max(sh90, use_data = TRUE, scale = 0.2),
     # maximise shots90 with higher scale
     harder = d_max(sh90, use_data = TRUE, scale = 5)
-  ) |> 
+  ) |>
   tidyr::pivot_longer(
-    cols = c(no_scale, easier, harder), 
-    names_to = "scaling", values_to = "value"
-    ) |> 
-  mutate(scaling = factor(scaling, levels = c("no_scale", "easier", "harder"))) |> 
+    cols = c(no_scale, easier, harder),
+    names_to = "scaling",
+    values_to = "value"
+  ) |>
+  mutate(
+    scaling = factor(scaling, levels = c("no_scale", "easier", "harder"))
+  ) |>
   ggplot(aes(x = sh90, y = value, colour = scaling)) +
   geom_point(size = 1, alpha = .5) +
   geom_line(linewidth = 0.8, alpha = .5) +
   scale_colour_manual(
     values = c("grey20", "#026E99", "#D93649"),
     labels = snakecase::to_title_case
-    ) +
+  ) +
   labs(
-    title = 
-        "Scaling Effects on the Desirability Score of Shots/90",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The unscaled desirability function is a linear transformation of ",
-          "shots per 90, while the rescaled functions are non-linear, with ",
-          "scaling values > 1 making higher desirability more difficult to ",
-          "satisfy and values < 1 making it easier."
-          ),
-        width = 95
+    title = "Scaling Effects on the Desirability Score of Shots/90",
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The unscaled desirability function is a linear transformation of ",
+        "shots per 90, while the rescaled functions are non-linear, with ",
+        "scaling values > 1 making higher desirability more difficult to ",
+        "satisfy and values < 1 making it easier."
       ),
-    x = "Shots/90", y = "Desirability",
-    caption = 
-      "Visualisation: Paul Johnson  |  Data: FBref Via {worldfootballR}"
-    )
+      width = 95
+    ),
+    x = "Shots/90",
+    y = "Desirability",
+    caption = "Visualisation: Paul Johnson  |  Data: FBref Via {worldfootballR}"
+  )
 ```
 
 When scaling desirability functions I think it is important to recognise the effects that imposing a non-linear transformation has. Because I've used the `use_data = TRUE` argument in `d_max()`, the maximum and minimum value in each desirability function is set by the data, meaning that regardless of the scaling applied the maximum value will still be 1 and the minimum value will be 0. However, as the scale increases, this will make it much harder for values to reach higher desirability scores, meaning that lower values of the corresponding variable will be given lower scores, but the non-linearity imposed increases the rate of desirability increases at higher values of the corresponding variable.
@@ -413,25 +420,25 @@ Just as with the goal threat component, the choices I've made here are more of a
 ```{r}
 #| label: chance-creation
 
-chance_creation <- 
+chance_creation <-
   big_five_stats |>
   mutate(
     across(
       .cols = c(ast90, xa90),
       ~ d_max(.x, use_data = TRUE),
       .names = "d_{.col}"
-      ),
+    ),
     d_sca90 = d_max(sca90, use_data = TRUE, scale = 0.5),
     d_chances = d_overall(across(starts_with("d_")), tolerance = 0.1)
-  ) |> 
-  select(player, position, team, league, starts_with("d_")) |> 
-  rename_at(vars(player:league), snakecase::to_title_case) |> 
+  ) |>
+  select(player, position, team, league, starts_with("d_")) |>
+  rename_at(vars(player:league), snakecase::to_title_case) |>
   rename(
     "Assists" = d_ast90,
     "xA" = d_xa90,
     "SCA" = d_sca90,
     "Overall" = d_chances
-  ) |> 
+  ) |>
   arrange(desc(Overall))
 ```
 
@@ -441,8 +448,8 @@ chance_creation <-
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-chance_creation |> 
-  head(10) |> 
+chance_creation |>
+  head(10) |>
   format_table(cols = 5:8)
 ```
 
@@ -469,7 +476,7 @@ ball_progression <-
   ) |>
   select(player, position, team, league, starts_with("d_")) |>
   arrange(desc(d_prg)) |>
-  rename_at(vars(player:league), snakecase::to_title_case) |> 
+  rename_at(vars(player:league), snakecase::to_title_case) |>
   rename(
     "Progressive Carrying" = d_prg_c90,
     "Progressive Passing" = d_prg_p90,
@@ -497,9 +504,9 @@ Forwards dominated the first two components but @tbl-ball-progression is more di
 #| code-fold: true
 #| code-summary: 'Table Code (Click to Expand)'
 
-ball_progression |> 
-  summarise(across(where(is.numeric), mean), .by = Position) |> 
-  arrange(desc(Overall)) |> 
+ball_progression |>
+  summarise(across(where(is.numeric), mean), .by = Position) |>
+  arrange(desc(Overall)) |>
   format_table(cols = 2:5)
 ```
 
@@ -507,9 +514,9 @@ The results are not shocking, but the marginal differences in progression by pos
 
 ### Overall Offensive Ratings
 
-Having created desirability scores for each offensive component, we could combine all three into an overall offensive rating using `d_overall()`. I think this would be a reasonable choice when the assumption is that each category is equally important in the overall score, but as discussed already, I don't think that's the case here. I think goal threat matters most, and chance creation and ball progression are, while important enough to be the two other categories in the overall ratings, a little less important than goals. 
+Having created desirability scores for each offensive component, we could combine all three into an overall offensive rating using `d_overall()`. I think this would be a reasonable choice when the assumption is that each category is equally important in the overall score, but as discussed already, I don't think that's the case here. I think goal threat matters most, and chance creation and ball progression are, while important enough to be the two other categories in the overall ratings, a little less important than goals.
 
-Whether or not goals are more important than chance creation and ball progression is probably open to plenty of debate, but assuming that they are (because this is my blog and I said so), we have to weight the three categories to reflect this. Rather than overcomplicating things and trying to do this as part of the process within the desirability functions, I have downweighted chance creation and ball progression by multiplying them by 0.5. 
+Whether or not goals are more important than chance creation and ball progression is probably open to plenty of debate, but assuming that they are (because this is my blog and I said so), we have to weight the three categories to reflect this. Rather than overcomplicating things and trying to do this as part of the process within the desirability functions, I have downweighted chance creation and ball progression by multiplying them by 0.5.
 
 Finally, I have opted for the arithmetic mean instead of the geometric mean, because I think the purpose of the geometric mean is of less value here.
 
@@ -519,22 +526,27 @@ Finally, I have opted for the arithmetic mean instead of the geometric mean, bec
 
 offensive_rating <-
   goal_threat |>
-  rename("Goal Threat" = Overall) |> 
+  rename("Goal Threat" = Overall) |>
   full_join(chance_creation |> rename("Chance Creation" = Overall)) |>
   full_join(ball_progression |> rename("Ball Progression" = Overall)) |>
   mutate(
     # downweight chance creation and ball progression desirability scores
     across(.cols = c("Chance Creation", "Ball Progression"), ~ .x * 0.5),
-    Overall =
-      d_overall(
-        across(.cols = c("Goal Threat", "Chance Creation", "Ball Progression")),
-        geometric = FALSE
-        )
+    Overall = d_overall(
+      across(.cols = c("Goal Threat", "Chance Creation", "Ball Progression")),
+      geometric = FALSE
+    )
   ) |>
   select(
-    Player, Position, Team, League, "Goal Threat", 
-    "Chance Creation", "Ball Progression", Overall
-    ) |>
+    Player,
+    Position,
+    Team,
+    League,
+    "Goal Threat",
+    "Chance Creation",
+    "Ball Progression",
+    Overall
+  ) |>
   arrange(desc(Overall))
 ```
 
@@ -546,11 +558,11 @@ offensive_rating <-
 #| code-summary: 'Table Code (Click to Expand)'
 
 offensive_rating |>
-  head(10) |> 
+  head(10) |>
   format_table(cols = 5:8)
 ```
 
-The old rule was that any metric not broken by Lionel Messi being so far ahead of everyone else is wrong, but Messi isn't quite the freak of nature he once was. Nonetheless, Messi's name being near the top of the ratings is a good sign, as is Mbappé and Haaland flanking him at the top. At a glance, there are few surprises in @tbl-offensive-rating. 
+The old rule was that any metric not broken by Lionel Messi being so far ahead of everyone else is wrong, but Messi isn't quite the freak of nature he once was. Nonetheless, Messi's name being near the top of the ratings is a good sign, as is Mbappé and Haaland flanking him at the top. At a glance, there are few surprises in @tbl-offensive-rating.
 
 Kingsley Coman making it into the top ten feels generous, but perhaps the biggest issue is the three Ligue 1 players in the top five. While those three players are exceptional, they seem to be rated a little too high. I think this points to the inevitable league effects compromising the ratings. The big five leagues have been treated equally and we know that isn't really the case (Ligue 1 is probably the weakest of the five). A more precise approach would involve weighting by league strength, but that's complicated and I don't want to do it.
 
@@ -559,64 +571,68 @@ Nonetheless, I think the ratings look pretty reasonable, and when we split the t
 ```{r}
 #| label: offensive-components
 #| fig-alt: |
-#|   A bar plot showing the component desirability scores (goal threat, chance 
-#|   creation, and ball progression) for the ten best players according to the 
-#|   offensive ratings. The overall offensive ratings are calculated using a 
-#|   weighted average of desirability scores, with goal threat given 50% of the 
+#|   A bar plot showing the component desirability scores (goal threat, chance
+#|   creation, and ball progression) for the ten best players according to the
+#|   offensive ratings. The overall offensive ratings are calculated using a
+#|   weighted average of desirability scores, with goal threat given 50% of the
 #|   weight, and chance creation and ball progression given 25% each. As a result,
 #|   the majority of the top then players have particularly high scores for goal
 #|   threat, with only a few players with comparatively high chance creation scores
-#|   (Messi, Neymar, and Kevin De Bruyne), and no players having particularly large 
+#|   (Messi, Neymar, and Kevin De Bruyne), and no players having particularly large
 #|   ball progression scores.
 #| fig-height: 9
 #| code-fold: true
 #| code-summary: 'Plot Code (Click to Expand)'
 
-offensive_rating |> 
-  head(10) |> 
+offensive_rating |>
+  head(10) |>
   tidyr::pivot_longer(
-    cols = 5:7,  
-    names_to = "component", 
+    cols = 5:7,
+    names_to = "component",
     values_to = "value"
-    ) |> 
+  ) |>
   mutate(
-    component = 
-      factor(
-        component, 
-        levels = c("Goal Threat", "Chance Creation", "Ball Progression")
-        )
-    ) |> 
-  ggplot(aes(x = reorder(Player, Overall), y = value, fill = component)) + 
-  geom_col(position = position_dodge2(reverse = TRUE), colour = "grey20", linewidth = 0.4) +
+    component = factor(
+      component,
+      levels = c("Goal Threat", "Chance Creation", "Ball Progression")
+    )
+  ) |>
+  ggplot(aes(x = reorder(Player, Overall), y = value, fill = component)) +
+  geom_col(
+    position = position_dodge2(reverse = TRUE),
+    colour = "grey20",
+    linewidth = 0.4
+  ) +
   geom_hline(yintercept = 0, colour = "grey20", linewidth = 0.8) +
   coord_flip() +
   scale_x_discrete(labels = scales::label_wrap(12)) +
   scale_fill_manual(values = c("#026E99", "#D93649", "#FCCE26")) +
   labs(
-    title = 
-        "Component Desirability Scores for the Offensive Ratings' Best Players",
-    subtitle = 
-      stringr::str_wrap(
-        glue::glue(
-          "The component desirability scores for the top ten players in the ",
-          "offensive ratings in the big five leagues for the 2022/23 season. ",
-          "The overall ratings are a weighted average of the desirability scores ",
-          "for goal threat (50%), chance creation (25%), and ball progression (25%)."
-          ),
-        width = 95
+    title = "Component Desirability Scores for the Offensive Ratings' Best Players",
+    subtitle = stringr::str_wrap(
+      glue::glue(
+        "The component desirability scores for the top ten players in the ",
+        "offensive ratings in the big five leagues for the 2022/23 season. ",
+        "The overall ratings are a weighted average of the desirability scores ",
+        "for goal threat (50%), chance creation (25%), and ball progression (25%)."
       ),
-    x = NULL, y = "Desirability",
-    caption = 
-      "Visualisation: Paul Johnson  |  Data: FBref Via {worldfootballR}"
-    ) +
+      width = 95
+    ),
+    x = NULL,
+    y = "Desirability",
+    caption = "Visualisation: Paul Johnson  |  Data: FBref Via {worldfootballR}"
+  ) +
   theme(
     panel.grid.major.y = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.y = element_text(
-      colour = "grey30", size = rel(1.15), hjust = 0.5, 
-      margin = margin(r = -15, l = -8), lineheight = .4
-      )
+      colour = "grey30",
+      size = rel(1.15),
+      hjust = 0.5,
+      margin = margin(r = -15, l = -8),
+      lineheight = .4
     )
+  )
 ```
 
 ## Limitations
@@ -627,7 +643,7 @@ Scaling can improve the performance of desirability functions when dealing with 
 
 ## Conclusion
 
-I am generally pretty sceptical of player rating systems in football. Capturing a multidimensional context like this is difficult using a single measure of player performance. And yet here I am, developing a player rating system that attempts to do exactly that! In my defense, I have at least limited these ratings to offense, which makes it slightly better^[Defensive event data does not reflect performance and is more of a measure of team and player style.], and it's a lot easier to rate players over an entire season than a single match. But I'd take these results with a big pinch of salt. I would include several caveats if I released these ratings into the wild, for the non-nerds (there is no chance anyone but nerds is reading this). These ratings are going to be pretty noisy! That said, I don't think the results are complete garbage, which meets the high standard I set for my work. 
+I am generally pretty sceptical of player rating systems in football. Capturing a multidimensional context like this is difficult using a single measure of player performance. And yet here I am, developing a player rating system that attempts to do exactly that! In my defense, I have at least limited these ratings to offense, which makes it slightly better^[Defensive event data does not reflect performance and is more of a measure of team and player style.], and it's a lot easier to rate players over an entire season than a single match. But I'd take these results with a big pinch of salt. I would include several caveats if I released these ratings into the wild, for the non-nerds (there is no chance anyone but nerds is reading this). These ratings are going to be pretty noisy! That said, I don't think the results are complete garbage, which meets the high standard I set for my work.
 
 Hopefully, these ratings illustrate how desirability functions work and demonstrate that they could be appropriate in many situations. You don't see desirability functions used very often, but they are quick and easy, and they can be pretty effective.
 
@@ -637,4 +653,4 @@ Preview image by [Dan Cristian Pădureț](https://unsplash.com/@dancristianpadur
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.
