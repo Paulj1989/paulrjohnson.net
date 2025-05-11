@@ -249,7 +249,7 @@ Another explanation could be that this is just a product of scales. The squad va
 
 [^Time]:
 
-I also looked at variance over time. The difference doesn't appear to change much from season to season, with perhaps the exception being 2017/18. I think it's reasonable to assume there is not a significant temporal component going on here.
+I also looked at differences over time. There was minimal variance from season to season, though 2017/18 was considerably lower than others, and I concluded that time isn't relevant.
 
 [^Filter]:
 
