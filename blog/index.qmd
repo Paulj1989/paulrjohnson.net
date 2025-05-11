@@ -2,14 +2,14 @@
 title: Blog Posts
 author: ""
 description: |
-  This is my blog. These are the many stupid things I've done so you don't have 
+  This is my blog. These are the many stupid things I've done so you don't have
   to tread the same sorry path.<br><br>[Subscribe via RSS](/blog/index.xml)
 description-meta: |
-  Blog posts chronicling my data science journey through statistics, machine 
-  learning, and programming in R & Python, sharing tips and tricks to help others 
+  Blog posts chronicling my data science journey through statistics, machine
+  learning, and programming in R & Python, sharing tips and tricks to help others
   on the same path.
-listing: 
-  contents: 
+listing:
+  contents:
     - "**/index.qmd"
     - "**/index.md"
   sort: date desc
@@ -17,15 +17,15 @@ listing:
   categories: true
   sort-ui: [title, date]
   filter-ui: true
-  fields: [title, categories, date, image]
+  fields: [title, subtitle, categories, date, image]
   page-size: 6
   feed: true
 citation: false
 toc: false
 comments: false
-format: 
-  html: 
+format:
+  html:
     page-layout: full
 title-block-style: plain
-css: ../assets/css/listing-default.css 
+css: ../assets/css/listing-default.css
 ---
