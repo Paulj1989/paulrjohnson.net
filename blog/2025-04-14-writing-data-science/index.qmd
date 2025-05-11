@@ -47,7 +47,7 @@ I have [Mark Thompson](https://get-goalside-newsletter-archive.beehiiv.com) to t
 
 ### Writing is Not an Afterthought
 
-There are plenty of excellent data scientists who might struggle as writers. It's natural to prioritise the skills you excel at––such as math, statistics, or programming––and when those skills become a career, it becomes a strong positive feedback loop. Writing can quickly become an afterthought.
+There are plenty of excellent data scientists who might struggle as writers. It's natural to prioritise the skills you excel at—such as math, statistics, or programming—and when those skills become a career, it becomes a strong positive feedback loop. Writing can quickly become an afterthought.
 
 Even so, communicating your findings shouldn't be a lower priority than the findings themselves. Instead of treating the writing stage as the means to an end, treat writing as central to everything you do. If you want to improve your writing, afford it the same weight you do to the other parts of the process and treat it as a part of the journey and a part of the fun. A well-written analysis is just as satisfying as the analysis itself, and a scientist has many tools at their disposal for illuminating their writing[^Tools].
 

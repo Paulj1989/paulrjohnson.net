@@ -2,7 +2,7 @@
 title: Make More Packages!
 subtitle: How (and why) to learn basic package development in R, for data scientists.
 description-meta: |
-  Demonstrating a basic package development workflow in R, with {devtools}, {usethis}, 
+  Demonstrating a basic package development workflow in R, with {devtools}, {usethis},
   {roxygen2}, and {testthat}, all applied to the stupidest package in existence.
 date: 2022-02-19
 image: package.webp
@@ -43,8 +43,8 @@ Packages are effectively just a way of housing and distributing functions. If yo
 ```{r}
 #| label: function
 
-check <- function(x){
-  if (x %in% c(69, 0.69)){
+check <- function(x) {
+  if (x %in% c(69, 0.69)) {
     print("Nice!")
   } else {
     print("Not very nice.")
@@ -73,7 +73,7 @@ Below is a basic example of what is needed, corresponding to the **nice** check 
 #' @export
 #' @examples
 #' check(69)
-#' 
+#'
 ```
 
 Having done this, devtools will process the documentation so that it all works as expected:
@@ -144,4 +144,4 @@ Preview image by [Jiawei Zhao](https://unsplash.com/@jiaweizhao) on [Unsplash](h
 
 ## Support {.appendix}
 
-If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you. 
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.
