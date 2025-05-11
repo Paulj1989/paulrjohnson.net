@@ -700,7 +700,7 @@ Instead, I think it is something to be aware of if using squad values in this co
 
 [^Values]:
 
-I have yet to find a definitive answer to how historic squad values are derived, but they don't appear to align with values at a specific point in the season. My working assumption is that they are average values across the season, but if anyone knows the answer, I'd love to hear it!
+I'm unsure how historic squad values are derived, but they don't appear to align with values at a specific point in the season, so I assume they are average. A workaround would be to recreate preseason squad values by scraping Transfermarkt's player values over time (shout out to [John Muller](https://johnspacemuller.com) for pointing this one out to me).
 
 [^Limitations]:
 
