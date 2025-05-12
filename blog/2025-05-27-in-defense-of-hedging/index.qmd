@@ -1,0 +1,57 @@
+---
+title: In Defense of Hedging
+subtitle: |
+    The importance of communicating uncertainty when writing about data science.
+description-meta: |
+    Discussing hedging.
+date: 2025-05-05
+image: hedge.webp
+image-alt: |
+    A green hedge with the bright pink wall of a building in the background.
+categories: [Writing, Scientific Communication]
+bibliography: references.bib
+---
+
+Last month, I wrote a blog post discussing how to write about data science effectively. The post focused on approaching writing in the right way to get the most out of your ideas and communicate in an engaging and accessible way. I was keen to avoid getting into the "technical" side of writing, because it feels like a distinct idea and while I think I do a pretty good job of writing in an approachable manner, I'm not about to claim I'm the best writer out there, nor an editor.
+
+Despite this, there was one area where I found myself diverging from popular opinion—the expression of confidence and uncertainty in propositions in language, otherwise known as hedging. While hedging is common in academic writing, I think there is a greater reluctance to use it in non-academic writing because it is deemed to weaken your writing and reduce the reader's confidence in your authority.
+
+I favour using hedging, qualifiers, and other linguistic devices that can correctly couch statements with appropriate certainty under any circumstances. Still, I recognise this is probably a real sicko approach (or cowardice, depending on your view it). This might be the main area that I find myself disagreeing with many much better writers than myself, and I really might be wrong, but this is my blog and I'm gonna write my own stupid ideas anyway, because they are all I've got.
+
+I'm not going to make a general case for hedging here because I don't have the credentials to tell much better, more experienced writers what they should or shouldn't be doing. But I will argue that data scientists should consider hedging a fundamental part of how they communicate, whether it be in blog posts, professional reports, or academic work.
+
+## What is Hedging?
+
+Hedging is a linguistic device used to qualify statements and provide additional context about the amount of certainty the writer has in the statement made. Hedges like "I think", "possibly", and "maybe" are commonly used when someone is seeking to reduce certainty and not overcommit to a claim [@hyland1998]. Similarly, hedges like "probably" still inject uncertainty into a statement that wouldn't be there otherwise, but much less so than "possibly". The choice of the hedge dictates the degree of tentativeness and possibility that is conveyed [@hyland1998].
+
+Academic writing requires hedging because it is essential to present any unproven claims carefully and with the uncertainty they require [@hyland1996]. This is vital because it doesn't just express the uncertainty in certain statements; it distinguishes those intended to be expressed with greater certainty. Communicating certainty and precision makes it easier for a reader to follow the researcher's argument. It also enables researchers to accurately convey findings without misleading readers, minimising the risk that the reader will draw the wrong conclusions from their work [@kojima2023].
+
+While hedging is an important part of communication in various contexts, there are also meaningful cultural differences in how we communicate, including the nature and frequency of hedging. Women tend to use hedging more than men, and I understand that hedging is viewed a little more negatively in the US than in the UK. The subtleties of hedging language are also non-trivial for folks trying to use it (or interpret it) in a language that is not their native tongue. These cultural differences and the challenges of adopting and dealing with hedging are well outside the scope of my silly little blog, but I did want to acknowledge that they exist.
+
+## Why Hedging is Important in Scientific Communication
+
+> Science writing involves weighing evidence, drawing conclusions from data, and stating circumstances which allow these conclusions to be accepted; it assesses the claims it makes [@hyland1998].
+
+I think the point isn't that hedging or qualifying in language is right or wrong, but that these devices serve a particular purpose, and their purpose is greater when writing about a subject like data science. Quantifying uncertainty is the name of the game, so why should we abandon this principle in our writing?
+
+It's important to use hedging where and only where it is necessary. I think this is a statement everyone can agree on, but where the disagreement lies will be in drawing the line between whether or not hedging is needed in a given context. I would argue that there is more room for hedging in both written and verbal communication than most folks seem to think, but I think this is especially the case when it comes to talking about science.
+
+There is plenty of research into the use of hedging in academic writing, including in the sciences, and it seems as though there is recognition that hedging serves a greater purpose in academic writing because of the greater need for precision and to communicate where there is greater uncertainty about certain statements. However, there are many forms that data science can take that are not strictly academic. Even so, I think hedging remains similarly crucial in these contexts.
+
+I know the argument against hedging is that it hurts the readers' confidence in you, but I'm fine with that. You shouldn't view me as an all-knowing genius, because I'm not. I'm a bozo. The authority in my work is provided by the findings my analysis produces. I don't want to steer someone to have greater confidence in my work than is justified just because I've used language that does not convey any uncertainty.
+
+## Conclusion
+
+I concede that I use hedging far too often, and I recognise that this probably hurts my writing, but I stand by the principle that hedging is more of a necessity when writing about something like data science. It's good to acknowledge when you are stating a fact or anything with a particularly high degree of certainty. But where you are uncertain, say so!
+
+Hedging shouldn't be used too often because it weakens your writing and devalues the hedges. It's important to use hedging at the right moments and to convey uncertainty where it exists. Identify where hedging adds value and does not, and only use it when it adds value. I need to better distinguish between my certainty levels using hedging. Still, I stand by the principle that hedging is useful for signalling certainty (or, more often, uncertainty) when writing about a subject matter that involves spending much time quantifying uncertainty.
+
+In a field where precision matters, I think it's important to treat your writing the same way. Don't use hedging to cover your back; use it to help the reader identify the main takeaways from your research.
+
+## Acknowledgments {.appendix}
+
+Preview image by [BP Miller](https://unsplash.com/@bp_miller) on [Unsplash](https://unsplash.com/photos/green-grass-beside-red-wall-TuQJ2Muj5sk).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.
