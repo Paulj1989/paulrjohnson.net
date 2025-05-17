@@ -1,24 +1,25 @@
 project:
   type: website
   resources: _redirects
+  pre-render: build/redirects.lua
 
 website:
   title: Paul Johnson
   site-url: https://paulrjohnson.net
   description: A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
-  favicon: assets/img/favicon/favicon.ico
+  favicon: assets/icons/favicon.ico
   search: false
   page-navigation: true
   back-to-top-navigation: false
   twitter-card: true
   open-graph: true
-  image: assets/img/paul/paul.webp
+  image: assets/images/me/headshot_rounded.webp
   image-alt: Me looking handsome as hell
   comments: false
 
   navbar:
     title: P(Johnson) > 0.05
-    logo: assets/img/favicon/favicon.ico
+    logo: assets/icons/favicon-32x32.png
     logo-alt: Purple Octopus
     tools:
       - icon: github
@@ -56,13 +57,15 @@ format:
   html:
     theme:
       - cosmo
-      - assets/css/theme.scss
-    highlight-style: assets/github-plus.theme
+      - styles/theme.scss
+    highlight-style: styles/github-plus.theme
     # pagetitle: "{{< meta title >}} | Paul Johnson"
     fig-align: center
     lightbox: true
     mermaid:
       theme: neutral
+    link-external-newwindow: true
+    crossrefs-hover: false
 
 knitr:
   opts_chunk:
@@ -74,4 +77,4 @@ execute:
   error: false
 
 include-in-header:
-  - assets/umami.html
+  - _includes/umami.html
