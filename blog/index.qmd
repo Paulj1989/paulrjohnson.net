@@ -27,5 +27,5 @@ format:
   html:
     page-layout: full
 title-block-style: plain
-css: ../styles/css/listing-default.css
+css: ../assets/css/listing-default.css
 ---
