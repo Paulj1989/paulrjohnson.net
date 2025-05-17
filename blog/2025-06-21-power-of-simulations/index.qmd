@@ -1,0 +1,260 @@
+---
+title: The Power of Simulations
+subtitle: Saving your time, energy, and sanity by simulating data
+author: Paul Johnson
+date: 2024-06-21
+image: pipe.webp
+categories: [Simulations, Statistical Power, Data Science, R]
+---
+
+I recently had to (sort of) reverse engineer a chi-squared test in order to measure the minimum sample size for a given absolute effect size (with the typical default values for statistical power and significance level). Although packages like `{pwr}` make power calculations for common statistical tests very easy, the effect size is measured using Cohen's $\omega$ (sometimes referred to as $\varphi$), which is not easily interpretable in absolute terms. It's definitely possible I might have been able to reverse engineer the effect size instead, but I'm dumb as hell and that seemed like a lot of work that I don't want to do. Instead, I made some convoluted efforts to calculate $\varphi$ from a range of sample sizes and then estimate the minimum sample size to observe an effect size this large.
+
+I think the way I went about this was ultimately correct, however, it was multiple steps and I wasn't totally confident that what I was doing wasn't incredibly stupid. My initial estimates of the minimum sample size were larger than I expected, and I immediately assumed I was wrong and I should quit my job and become a clown. Thankfully, I don't have all the gear for the clown life, so I was forced to head back into the sewage and rethink my approach. Instead, I did the thing that was obviously preferable all along but that I had avoided just because it would have required me to make more choices up-front and I wanted the "easy" way out -- simulation!
+
+## The Value of Simulations
+
+Ignoring for a moment the hypothesis testing debate, because I don't want to receive death threats from an old white man that looks like Gerry Adams if his weapons of choice were strongly-worded letters to the editor written in $\LaTeX$, simulations are an incredibly powerful tool for helping us think about our data and how we should interact with it. This shouldn't be news to anyone, but I suspect there are more than a few of you out there that, like me, often attempt to take what seems like the easier route, because it feels like it requires less decisions to be made upfront.
+
+The problem with this is that carrying out power calculations using packages like `{pwr}` doesn't really require fewer decisions. The choices are baked into the choice of the test being carried out and the assumptions that underpin that test. You're passing the buck^[Which isn't to say that `{pwr}` is bad or that the choices are wrong, it just doesn't require you to engage with those choices upfront like simulating the data does.]! Simulating your data distribution and the model that you are fitting to that data requires you to make some explicit decisions about your data generating process. This requires a little more thought, but this is a good thing, because it's a lot easier to justify your methodological approach when you have a clear understanding of everything that went into it!
+
+Besides the obvious "knowing what you've just done is good" justification, once you've thought through the explicit processes that you need to simulate, I think generating the simulations usually proves to be the much simpler approach anyway.
+
+## Simulating Minimum Sample Size for Chi-Squared Tests
+
+Lets use a chi-squared test as an example, because there are plenty of examples out there using t-tests, and because I recently did this and it's really all about me.
+
+```{python}
+# | label: setup
+# | output: false
+# | code-fold: true
+# | code-summary: 'Setup Code (Click to Expand)'
+
+import sys
+import os
+from pathlib import Path
+import numpy as np
+import polars as pl
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# website_root = Path().resolve().parent
+# while not (website_root / "py").exists() and website_root.parent != website_root:
+#     website_root = website_root.parent
+# sys.path.insert(0, str(website_root))
+
+from py import blog_style, finalize_plot
+```
+
+```{python}
+# | label: import-data
+# | code-fold: true
+# | code-summary: 'Data Code (Click to Expand)'
+
+# Load the data, treating "NA" as null
+url = (
+    "https://raw.githubusercontent.com/rfordatascience/tidytuesday/"
+    "main/data/2024/2024-11-05/democracy_data.csv"
+)
+df = pl.read_csv(url, null_values="NA")
+
+# Print basic info
+# print("Columns and types:")
+# print(df.schema)
+
+# print("\nFirst 5 rows:")
+# print(df.head())
+
+# Summary statistics for numerical columns
+# print("\nSummary statistics:")
+# print(df.describe())
+
+# Count of unique values for categorical columns
+# categorical_cols = [col for col, dtype in df.schema.items() if dtype == pl.Utf8]
+# for col in categorical_cols:
+#     print(f"\nTop categories in '{col}':")
+#     print(df[col].value_counts().sort("count", descending=True).head())
+```
+
+```{python}
+# | label: transform-data
+# | code-fold: true
+# | code-summary: 'Data Code (Click to Expand)'
+
+# Filter to democracies and select variables of interest
+df = df.select(["country_code", "year", "is_democracy", "is_presidential"])
+# Ensure sorting for lead operation
+df = df.sort(["country_code", "year"])
+# Add is_democracy_next_year column (lead)
+df = df.with_columns(
+    pl.col("is_democracy").shift(-1).over("country_code").alias("is_democracy_next")
+)
+# Identify periods of consecutive years of democracy
+df = df.with_columns(
+    pl.when(pl.col("is_democracy") == True)
+    .then(pl.col("year"))
+    .otherwise(None)
+    .alias("year_if_democratic")
+)
+# Group by country and count consecutive years of democracy
+consecutive_democracies = df.group_by("country_code").agg(
+    pl.col("year_if_democratic")
+    .filter(pl.col("year_if_democratic").is_not_null())
+    .len()
+    .alias("consecutive_democracy_years")
+)
+# Filter to include only countries with at least 5 consecutive years of democracy
+valid_countries = consecutive_democracies.filter(
+    pl.col("consecutive_democracy_years") >= 5
+).select("country_code")
+# Join this with the main dataframe to keep only the valid countries
+df = df.join(valid_countries, on="country_code", how="inner")
+# Add is_democracy_next_year column again after filtering (to ensure it's valid)
+df = df.with_columns(
+    pl.col("is_democracy").shift(-1).over("country_code").alias("is_democracy_next")
+)
+# Only retain rows where the current year is democratic
+transitions = df.filter(
+    (pl.col("is_democracy") == True) & (pl.col("is_democracy_next").is_not_null())
+)
+# Create binary indicator for falling into autocracy
+transitions = transitions.with_columns(
+    (pl.col("is_democracy_next") == False).alias("fell_to_autocracy")
+)
+# Drop any rows where is_presidential is null
+transitions = transitions.filter(pl.col("is_presidential").is_not_null())
+# Show transition counts grouped by presidential system and transition outcome
+print("\nTransition counts:")
+result = transitions.group_by(["is_presidential", "fell_to_autocracy"]).agg(
+    pl.len().alias("count")
+)
+print(result)
+# Additional analysis: percentage of democracies that fell by presidential status
+print("\nPercentage of democracies that fell by presidential status:")
+summary = transitions.group_by("is_presidential").agg(
+    pl.col("fell_to_autocracy").mean().alias("pct_fell_to_autocracy"),
+    pl.len().alias("total_observations"),
+)
+print(summary)
+```
+
+```{python}
+# | label: simulation
+# | code-fold: true
+# | code-summary: 'Simulation Code (Click to Expand)'
+
+import numpy as np
+import random
+
+# Set random seed for reproducibility
+random.seed(42)
+np.random.seed(42)
+
+# Number of simulation iterations
+num_simulations = 10000
+
+
+# Simulation function
+def simulate_transitions(data, num_simulations):
+    # Results storage
+    transition_results = {"Presidential": [], "Parliamentary": []}
+
+    for _ in range(num_simulations):
+        # Resample the transitions data
+        resampled_data = data.sample(n=data.height, with_replacement=True)
+
+        # Get transition probabilities by regime type
+        for regime_type in ["Presidential", "Parliamentary"]:
+            regime_data = resampled_data.filter(
+                pl.col("is_presidential") == (1 if regime_type == "Presidential" else 0)
+            )
+            prob_fell = regime_data.select(
+                pl.col("fell_to_autocracy").mean()
+            ).to_numpy()[0][0]
+            transition_results[regime_type].append(prob_fell)
+
+    return transition_results
+
+
+# Simulate regime transitions
+transition_results = simulate_transitions(transitions, num_simulations)
+
+# Calculate average probabilities for each regime type
+avg_presidential_fell = np.mean(transition_results["Presidential"])
+avg_parliamentary_fell = np.mean(transition_results["Parliamentary"])
+
+# Print simulation results
+print(
+    f"\nAverage probability of presidential democracies falling to autocracy: {avg_presidential_fell:.4f}"
+)
+print(
+    f"Average probability of parliamentary democracies falling to autocracy: {avg_parliamentary_fell:.4f}"
+)
+
+# Perform a comparison (simple difference of means)
+diff = avg_presidential_fell - avg_parliamentary_fell
+print(f"\nDifference in transition probabilities: {diff:.4f}")
+
+```
+
+```{python}
+# | label: dist-plot
+# | code-fold: true
+# | code-summary: 'Plot Code (Click to Expand)'
+
+import pandas as pd
+
+# Convert simulation results to a pandas DataFrame for plotting
+simulation_df = pd.DataFrame(
+    {
+        "probability": transition_results["Presidential"]
+        + transition_results["Parliamentary"],
+        "regime_type": ["Presidential"] * num_simulations
+        + ["Parliamentary"] * num_simulations,
+    }
+)
+
+# plot transition probability
+with blog_style():
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Plot density plot using seaborn
+    sns.kdeplot(
+        data=simulation_df,
+        x="probability",
+        hue="regime_type",
+        fill=True,
+        alpha=0.7,
+        palette=["#7AB5CC", "#D93649"],
+        common_norm=False,
+        ax=ax,
+        legend=True,
+    )
+
+    plt.xlabel("Transition Probability")
+    plt.ylabel("Density")
+
+    finalize_plot(
+        fig,
+        ax,
+        title="Density of Transition Probabilities by Regime Type",
+        subtitle="Data from 2010-2023 regime transitions",
+        caption="Visualisation: Paul Johnson | Data: TidyTuesday",
+    )
+
+    plt.show()
+```
+
+
+## Conclusion
+
+I thought about calling this blog post "Do More Simulations", but in the end I decided that is too broad and doesn't really tell the reader what this blog post is about. Just know that the main thing I want you to take away from this post, however, is that simulations are good and you should do more of them.
+
+I don't think anything I've said here is revolutionary, and besides providing code that can be used as a learning resource, I suspect the primary value of this blog post is in reminding people of what they already know -- the easy way out is usually worse and you should do the right thing.
+
+## Acknowledgments {.appendix}
+
+Preview image by [Igor Omilaev](https://unsplash.com/@omilaev) on [Unsplash](https://unsplash.com/photos/a-blue-pipe-on-a-yellow-and-purple-wall-HhEEKNxIbR8).
+
+## Support {.appendix}
+
+If you enjoyed this blog post and would like to support my work, you can [buy me a coffee or a beer or give me a tip](https://www.buymeacoffee.com/paulj1989) as a thank you.
