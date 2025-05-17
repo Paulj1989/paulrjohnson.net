@@ -9,11 +9,11 @@
 
 // Colors: Quarto variables
 // $primary:                    $spc-primary-light;
-$secondary:                     #2C3033;
+$secondary: #2C3033;
 // Colors: custom variables
 // $primary-dark:               $spc-primary;
 // $secondary-light:            $spc-secondary-light;
-// $accent:                     $spc-accent; 
+// $accent:                     $spc-accent;
 // $accent-light:               $spc-accent-light;
 // $accent-dark:                $spc-accent-dark;
 
@@ -26,19 +26,19 @@ $secondary:                     #2C3033;
 
 // stylelint-disable-next-line value-keyword-case
 $font-family-sans-serif: "Poppins", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-$font-family-serif: "Lora", serif,;
+$font-family-serif: "Lora", serif, ;
 $headings-font-weight: 400;
 $font-family-monospace: "Fira Code", "Dank Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $headings-font-family: "Lora";
 
 // Links
-$link-color:                        #43494D;
-$link-decoration:                   underline;
-$link-hover-color:                  #5A6266;
-$link-hover-decoration:             none;
-$btn-bg:                            #43494D;
-$pagination-active-bg:              #43494D;
-$pagination-active-border-color:    #43494D;
+$link-color: #43494D;
+$link-decoration: underline;
+$link-hover-color: #5A6266;
+$link-hover-decoration: none;
+$btn-bg: #43494D;
+$pagination-active-bg: #43494D;
+$pagination-active-border-color: #43494D;
 
 /*-- scss:rules --*/
 
@@ -56,7 +56,8 @@ div.sourceCode {
 
 // home page
 .about-links .about-link i {
-//  color: #43494D !important;
+
+  //  color: #43494D !important;
   &:hover {
     filter: brightness(40%);
     // color: #373a3c !important;
@@ -64,13 +65,13 @@ div.sourceCode {
   }
 }
 
-// Contact  
+// Contact
 
 // Buttons
 
 // post links
 .btn-secondary {
-  color:  #43494D !important;
+  color: #43494D !important;
   background: transparent;
   border-radius: 5px;
 }
@@ -78,21 +79,23 @@ div.sourceCode {
 // contact form
 .btn-primary {
   color: white !important;
-  background-color:  #43494D !important;
-  border-color:  #43494D !important;
+  background-color: #43494D !important;
+  border-color: #43494D !important;
+
   &:hover {
-    background-color:  #212529 !important;
-    border-color:  #212529 !important;
-    }
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+  }
 }
 
 // pagination
 .page-link {
   color: #43494D;
+
   &:hover {
     color: white !important;
-    background-color:  #43494D !important;
-    border-color:  #43494D !important;
+    background-color: #43494D !important;
+    border-color: #43494D !important;
   }
 }
 
@@ -108,7 +111,7 @@ div.sourceCode {
 }
 
 .quarto-categories .quarto-category {
-  font-size: 0.7rem;  
+  font-size: 0.7rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.02rem;
@@ -122,7 +125,7 @@ div.sourceCode {
 
 // listings
 .listing-category {
-  font-size: 0.7rem;  
+  font-size: 0.7rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.02rem;
@@ -135,7 +138,7 @@ div.sourceCode {
 }
 
 div.quarto-post .thumbnail img {
-    margin-top: -1em;
+  margin-top: -1em;
 }
 
 // Navbar
@@ -161,24 +164,24 @@ div.quarto-post .thumbnail img {
 
 // links
 .navbar-nav .nav-link {
-    color: #212529;
-    letter-spacing: 0.05rem; 
-    border-bottom: 0px hidden;   
-    margin: 0px 10px 0px 10px; 
-    padding: 2px 2px 4px 2px !important;
+  color: #212529;
+  letter-spacing: 0.05rem;
+  border-bottom: 0px hidden;
+  margin: 0px 10px 0px 10px;
+  padding: 2px 2px 4px 2px !important;
 
-    &:hover {
-      filter: brightness(50%);
-      text-decoration: underline !important;
-      padding: 2px 2px 0px 2px !important;
-    }
+  &:hover {
+    filter: brightness(50%);
+    text-decoration: underline !important;
+    padding: 2px 2px 0px 2px !important;
+  }
 }
 
 .navbar .quarto-navbar-tools {
-    margin-left: auto;
-    order: 900;
-    font-size: 1.2rem;
-    margin-right: -0.5rem;
+  margin-left: auto;
+  order: 900;
+  font-size: 1.2rem;
+  margin-right: -0.5rem;
 }
 
 // Footer
@@ -194,9 +197,9 @@ div.quarto-post .thumbnail img {
 
 // links on right side
 .nav-footer .nav-link {
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 // Listing cards
@@ -208,7 +211,7 @@ div.quarto-post .thumbnail img {
 }
 
 .card-img {
-    border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 0px 0px;
 }
 
 // Title block
@@ -225,6 +228,7 @@ div.quarto-post .thumbnail img {
 // links in description
 .description a {
   text-decoration: underline !important;
+
   &:hover {
     text-decoration: none !important;
   }
@@ -242,10 +246,12 @@ div.quarto-post .thumbnail img {
 // subtitle
 .subtitle {
   font-size: 1.2rem;
+
   // links within subtitles
   a {
     // color: white;
     text-decoration: underline !important;
+
     &:hover {
       text-decoration: none !important;
     }
@@ -264,8 +270,12 @@ img {
 }
 
 //tables
-.panel-caption, .figure-caption, .subfigure-caption, 
-.table-caption, figcaption, caption {
+.panel-caption,
+.figure-caption,
+.subfigure-caption,
+.table-caption,
+figcaption,
+caption {
   color: #596166;
   text-align: center;
   margin-top: .5em;
@@ -275,24 +285,25 @@ img {
 // Mobile
 
 @media screen and (max-width: 991.98px) {
+
   // social media links
   .about-entity .about-links {
     flex-direction: row !important;
     justify-content: center !important;
   }
-  
+
   .navbar-title {
     justify-content: center !important;
     font-size: 0.85rem;
   }
-  
+
   .navbar .quarto-navbar-tools {
     font-size: 1.2rem;
   }
 
   // navigation footer
   .nav-footer {
-      flex-direction: row;
+    flex-direction: row;
   }
 
   .nav-footer-center {
