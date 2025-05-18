@@ -1,36 +1,36 @@
-/* title */
+/* Listing page styling */
 
-/* remove styling from title block partial */
-#title-block-header, #title-block-header-title {
+/* Title block reset */
+#title-block-header,
+#title-block-header-title {
   all: unset;
-  background-image: none !important;
+  background-image: none;
 }
 
-/* page title  */
+/* Page title */
 #title-block-header.quarto-title-block.default .quarto-title .title {
   font-size: 2.5em;
   text-align: center;
-  margin: 0.5em 0 0.5em 0;
+  margin: 0.5em 0;
 }
 
-/* text below page title */
+/* Page description */
 .description p {
-  text-align: center; 
-  /* margin: 0 1em 3em 1em; */
+  text-align: center;
   margin: 0 auto;
-  padding: 1.5em 0 3em 0;
+  padding: 1.5em 0 3em;
   width: 600px;
 }
 
 .description a {
-  text-decoration: underline !important;
+  text-decoration: underline;
 }
 
 .description a:hover {
-  text-decoration: none !important;
+  text-decoration: none;
 }
 
-/* listing cards  */
+/* Card styling */
 .card {
   background: transparent;
   border: none;
@@ -39,21 +39,19 @@
 }
 
 .card-img {
-    border-radius: 8px 8px 0px 0px;
+  border-radius: 8px 8px 0 0;
 }
 
-/* Mobile */
-
+/* Responsive styling - Mobile */
 @media screen and (max-width: 991.98px) {
-  /* text below page title */
   .description p {
     width: 300px;
   }
-  
+
   .quarto-listing-sort {
     margin-right: 0.5rem;
   }
-  
+
   .quarto-listing-filter {
     margin-left: 0.5rem;
   }
