@@ -2,12 +2,12 @@
 pagetitle: Contact | Paul Johnson
 name: Contact Form
 page-layout: article
-format:
-  html:
+format: 
+  html: 
     grid:
       margin-width: 0px
       sidebar-width: 0px
-css: styles/css/contact.css
+css: assets/css/contact.css
 ---
 
 ::: {.grid}
