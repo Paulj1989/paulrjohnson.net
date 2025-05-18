@@ -24,24 +24,12 @@ def is_font_available(font_name):
         return False
 
 
-def find_style_file():
-    """Find the style file in the styles/ folder at the project root"""
-    # Get the current file's directory
-    current_dir = Path(__file__).resolve().parent
-
-    # Navigate to project root (assuming _resources/py_utils/ structure)
-    project_root = current_dir.parent.parent
-
-    # Style file is located in styles/ at the project root
-    style_path = project_root / "styles" / "plot_theme.mplstyle"
-
-    # Verify the file exists
-    if not style_path.exists():
-        print(f"Warning: Style file not found at {style_path}")
-        # Fallback to default style
-        return "default"
-
-    return str(style_path)
+def find_style_file() -> Path:
+    """
+    Return the path to plot_theme.mplstyle, assumed to live
+    in the same folder as this module.
+    """
+    return Path(__file__).with_name("plot_theme.mplstyle")
 
 
 @contextmanager
