@@ -39,9 +39,8 @@ about:
 
 page-layout: full
 
-css: styles/css/index.css
-include-in-header: _includes/umami.html
-echo: false
+css:
+  - /assets/css/index.css
 ---
 
 <br><br><br><br>
