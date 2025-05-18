@@ -1,7 +1,7 @@
 ---
 title: Paul Johnson
 subtitle: Using Causal Inference & Machine Learning to Confirm My Priors
-image: assets/img/paul/paul.webp
+image: assets/images/me/headshot_rounded.webp
 image-alt: Me looking handsome as hell
 description-meta: |
   I am a data scientist interested in using my knowledge of causal inference,
@@ -11,7 +11,7 @@ twitter-card:
     title: Paul Johnson
     description: |
       A Data Scientist Using Causal Inference & Machine Learning to Confirm His Priors.
-    image: assets/img/paul/paul.webp
+    image: assets/images/me/headshot_rounded.webp
 
 about:
   template: solana
@@ -39,8 +39,8 @@ about:
 
 page-layout: full
 
-css: assets/css/index.css
-include-in-header: assets/umami.html
+css: styles/css/index.css
+include-in-header: _includes/umami.html
 echo: false
 ---
 
@@ -53,95 +53,3 @@ I am a data scientist at NHS South, Central and West CSU. I am interested in app
 At heart, I want to understand how the world works, and I enjoy telling stories that help others do the same, leveraging data and my quantitative skill set in the process.
 
 :::
-
-```{r}
-#| label: manual-redirects
-
-# import redirects
-manual_redirects <- readr::read_lines(here::here("assets", "_manualredirects"))
-```
-
-```{r}
-#| label: blog-redirects
-
-# get file paths for all blog posts
-get_file_paths <-
-  function(folder) {
-    blog_posts <-
-      list.dirs(
-        path = c(here::here(folder)),
-        full.names = FALSE,
-        recursive = FALSE
-      ) |>
-      tibble::as_tibble_col(column_name = "path") |>
-      dplyr::mutate(folder = folder)
-  }
-
-# create & extract shortened redirects
-blog_posts <-
-  # get blog post file paths
-  purrr::map("blog", get_file_paths) |>
-  # row-bind file paths
-  purrr::list_rbind() |>
-  dplyr::mutate(
-    # remove date slug
-    blog_title = stringr::str_remove(path, "(?!\\-)\\d{4}-\\d{2}-\\d{2}-"),
-    # create short path
-    short_path = paste0(folder, "/", blog_title),
-    # combine old path and new path to create redirect rule
-    redirects = paste0("/", short_path, " ", "/", folder, "/", path)
-  )
-
-blog_redirects <-
-  blog_posts |>
-  dplyr::pull(redirects)
-```
-
-```{r}
-#| label: category-redirects
-
-# get categories from blog posts
-get_categories <-
-  function(post) {
-    file <- here::here("blog", post) |> fs::path("index.qmd")
-    if (!fs::file_exists(file)) {
-      return(character(0))
-    }
-    file |>
-      readr::read_lines() |>
-      stringr::str_subset("^categories:") |>
-      stringr::str_extract("\\[.*\\]") |>
-      stringr::str_remove_all("[\\[\\]]") |>
-      stringr::str_split(", ") |>
-      purrr::list_c()
-  }
-
-# extract categories
-categories <-
-  # blog post categories
-  purrr::map(blog_posts |> dplyr::pull(path), get_categories) |>
-  # concatenate categories into a vector
-  purrr::list_c() |>
-  unique() |>
-  stringr::str_replace_all(" ", "%20")
-
-# extract tags
-tags <-
-  categories |>
-  stringr::str_to_lower() |>
-  stringr::str_replace_all("%20", "-")
-
-# write category redirects
-category_redirects <-
-  paste0("/tags/", tags, " ", "/blog/#category=", categories)
-```
-
-```{r}
-#| label: write-redirects
-
-# write the _redirects file
-readr::write_lines(
-  x = c(manual_redirects, blog_redirects, category_redirects),
-  file = here::here("_redirects")
-)
-```
