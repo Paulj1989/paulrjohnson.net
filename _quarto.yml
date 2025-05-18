@@ -13,7 +13,7 @@ website:
   back-to-top-navigation: false
   twitter-card: true
   open-graph: true
-  image: assets/images/me/headshot_rouinded.webp
+  image: assets/images/me/headshot_rounded.webp
   image-alt: Me looking handsome as hell
   comments: false
 
@@ -57,8 +57,8 @@ format:
   html:
     theme:
       - cosmo
-      - styles/theme.scss
-    highlight-style: styles/github-plus.theme
+      - theme.scss
+    highlight-style: assets/github-plus.theme
     # pagetitle: "{{< meta title >}} | Paul Johnson"
     fig-align: center
     lightbox: true
