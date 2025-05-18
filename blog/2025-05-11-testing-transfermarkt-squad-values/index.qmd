@@ -27,87 +27,11 @@ suppressPackageStartupMessages({
   library(tidymodels)
 })
 
-# setup fonts
-sysfonts::font_add_google("Poppins")
-sysfonts::font_add_google("Lora")
-showtext::showtext_auto()
+# load helper functions
+source(here::here("_resources/r_utils/visualisation.R"))
 
 # set plot theme
-# inspired by https://github.com/z3tt/TidyTuesday/blob/main/R/2020_31_PalmerPenguins.Rmd
-theme_set(theme_minimal(base_size = 20, base_family = "Poppins")) +
-  theme_update(
-    panel.grid.major = element_line(color = "grey90", linewidth = .4),
-    panel.grid.minor = element_blank(),
-    panel.spacing.x = unit(.65, units = "cm"),
-    panel.spacing.y = unit(.3, units = "cm"),
-    axis.title.x = element_text(
-      color = "grey30",
-      margin = margin(t = 5),
-      size = rel(1.05),
-      lineheight = 0.55
-    ),
-    axis.title.y = element_text(
-      color = "grey30",
-      margin = margin(r = 5),
-      size = rel(1.05),
-      lineheight = 0.55
-    ),
-    axis.text = element_text(color = "grey50", size = rel(1)),
-    axis.ticks = element_line(color = "grey90", linewidth = .4),
-    axis.ticks.length = unit(.2, "lines"),
-    legend.position = "top",
-    legend.title = element_blank(),
-    legend.text = element_text(size = rel(.9)),
-    legend.box.margin = margin(0, 0, -10, 0),
-    legend.key.width = unit(1, units = "cm"),
-    plot.title = element_text(
-      hjust = 0,
-      color = "black",
-      family = "Lora",
-      size = rel(1.5),
-      margin = margin(t = 5, b = 5)
-    ),
-    plot.subtitle = element_text(
-      hjust = 0,
-      color = "grey30",
-      family = "Lora",
-      lineheight = 0.55,
-      size = rel(1.1),
-      margin = margin(5, 0, 15, 0)
-    ),
-    plot.title.position = "plot",
-    plot.caption = element_text(
-      color = "grey50",
-      size = rel(0.8),
-      hjust = 1,
-      margin = margin(10, 0, 0, 0)
-    ),
-    plot.caption.position = "plot",
-    plot.margin = margin(rep(10, 4)),
-    strip.text = element_text(size = rel(1), margin = margin(0, 0, 5, 0)),
-    strip.clip = "off"
-  )
-
-# set table theme
-tbl_theme <-
-  function(data, width = 100, alignment = "center") {
-    data |>
-      tab_source_note(
-        source_note = "Source: DFL & Transfermarkt"
-      ) |>
-      tab_options(
-        footnotes.marks = "standard",
-        footnotes.spec_ref = "^i",
-        footnotes.spec_ftr = "()",
-        table.width = pct(width),
-        table.align = alignment,
-        table.font.names = "Poppins"
-      ) |>
-      tab_style(
-        style = cell_text(align = "left"),
-        locations = list(cells_source_notes(), cells_footnotes())
-      )
-  }
+set_plot_theme()
 
 # load data
 buli_resources <-
@@ -240,7 +164,7 @@ buli_resources |>
     style = list(cell_fill(color = "#f8f9fa")),
     locations = cells_body(rows = everything())
   ) |>
-  tbl_theme()
+  table_theme(source_note = "Source: DFL & Transfermarkt")
 ```
 
 Looking at @tbl-team-difference, it is obvious that the differences are at least partially a function of the team's quality or the resources available to teams. This probably identifies an issue with Transfermarkt's values. Squad values are updated regularly and will be responsive to player (and team) performances. Good teams play better, leading to better teams seeing their values increase.
@@ -354,7 +278,7 @@ correlation_table |>
     style = cell_text(weight = "bold"),
     locations = cells_row_groups()
   ) |>
-  tbl_theme()
+  table_theme(source_note = "Source: DFL & Transfermarkt")
 ```
 
 All three outcomes have stronger correlations with squad value than staff costs. The differences are relatively small, but they are consistent. However, the differences are barely perceptible when we plot the relationship between our two predictors and the Bundesliga outcomes below.
@@ -671,7 +595,7 @@ summary_table |>
     style = list(cell_text(weight = "bold")),
     locations = cells_row_groups()
   ) |>
-  tbl_theme()
+  table_theme(source_note = "Source: DFL & Transfermarkt")
 ```
 
 @tbl-model-performance shows a similar pattern to the correlations in @tbl-correlation. The squad value models consistently outperform the staff costs models across both metrics, especially R<sup>2</sup>. It's worth noting that the models are tuned on RMSE, so the variance in R<sup>2</sup> across the two sets of models is possibly a function of this. However, there is a sizable increase in RMSE, too.
