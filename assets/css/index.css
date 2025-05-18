@@ -1,0 +1,86 @@
+/* Home page styling */
+
+/* Typography */
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2em !important;
+}
+
+.subtitle {
+  font-family: "Lora";
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+/* Layout */
+.entity-contents {
+  text-align: right !important;
+  padding: 0 2em 0 2em;
+}
+
+.about-contents {
+  padding: 0 0 0 2em !important;
+}
+
+/* Social links: block of links */
+.about-entity .about-links {
+  justify-content: flex-end !important;
+  column-gap: 0em !important;
+  font-size: 1.2rem !important;
+}
+
+/* Social links: individual links */
+.about-entity .about-link {
+  padding: 0.25em 0.25em !important;
+  border: none !important;
+}
+
+/* Profile image */
+.about-image {
+  max-height: 120%;
+  max-width: 100%;
+  margin-top: -2em;
+  padding: 0 2em 0em 0;
+}
+
+/* Responsive design - Mobile (screens up to 992px) */
+@media screen and (max-width: 991.98px) {
+
+  /* Content layout adjustments */
+  .entity-contents {
+    order: 2 !important;
+    margin: -8em 0 0 0 !important;
+    padding: 0 0 0 0em !important;
+    text-align: center !important;
+  }
+
+  .subtitle {
+    text-align: center !important;
+  }
+
+  /* Social links adjustments */
+  .about-entity .about-links {
+    justify-content: center !important;
+    font-size: 1.25rem !important;
+  }
+
+  .about-entity .about-link {
+    padding: 0em 0.4em !important;
+  }
+
+  /* Content spacing */
+  .about-contents {
+    padding: 0 0 0 0em !important;
+  }
+
+  /* Image adjustments */
+  .about-image {
+    max-width: 110%;
+    order: 1 !important;
+    margin-top: 1em;
+    padding: 0 2em 0 2em !important;
+  }
+}

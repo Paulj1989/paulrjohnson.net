@@ -7,7 +7,8 @@ format:
     grid:
       margin-width: 0px
       sidebar-width: 0px
-css: styles/css/contact.css
+css:
+  - /assets/css/contact.css
 ---
 
 ::: {.grid}

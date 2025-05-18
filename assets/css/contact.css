@@ -1,0 +1,18 @@
+/* Contact form styling */
+#form {
+  margin-top: -1em;
+}
+
+/* Responsive layout for screens up to 992px */
+@media screen and (max-width: 991.98px) {
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  #form {
+    margin-top: 0;
+    flex: 1 0 100%;
+    /* Simplified from flex-basis and flex-grow */
+  }
+}
