@@ -3,28 +3,11 @@ title: Paul Johnson
 subtitle: Data Scientist with Experience Across Social Science & Healthcare
 pagetitle: Curriculum Vitae | Paul Johnson
 description-meta: |
-  I am a data scientist with over eight years of experience applying causal 
-  inference, statistics, and machine learning to human problems across social 
+  I am a data scientist with over eight years of experience applying causal
+  inference, statistics, and machine learning to human problems across social
   science and healthcare.
-css: ../assets/css/cv.css
+css: ../styles/css/cv.css
 ---
-
-## Education  {{< fa graduation-cap >}}
-
-**M.A. Political Science** 
-\
-*University of Houston* [*2017 --- 2020*]{.cvdate}
-\
-\
-**M.Sc. Global Politics**
-\
-*University of Southampton* [*2011 --- 2012*]{.cvdate}
-\
-\
-**B.A. Politics**
-\
-*University of Sussex* [*2008 --- 2011*]{.cvdate}
-\
 
 ## Selected Work Experience  {{< fa briefcase >}}
 
@@ -75,3 +58,20 @@ css: ../assets/css/cv.css
 - Family for Every Child – Events Coordinator
 - University Hospital Southampton – Oncology Outpatient Clerk
 - University Hospital Southampton – Income Management Assistant
+
+## Education  {{< fa graduation-cap >}}
+
+**M.A. Political Science**
+\
+*University of Houston* [*2017 --- 2020*]{.cvdate}
+\
+\
+**M.Sc. Global Politics**
+\
+*University of Southampton* [*2011 --- 2012*]{.cvdate}
+\
+\
+**B.A. Politics**
+\
+*University of Sussex* [*2008 --- 2011*]{.cvdate}
+\
