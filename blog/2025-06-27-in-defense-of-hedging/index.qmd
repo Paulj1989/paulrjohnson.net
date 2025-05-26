@@ -4,7 +4,7 @@ subtitle: |
     The importance of communicating uncertainty when writing about data science.
 description-meta: |
     Discussing hedging.
-date: 2025-05-27
+date: 2025-06-27
 image: hedge.webp
 image-alt: |
     A green hedge with the bright pink wall of a building in the background.
@@ -27,6 +27,8 @@ Hedging is a linguistic device used to qualify statements and provide additional
 Academic writing requires hedging because it is essential to present any unproven claims carefully and with the uncertainty they require [@hyland1996]. This is vital because it doesn't just express the uncertainty in certain statements; it distinguishes those intended to be expressed with greater certainty. Communicating certainty and precision makes it easier for a reader to follow the researcher's argument. It also enables researchers to accurately convey findings without misleading readers, minimising the risk that the reader will draw the wrong conclusions from their work [@kojima2023].
 
 While hedging is an important part of communication in various contexts, there are also meaningful cultural differences in how we communicate, including the nature and frequency of hedging. Women tend to use hedging more than men, and I understand that hedging is viewed a little more negatively in the US than in the UK. The subtleties of hedging language are also non-trivial for folks trying to use it (or interpret it) in a language that is not their native tongue. These cultural differences and the challenges of adopting and dealing with hedging are well outside the scope of my silly little blog, but I did want to acknowledge that they exist.
+
+## The General View of Hedging
 
 ## Why Hedging is Important in Scientific Communication
 
