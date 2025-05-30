@@ -19,7 +19,7 @@ website:
 
   navbar:
     title: P(Johnson) > 0.05
-    logo: assets/icons/favicon-24x24.webp
+    logo: assets/icons/favicon-36x36.webp
     logo-alt: Purple Octopus
     tools:
       - icon: github
