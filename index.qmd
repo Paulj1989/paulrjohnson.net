@@ -19,22 +19,22 @@ about:
   id: hero-heading
   links:
     - text: "{{< iconify fa6-brands bluesky >}}"
-      aria-label: Bluesky
+      aria-label: "Bluesky"
       href: https://bsky.app/profile/paulrjohnson.net
     - icon: linkedin
-      aria-label: LinkedIn
+      aria-label: "LinkedIn"
       href: https://linkedin.com/in/paulj1989
     - icon: github
-      aria-label: GitHub
+      aria-label: "GitHub"
       href: https://github.com/paulj1989
     - text: "{{< iconify fa6-brands kaggle >}}"
-      aria-label: Kaggle
+      aria-label: "Kaggle"
       href: https://kaggle.com/paulrjohnson
     - text: "{{< iconify fa6-brands google-scholar >}}"
-      aria-label: Google Scholar
+      aria-label: "Google Scholar"
       href: https://scholar.google.com/citations?user=Op4yo3YAAAAJ&hl=en
     - icon: cup-hot-fill
-      aria-label: Buy Me a Coffee
+      aria-label: "Buy Me a Coffee"
       href: https://www.buymeacoffee.com/paulj1989
 
 page-layout: full

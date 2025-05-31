@@ -1,7 +1,69 @@
 /*-- scss:defaults --*/
 
-// Import fonts - consolidated font weights using ranges
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/*-- scss:defaults --*/
+
+// Optimized font declarations
+// FIRA CODE - monospace for code
+@font-face {
+  font-family: 'Fira Code';
+  src: url('assets/fonts/FiraCode-VariableFont_wght.woff2') format('woff2');
+    // url('assets/fonts/FiraCode-VariableFont_wght.woff') format('woff');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// LORA - for headings (serif)
+// Normal styles
+@font-face {
+  font-family: 'Lora';
+  src: url('assets/fonts/Lora-VariableFont_wght.woff2') format('woff2');
+    // url('assets/fonts/Lora-VariableFont_wght.woff') format('woff');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// POPPINS - for body text and UI elements (sans-serif)
+// Regular weight for body text
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Regular.woff2') format('woff2');
+    // url('assets/fonts/Poppins-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Medium weight for navigation, buttons, emphasis
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Medium.woff2') format('woff2');
+    // url('assets/fonts/Poppins-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Bold weight for strong emphasis, job titles, dates
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Bold.woff2') format('woff2');
+    // url('assets/fonts/Poppins-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Regular italic for emphasis in body text, references
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins-Italic.woff2') format('woff2');
+    // url('assets/fonts/Poppins-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
 
 // Color system - organized hierarchically
 $primary: #43494D;
