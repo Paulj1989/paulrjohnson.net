@@ -1,30 +1,43 @@
 <!-- Critical Performance Optimizations -->
-
 <!-- DNS Prefetch for external resources -->
 <link rel="dns-prefetch" href="//api.iconify.design">
-<!-- <link rel="dns-prefetch" href="//fonts.googleapis.com">
-<link rel="dns-prefetch" href="//github.com">
-<link rel="dns-prefetch" href="//buymeacoffee.com"> -->
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
 
 <!-- Preconnect to critical origins -->
-<!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+<link rel="preconnect" href="https://api.iconify.design" crossorigin>
 
 <!-- Preload critical images with proper sizing -->
 <link rel="preload" as="image" href="assets/images/me/headshot_rounded.webp"
-    imagesrcset="assets/images/me/headshot_rounded.webp 448w" fetchpriority="high" imagesizes="(max-width: 768px) 320px, 448px">
+    imagesrcset="assets/images/me/headshot_rounded.webp 448w" fetchpriority="high"
+    imagesizes="(max-width: 768px) 320px, 448px">
 <link rel="preload" as="image" href="assets/icons/favicon-36x36.webp" imagesrcset="assets/icons/favicon-36x36.webp 36w"
     imagesizes="36px">
+
+<!-- Critical JavaScript - only load what's needed for LCP -->
+<script>
+    // Immediately mark critical images to prevent lazy loading
+    document.addEventListener('DOMContentLoaded', function () {
+        const criticalImages = document.querySelectorAll('.about-image, .navbar-logo, img[src*="headshot"], img[src*="favicon"]');
+        criticalImages.forEach(function (img) {
+            img.setAttribute('data-critical', 'true');
+            img.fetchPriority = 'high';
+        });
+    });
+</script>
 
 <!-- Resource Hints for better loading -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<!-- Optimize rendering -->
+<!-- Critical CSS for above-the-fold content -->
 <style>
-    /* Critical CSS for above-the-fold content */
+    /* Critical CSS for LCP optimization */
     .about-image {
         aspect-ratio: 1;
         max-width: 28em;
         object-fit: cover;
+        /* Prevent layout shift */
+        width: 100%;
+        height: auto;
     }
 
     .navbar-logo {
@@ -34,9 +47,49 @@
         object-fit: contain;
     }
 
-    .figure-img[src*="figure-html"],
-    .img-fluid[src*="index_files"] {
-        /* aspect-ratio: 1; */
-        object-fit: contain;
+    /* Prevent FOIT (Flash of Invisible Text) */
+    html:not(.fonts-loaded) body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    html:not(.fonts-loaded) .title,
+    html:not(.fonts-loaded) h1,
+    html:not(.fonts-loaded) h2,
+    html:not(.fonts-loaded) h3 {
+        font-family: Georgia, "Times New Roman", serif;
+    }
+
+    /* Critical layout styles to prevent CLS */
+    .navbar {
+        min-height: 56px;
+        /* Reserve space for navbar */
+    }
+
+    .title {
+        font-size: 2.5rem;
+        font-weight: 500;
+        line-height: 1.1;
+    }
+
+    /* Optimize rendering performance */
+    img,
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Critical button styles */
+    .btn {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        margin-bottom: 0;
+        font-size: 1rem;
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
     }
 </style>

@@ -1,11 +1,116 @@
+<!-- JavaScript Loading Optimization -->
 <script>
-    // Defer non-critical JavaScript loading
+    // Critical: Defer non-essential JavaScript to improve render performance
+    (function () {
+        'use strict';
+
+        // Function to defer script loading until after initial render
+        function deferScript(src, callback) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.defer = true;
+            script.async = false; // Maintain execution order
+            if (callback) script.onload = callback;
+            document.head.appendChild(script);
+        }
+
+        // Function to defer inline scripts
+        function deferInlineScript(content) {
+            const script = document.createElement('script');
+            script.textContent = content;
+            document.head.appendChild(script);
+        }
+
+        // Wait for DOM content to be ready, then load non-critical scripts
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Defer Bootstrap and related UI libraries (not needed for initial render)
+            const deferredScripts = [
+                // Bootstrap ecosystem
+                { selector: 'script[src*="bootstrap.min.js"]', priority: 1 },
+                { selector: 'script[src*="popper.min.js"]', priority: 1 },
+
+                // UI enhancements (tooltips, etc.)
+                { selector: 'script[src*="tippy.umd.min.js"]', priority: 2 },
+
+                // Code functionality
+                { selector: 'script[src*="clipboard.min.js"]', priority: 3 },
+
+                // Navigation enhancements
+                { selector: 'script[src*="headroom.min.js"]', priority: 3 },
+
+                // Icon system (if not critical for LCP)
+                { selector: 'script[src*="iconify"]', priority: 4 }
+            ];
+
+            // Remove render-blocking scripts and reload them deferred
+            deferredScripts.forEach(function (scriptInfo) {
+                const scripts = document.querySelectorAll(scriptInfo.selector);
+                scripts.forEach(function (script) {
+                    if (script.src && !script.defer && !script.async) {
+                        const src = script.src;
+                        script.remove(); // Remove the render-blocking version
+
+                        // Add back as deferred with appropriate timing
+                        setTimeout(function () {
+                            deferScript(src);
+                        }, scriptInfo.priority * 100); // Stagger loading
+                    }
+                });
+            });
+
+            // Handle Quarto-specific optimizations
+            setTimeout(function () {
+                // Ensure Quarto nav and core functionality loads first
+                const quartoScripts = document.querySelectorAll('script[src*="quarto-nav"], script[src*="quarto.js"]');
+                quartoScripts.forEach(function (script) {
+                    if (!script.defer) {
+                        script.defer = true;
+                    }
+                });
+            }, 50);
+
+        });
+
+        // Preload critical scripts during idle time
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(function () {
+                // Preload but don't execute critical scripts
+                const criticalScripts = [
+                    document.querySelector('script[src*="quarto-nav"]')?.src,
+                    document.querySelector('script[src*="quarto.js"]')?.src
+                ].filter(Boolean);
+
+                criticalScripts.forEach(function (src) {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'script';
+                    link.href = src;
+                    document.head.appendChild(link);
+                });
+            });
+        }
+
+    })();
+</script>
+
+<!-- Optimize resource loading priorities -->
+<script>
+    // Set loading priorities for better performance
     document.addEventListener('DOMContentLoaded', function () {
-        // This will help with render-blocking
-        const scripts = document.querySelectorAll('script[src*="bootstrap"], script[src*="tippy"], script[src*="popper"]');
-        scripts.forEach(script => {
-            if (script.src) {
-                script.defer = true;
+        // Lower priority for non-critical images
+        const images = document.querySelectorAll('img:not([data-critical])');
+        images.forEach(function (img) {
+            if (!img.loading) {
+                img.loading = 'lazy';
+            }
+        });
+
+        // Optimize iframe loading if present
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach(function (iframe) {
+            if (!iframe.loading) {
+                iframe.loading = 'lazy';
             }
         });
     });
