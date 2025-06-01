@@ -58,9 +58,8 @@ format:
       - theme.scss
     highlight-style: assets/github-plus.theme
     fig-align: center
-    # lightbox: true
-    fig-width: 7
-    fig-height: 5
+    # fig-width: 7
+    # fig-height: 5
     fig-dpi: 150
     fig-responsive: true
     mainfont: "Poppins"
