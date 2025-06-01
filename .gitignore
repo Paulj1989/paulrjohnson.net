@@ -60,5 +60,8 @@ blog/2024-10-09-analysing-money-in-football/data/squad_values.csv
 # DS_Store files
 .DS_Store
 
+# Lua
+/.luarc.json
+
 # Node.js
 node_modules/
