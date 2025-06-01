@@ -2,6 +2,7 @@ project:
   type: website
   resources: _redirects
   pre-render: build/redirects.lua
+  post-render: bash build/purge_css.sh
 
 website:
   title: Paul Johnson
