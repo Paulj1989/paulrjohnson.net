@@ -2,15 +2,16 @@
 
 /*-- scss:defaults --*/
 
-// Optimized font declarations
+// Optimized font declarations with CLS fixes
 // FIRA CODE - monospace for code
 @font-face {
   font-family: 'Fira Code';
   src: url('assets/fonts/FiraCode-VariableFont_wght.woff2') format('woff2');
-    // url('assets/fonts/FiraCode-VariableFont_wght.woff') format('woff');
+  // url('/assets/fonts/FiraCode-VariableFont_wght.woff') format('woff');
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
+  size-adjust: 100%;
 }
 
 // LORA - for headings (serif)
@@ -18,10 +19,11 @@
 @font-face {
   font-family: 'Lora';
   src: url('assets/fonts/Lora-VariableFont_wght.woff2') format('woff2');
-    // url('assets/fonts/Lora-VariableFont_wght.woff') format('woff');
+  // url('/assets/fonts/Lora-VariableFont_wght.woff') format('woff');
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
+  size-adjust: 94%;
 }
 
 // POPPINS - for body text and UI elements (sans-serif)
@@ -29,40 +31,44 @@
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Regular.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Regular.woff') format('woff');
+  // url('/assets/fonts/Poppins-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  size-adjust: 100%;
 }
 
 // Medium weight for navigation, buttons, emphasis
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Medium.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Medium.woff') format('woff');
+  // url('/assets/fonts/Poppins-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  size-adjust: 100%;
 }
 
 // Bold weight for strong emphasis, job titles, dates
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Bold.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Bold.woff') format('woff');
+  // url('/assets/fonts/Poppins-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  size-adjust: 100%;
 }
 
 // Regular italic for emphasis in body text, references
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Italic.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Italic.woff') format('woff');
+  // url('/assets/fonts/Poppins-Italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
+  size-adjust: 100%;
 }
 
 // Color system - organized hierarchically
@@ -78,10 +84,10 @@ $border-color: #dee2e6;
 $body-bg: white;
 $body-color: $primary;
 
-// Typography
-$font-family-sans-serif: "Poppins", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-$font-family-serif: "Lora", serif;
-$font-family-monospace: "Fira Code", "Dank Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+// Typography with CLS-optimized fallbacks
+$font-family-sans-serif: "Poppins", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-family-serif: "Lora", Georgia, "Times New Roman", serif;
+$font-family-monospace: "Fira Code", "Courier New", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 $headings-font-family: $font-family-serif;
 $headings-font-weight: 400;
 
@@ -98,43 +104,27 @@ $pagination-active-border-color: $primary;
 
 /*-- scss:rules --*/
 
-// Typography
-.title {
-  font-size: 2.5rem;
-  font-weight: 500;
-  line-height: 1.1;
+// CLS Prevention: Base layout stabilization
+* {
+  box-sizing: border-box;
 }
 
-.subtitle {
-  font-size: 1.2rem;
-
-  a {
-    text-decoration: underline !important;
-
-    &:hover {
-      text-decoration: none !important;
-    }
-  }
+// Content container stabilization
+.content,
+main {
+  min-height: 60vh;
 }
 
-// Link styles
-.description a {
-  text-decoration: underline !important;
-
-  &:hover {
-    text-decoration: none !important;
-  }
-}
-
-// Code blocks
-div.sourceCode {
-  background-color: $gray-light;
-  border: 1px solid $gray-light;
-}
-
-// Navigation
+// Navigation stabilization
 .navbar {
+  min-height: 60px;
   background: transparent;
+  contain: layout;
+
+  // Navigation links container
+  .navbar-nav {
+    min-width: 200px;
+  }
 
   // Title styling
   .navbar-title {
@@ -193,6 +183,61 @@ div.sourceCode {
   }
 }
 
+// Code block stabilization
+div.sourceCode {
+  background-color: $gray-light;
+  border: 1px solid $gray-light;
+  min-height: 2em;
+  contain: layout;
+}
+
+pre,
+.sourceCode {
+  min-height: 2em;
+  contain: layout;
+}
+
+// Prevent syntax highlighting shifts
+code[class*="language-"],
+pre[class*="language-"] {
+  visibility: hidden;
+}
+
+code[class*="language-"].loaded,
+pre[class*="language-"].loaded {
+  visibility: visible;
+}
+
+// Typography with reserved space
+.title {
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+  min-height: 2.75rem; // Reserve space
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  min-height: 1.44rem; // Reserve space
+
+  a {
+    text-decoration: underline !important;
+
+    &:hover {
+      text-decoration: none !important;
+    }
+  }
+}
+
+// Link styles
+.description a {
+  text-decoration: underline !important;
+
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
 // Home page social links
 .about-links .about-link i {
   &:hover {
@@ -244,13 +289,14 @@ div.sourceCode {
   border-radius: 0.25rem;
 }
 
-// Categories
+// Categories with layout containment
 .quarto-categories {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em 0.4em; // Using gap shorthand
+  gap: 0.5em 0.4em;
   padding-bottom: 0.5em;
   margin-top: 0.75em;
+  contain: layout;
 
   .quarto-category {
     @extend %category-base;
@@ -262,16 +308,23 @@ div.sourceCode {
   @extend %category-base;
 }
 
+// Stabilize list elements
+ul,
+ol {
+  contain: layout;
+}
+
 div.quarto-post .thumbnail img {
   margin-top: -1em;
 }
 
-// Cards
+// Cards with stabilization
 .card {
   background: transparent;
   border: none;
   border-radius: 4px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+  contain: layout;
 }
 
 .card-img {
@@ -285,18 +338,26 @@ div.quarto-post .thumbnail img {
   }
 }
 
-// Images
+// Images with CLS prevention
 img {
   max-width: 100%;
   height: auto;
+  display: block;
 }
 
 .figure-img {
   width: 100%;
   height: auto;
+  display: block;
 }
 
-// Captions - consolidated styling
+// Table stabilization
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+// Captions - consolidated styling with reserved space
 .panel-caption,
 .figure-caption,
 .subfigure-caption,
@@ -306,6 +367,29 @@ caption {
   color: $medium-gray;
   text-align: center;
   margin: 0.5em 0;
+  min-height: 1.2em; // Reserve space
+}
+
+// Quarto callout blocks stabilization
+.callout {
+  min-height: 3em;
+  contain: layout;
+}
+
+// Embed containers (for any third-party content)
+.embed-container {
+  position: relative;
+  padding-bottom: 56.25%; // 16:9 aspect ratio
+  height: 0;
+  overflow: hidden;
+}
+
+.embed-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 // Fixed positioning
