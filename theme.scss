@@ -97,22 +97,16 @@ $pagination-active-border-color: $primary;
 }
 
 // Blog post images
-.figure-img,
-.img-fluid {
+// .figure-img,
+// .img-fluid {
 
-  // Only add aspect-ratio for content images, not decorative ones
-  &[src*="figure-html"],
-  &[src*="index_files"] {
-    // aspect-ratio: 1;
-    object-fit: contain; // Preserve chart readability
-  }
-}
-
-// Remove problematic dynamic height calculation
-#quarto-content {
-  // Replace min-height calc with a simpler approach
-  // min-height: 100vh !important;
-}
+//   // Only add aspect-ratio for content images, not decorative ones
+//   &[src*="figure-html"],
+//   &[src*="index_files"] {
+//     // aspect-ratio: 1;
+//     object-fit: contain; // Preserve chart readability
+//   }
+// }
 
 // Typography
 .title {
