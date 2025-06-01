@@ -13,6 +13,12 @@ categories: [Netlify, Quarto, Web Development, R]
 eval: false
 ---
 
+::: {.callout-note}
+
+I have updated my process for generating Netlify redirects. If you are interested in an automated process, check out the [blog post](/blog/generating-redirects-with-lua) discussing my updated approach.
+
+:::
+
 If you are using Netlify to host your Quarto website there is a ton of helpful functionality that can smooth out the process. They even give you a fancy deployment status badge, and who among us can really claim they're better than a nice status badge?
 
 One of the features that Netlify offers is a simple process for handling redirects. Whether you need to redirect traffic from old URLs from your previous site URL structure (it's me) or you want to shorten URLs to make it easier to share links to your blog posts, Netlify's `_redirects` [handles all of this very easily](https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/).
