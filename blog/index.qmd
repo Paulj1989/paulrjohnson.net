@@ -20,6 +20,7 @@ listing:
   fields: [title, subtitle, categories, date, image]
   page-size: 6
   feed: true
+  image-lazy-loading: true
 citation: false
 toc: false
 comments: false
