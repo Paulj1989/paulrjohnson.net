@@ -1,70 +1,57 @@
 /*-- scss:defaults --*/
 
-/*-- scss:defaults --*/
-
-// Optimized font declarations with CLS fixes
+// Optimized font declarations with fallback fonts
 // FIRA CODE - monospace for code
 @font-face {
   font-family: 'Fira Code';
   src: url('assets/fonts/FiraCode-VariableFont_wght.woff2') format('woff2');
-  // url('/assets/fonts/FiraCode-VariableFont_wght.woff') format('woff');
   font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%; // Helps maintain consistent sizing
+}
+
+// LORA - for headings (serif)
+@font-face {
+  font-family: 'Lora';
+  src: url('assets/fonts/Lora-VariableFont_wght.woff2') format('woff2');
+  font-weight: 400 700;
   font-style: normal;
   font-display: swap;
   size-adjust: 100%;
 }
 
-// LORA - for headings (serif)
-// Normal styles
-@font-face {
-  font-family: 'Lora';
-  src: url('assets/fonts/Lora-VariableFont_wght.woff2') format('woff2');
-  // url('/assets/fonts/Lora-VariableFont_wght.woff') format('woff');
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 94%;
-}
-
 // POPPINS - for body text and UI elements (sans-serif)
-// Regular weight for body text
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Regular.woff2') format('woff2');
-  // url('/assets/fonts/Poppins-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
   size-adjust: 100%;
 }
 
-// Medium weight for navigation, buttons, emphasis
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Medium.woff2') format('woff2');
-  // url('/assets/fonts/Poppins-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
   size-adjust: 100%;
 }
 
-// Bold weight for strong emphasis, job titles, dates
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Bold.woff2') format('woff2');
-  // url('/assets/fonts/Poppins-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
   size-adjust: 100%;
 }
 
-// Regular italic for emphasis in body text, references
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Italic.woff2') format('woff2');
-  // url('/assets/fonts/Poppins-Italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -84,10 +71,10 @@ $border-color: #dee2e6;
 $body-bg: white;
 $body-color: $primary;
 
-// Typography with CLS-optimized fallbacks
-$font-family-sans-serif: "Poppins", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+// Typography with better fallback fonts that match custom fonts
+$font-family-sans-serif: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Lora", Georgia, "Times New Roman", serif;
-$font-family-monospace: "Fira Code", "Courier New", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+$font-family-monospace: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $headings-font-family: $font-family-serif;
 $headings-font-weight: 400;
 
@@ -104,27 +91,111 @@ $pagination-active-border-color: $primary;
 
 /*-- scss:rules --*/
 
-// CLS Prevention: Base layout stabilization
-* {
-  box-sizing: border-box;
+// CLS Prevention: Preload critical fonts and prevent invisible text
+body {
+  font-display: swap;
 }
 
-// Content container stabilization
-.content,
-main {
-  min-height: 60vh;
-}
+// CLS Prevention: Image sizing and aspect ratio preservation
+img {
+  max-width: 100%;
+  height: auto;
 
-// Navigation stabilization
-.navbar {
-  min-height: 60px;
-  background: transparent;
-  contain: layout;
-
-  // Navigation links container
-  .navbar-nav {
-    min-width: 200px;
+  // Prevent layout shift for images without explicit dimensions
+  &:not([width]):not([height]) {
+    aspect-ratio: attr(width) / attr(height);
   }
+}
+
+// Specific fixes for your problematic images
+.about-image {
+  // Reserve space for the headshot image (appears to be roughly square based on 28em width)
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  max-width: 28em;
+  height: auto;
+}
+
+.navbar-logo {
+  // Reserve space for favicon (typically square)
+  aspect-ratio: 1 / 1;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+// Figure images (blog post images)
+.figure-img,
+.img-fluid {
+  // Use aspect-ratio to prevent layout shift
+  // Adjust this ratio based on your typical image dimensions
+  aspect-ratio: 672 / 400; // Approximate ratio for your blog images
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+
+  // For images with explicit width attribute (like your 672px ones)
+  &[width="672"] {
+    aspect-ratio: 672 / 400; // Adjust height value based on your typical images
+  }
+}
+
+// CLS Prevention: Container height stabilization
+#quarto-content {
+  // Remove dynamic min-height calculation that causes shifts
+  min-height: auto !important;
+}
+
+.quarto-container {
+  // Ensure containers don't cause layout shifts
+  contain: layout style;
+}
+
+// Typography
+.title {
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+  // Prevent text reflow during font loading
+  font-display: swap;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  font-display: swap;
+
+  a {
+    text-decoration: underline !important;
+
+    &:hover {
+      text-decoration: none !important;
+    }
+  }
+}
+
+// Link styles
+.description a {
+  text-decoration: underline !important;
+
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+// Code blocks
+div.sourceCode {
+  background-color: $gray-light;
+  border: 1px solid $gray-light;
+  // Prevent layout shifts in code blocks
+  contain: layout;
+}
+
+// Navigation with CLS prevention
+.navbar {
+  background: transparent;
+  // Prevent navbar height changes
+  min-height: 56px; // Standard Bootstrap navbar height
+  contain: layout;
 
   // Title styling
   .navbar-title {
@@ -133,6 +204,7 @@ main {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
+    font-display: swap;
 
     &:hover {
       filter: brightness(50%);
@@ -147,6 +219,7 @@ main {
     border-bottom: 0 hidden;
     margin: 0 10px;
     padding: 2px 2px 4px 2px !important;
+    font-display: swap;
 
     &:hover {
       filter: brightness(50%);
@@ -180,61 +253,6 @@ main {
   .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(84, 85, 85, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
     filter: none !important;
-  }
-}
-
-// Code block stabilization
-div.sourceCode {
-  background-color: $gray-light;
-  border: 1px solid $gray-light;
-  min-height: 2em;
-  contain: layout;
-}
-
-pre,
-.sourceCode {
-  min-height: 2em;
-  contain: layout;
-}
-
-// Prevent syntax highlighting shifts
-code[class*="language-"],
-pre[class*="language-"] {
-  visibility: hidden;
-}
-
-code[class*="language-"].loaded,
-pre[class*="language-"].loaded {
-  visibility: visible;
-}
-
-// Typography with reserved space
-.title {
-  font-size: 2.5rem;
-  font-weight: 500;
-  line-height: 1.1;
-  min-height: 2.75rem; // Reserve space
-}
-
-.subtitle {
-  font-size: 1.2rem;
-  min-height: 1.44rem; // Reserve space
-
-  a {
-    text-decoration: underline !important;
-
-    &:hover {
-      text-decoration: none !important;
-    }
-  }
-}
-
-// Link styles
-.description a {
-  text-decoration: underline !important;
-
-  &:hover {
-    text-decoration: none !important;
   }
 }
 
@@ -287,16 +305,17 @@ pre[class*="language-"].loaded {
   border: 0.1px solid $border-color;
   padding: 5px;
   border-radius: 0.25rem;
+  font-display: swap;
 }
 
-// Categories with layout containment
+// Categories
 .quarto-categories {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em 0.4em;
   padding-bottom: 0.5em;
   margin-top: 0.75em;
-  contain: layout;
+  contain: layout; // Prevent layout shifts
 
   .quarto-category {
     @extend %category-base;
@@ -308,27 +327,26 @@ pre[class*="language-"].loaded {
   @extend %category-base;
 }
 
-// Stabilize list elements
-ul,
-ol {
-  contain: layout;
-}
-
 div.quarto-post .thumbnail img {
   margin-top: -1em;
+  // Ensure thumbnail images don't cause shifts
+  aspect-ratio: 16 / 9; // Adjust based on your thumbnail aspect ratio
+  object-fit: cover;
 }
 
-// Cards with stabilization
+// Cards
 .card {
   background: transparent;
   border: none;
   border-radius: 4px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-  contain: layout;
+  contain: layout; // Prevent layout shifts within cards
 }
 
 .card-img {
   border-radius: 4px 4px 0 0;
+  aspect-ratio: 16 / 9; // Standard card image ratio
+  object-fit: cover;
 }
 
 // Footer links
@@ -338,26 +356,7 @@ div.quarto-post .thumbnail img {
   }
 }
 
-// Images with CLS prevention
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.figure-img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-// Table stabilization
-table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-// Captions - consolidated styling with reserved space
+// Captions - consolidated styling
 .panel-caption,
 .figure-caption,
 .subfigure-caption,
@@ -367,35 +366,36 @@ caption {
   color: $medium-gray;
   text-align: center;
   margin: 0.5em 0;
-  min-height: 1.2em; // Reserve space
-}
-
-// Quarto callout blocks stabilization
-.callout {
-  min-height: 3em;
-  contain: layout;
-}
-
-// Embed containers (for any third-party content)
-.embed-container {
-  position: relative;
-  padding-bottom: 56.25%; // 16:9 aspect ratio
-  height: 0;
-  overflow: hidden;
-}
-
-.embed-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  font-display: swap;
 }
 
 // Fixed positioning
 .fixed-top,
 .aa-DetachedOverlay {
   position: absolute;
+}
+
+// CLS Prevention: Skeleton loading states
+.about-contents {
+  // Reserve minimum space to prevent shifts
+  min-height: 200px;
+}
+
+// Loading state for images (optional - you can implement this with JavaScript)
+.image-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 // Responsive styles
@@ -409,6 +409,9 @@ caption {
 
   // Navbar elements
   .navbar {
+    // Maintain consistent height on mobile
+    min-height: 56px;
+
     &-title {
       justify-content: center !important;
       font-size: 0.85rem;
@@ -443,5 +446,15 @@ caption {
     &-left {
       order: 3 !important;
     }
+  }
+
+  // Mobile-specific image adjustments
+  .about-image {
+    max-width: 20em; // Smaller on mobile
+  }
+
+  .figure-img {
+    // Adjust aspect ratio for mobile if needed
+    aspect-ratio: 4 / 3;
   }
 }
