@@ -1,6 +1,6 @@
 /*-- scss:defaults --*/
 
-// Optimized font declarations with fallback fonts
+// Optimized font declarations
 // FIRA CODE - monospace for code
 @font-face {
   font-family: 'Fira Code';
@@ -8,7 +8,6 @@
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
-  size-adjust: 100%; // Helps maintain consistent sizing
 }
 
 // LORA - for headings (serif)
@@ -18,44 +17,42 @@
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
-  size-adjust: 100%;
 }
 
-// POPPINS - for body text and UI elements (sans-serif)
+// POPPINS - Regular weight for body text
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  size-adjust: 100%;
 }
 
+// Medium weight for navigation, buttons, emphasis
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  size-adjust: 100%;
 }
 
+// Bold weight for strong emphasis, job titles, dates
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  size-adjust: 100%;
 }
 
+// Regular italic for emphasis in body text, references
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
-  size-adjust: 100%;
 }
 
 // Color system - organized hierarchically
@@ -71,10 +68,10 @@ $border-color: #dee2e6;
 $body-bg: white;
 $body-color: $primary;
 
-// Typography with better fallback fonts that match custom fonts
-$font-family-sans-serif: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$font-family-serif: "Lora", Georgia, "Times New Roman", serif;
-$font-family-monospace: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+// Typography
+$font-family-sans-serif: "Poppins", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-family-serif: "Lora", serif;
+$font-family-monospace: "Fira Code", "Dank Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $headings-font-family: $font-family-serif;
 $headings-font-weight: 400;
 
@@ -91,64 +88,30 @@ $pagination-active-border-color: $primary;
 
 /*-- scss:rules --*/
 
-// CLS Prevention: Preload critical fonts and prevent invisible text
-body {
-  font-display: swap;
-}
-
-// CLS Prevention: Image sizing and aspect ratio preservation
-img {
-  max-width: 100%;
-  height: auto;
-
-  // Prevent layout shift for images without explicit dimensions
-  &:not([width]):not([height]) {
-    aspect-ratio: attr(width) / attr(height);
-  }
-}
-
-// Specific fixes for your problematic images
+// Image sizing
 .about-image {
-  // Reserve space for the headshot image (appears to be roughly square based on 28em width)
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+  // Reserve space
   max-width: 28em;
-  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
-.navbar-logo {
-  // Reserve space for favicon (typically square)
-  aspect-ratio: 1 / 1;
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-
-// Figure images (blog post images)
+// Blog post images
 .figure-img,
 .img-fluid {
-  // Use aspect-ratio to prevent layout shift
-  // Adjust this ratio based on your typical image dimensions
-  aspect-ratio: 672 / 400; // Approximate ratio for your blog images
-  object-fit: cover;
-  width: 100%;
-  height: auto;
 
-  // For images with explicit width attribute (like your 672px ones)
-  &[width="672"] {
-    aspect-ratio: 672 / 400; // Adjust height value based on your typical images
+  // Only add aspect-ratio for content images, not decorative ones
+  &[src*="figure-html"],
+  &[src*="index_files"] {
+    aspect-ratio: 1.4;
+    object-fit: contain; // Preserve chart readability
   }
 }
 
-// CLS Prevention: Container height stabilization
+// Remove problematic dynamic height calculation
 #quarto-content {
-  // Remove dynamic min-height calculation that causes shifts
-  min-height: auto !important;
-}
-
-.quarto-container {
-  // Ensure containers don't cause layout shifts
-  contain: layout style;
+  // Replace min-height calc with a simpler approach
+  min-height: 100vh !important;
 }
 
 // Typography
@@ -156,13 +119,10 @@ img {
   font-size: 2.5rem;
   font-weight: 500;
   line-height: 1.1;
-  // Prevent text reflow during font loading
-  font-display: swap;
 }
 
 .subtitle {
   font-size: 1.2rem;
-  font-display: swap;
 
   a {
     text-decoration: underline !important;
@@ -186,16 +146,11 @@ img {
 div.sourceCode {
   background-color: $gray-light;
   border: 1px solid $gray-light;
-  // Prevent layout shifts in code blocks
-  contain: layout;
 }
 
-// Navigation with CLS prevention
+// Navigation
 .navbar {
   background: transparent;
-  // Prevent navbar height changes
-  min-height: 56px; // Standard Bootstrap navbar height
-  contain: layout;
 
   // Title styling
   .navbar-title {
@@ -204,7 +159,6 @@ div.sourceCode {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
-    font-display: swap;
 
     &:hover {
       filter: brightness(50%);
@@ -219,7 +173,6 @@ div.sourceCode {
     border-bottom: 0 hidden;
     margin: 0 10px;
     padding: 2px 2px 4px 2px !important;
-    font-display: swap;
 
     &:hover {
       filter: brightness(50%);
@@ -305,17 +258,15 @@ div.sourceCode {
   border: 0.1px solid $border-color;
   padding: 5px;
   border-radius: 0.25rem;
-  font-display: swap;
 }
 
 // Categories
 .quarto-categories {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em 0.4em;
+  gap: 0.5em 0.4em; // Using gap shorthand
   padding-bottom: 0.5em;
   margin-top: 0.75em;
-  contain: layout; // Prevent layout shifts
 
   .quarto-category {
     @extend %category-base;
@@ -329,9 +280,6 @@ div.sourceCode {
 
 div.quarto-post .thumbnail img {
   margin-top: -1em;
-  // Ensure thumbnail images don't cause shifts
-  aspect-ratio: 16 / 9; // Adjust based on your thumbnail aspect ratio
-  object-fit: cover;
 }
 
 // Cards
@@ -340,13 +288,10 @@ div.quarto-post .thumbnail img {
   border: none;
   border-radius: 4px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-  contain: layout; // Prevent layout shifts within cards
 }
 
 .card-img {
   border-radius: 4px 4px 0 0;
-  aspect-ratio: 16 / 9; // Standard card image ratio
-  object-fit: cover;
 }
 
 // Footer links
@@ -354,6 +299,17 @@ div.quarto-post .thumbnail img {
   &:hover {
     text-decoration: underline;
   }
+}
+
+// Images
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.figure-img {
+  width: 100%;
+  height: auto;
 }
 
 // Captions - consolidated styling
@@ -366,36 +322,12 @@ caption {
   color: $medium-gray;
   text-align: center;
   margin: 0.5em 0;
-  font-display: swap;
 }
 
 // Fixed positioning
 .fixed-top,
 .aa-DetachedOverlay {
   position: absolute;
-}
-
-// CLS Prevention: Skeleton loading states
-.about-contents {
-  // Reserve minimum space to prevent shifts
-  min-height: 200px;
-}
-
-// Loading state for images (optional - you can implement this with JavaScript)
-.image-loading {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-
-  100% {
-    background-position: -200% 0;
-  }
 }
 
 // Responsive styles
@@ -409,9 +341,6 @@ caption {
 
   // Navbar elements
   .navbar {
-    // Maintain consistent height on mobile
-    min-height: 56px;
-
     &-title {
       justify-content: center !important;
       font-size: 0.85rem;
@@ -446,15 +375,5 @@ caption {
     &-left {
       order: 3 !important;
     }
-  }
-
-  // Mobile-specific image adjustments
-  .about-image {
-    max-width: 20em; // Smaller on mobile
-  }
-
-  .figure-img {
-    // Adjust aspect ratio for mobile if needed
-    aspect-ratio: 4 / 3;
   }
 }
