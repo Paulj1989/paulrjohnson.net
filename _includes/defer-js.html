@@ -1,0 +1,12 @@
+<script>
+    // Defer non-critical JavaScript loading
+    document.addEventListener('DOMContentLoaded', function () {
+        // This will help with render-blocking
+        const scripts = document.querySelectorAll('script[src*="bootstrap"], script[src*="tippy"], script[src*="popper"]');
+        scripts.forEach(script => {
+            if (script.src) {
+                script.defer = true;
+            }
+        });
+    });
+</script>
