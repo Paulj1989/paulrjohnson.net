@@ -1,1 +1,44 @@
-<link rel="preload" href="/assets/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Optimized Font Preloading - Only Critical Fonts -->
+
+<!-- Preload only the most critical font (body text) -->
+<link rel="preload" href="assets/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- Preload heading font (used less frequently, but important for LCP) -->
+<link rel="preload" href="assets/fonts/Lora-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- Font loading optimization script -->
+<script>
+    // Optimize font loading to prevent FOIT (Flash of Invisible Text)
+    if ('fonts' in document) {
+        // Add loaded class when critical fonts are ready
+        Promise.all([
+            document.fonts.load('400 16px Poppins'),
+            document.fonts.load('400 24px Lora')
+        ]).then(() => {
+            document.documentElement.classList.add('fonts-loaded');
+        }).catch(() => {
+            // Fallback: show text after 3 seconds even if fonts fail
+            setTimeout(() => {
+                document.documentElement.classList.add('fonts-loaded');
+            }, 3000);
+        });
+    } else {
+        // Fallback for older browsers
+        document.documentElement.classList.add('fonts-loaded');
+    }
+</script>
+
+<!-- Critical font display optimization -->
+<style>
+    /* Ensure text remains visible during font swap */
+    html:not(.fonts-loaded) body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    html:not(.fonts-loaded) .title,
+    html:not(.fonts-loaded) h1,
+    html:not(.fonts-loaded) h2,
+    html:not(.fonts-loaded) h3 {
+        font-family: Georgia, "Times New Roman", serif;
+    }
+</style>

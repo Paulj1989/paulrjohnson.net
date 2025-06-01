@@ -103,7 +103,7 @@ $pagination-active-border-color: $primary;
   // Only add aspect-ratio for content images, not decorative ones
   &[src*="figure-html"],
   &[src*="index_files"] {
-    aspect-ratio: 1.4;
+    // aspect-ratio: 1;
     object-fit: contain; // Preserve chart readability
   }
 }
@@ -111,7 +111,7 @@ $pagination-active-border-color: $primary;
 // Remove problematic dynamic height calculation
 #quarto-content {
   // Replace min-height calc with a simpler approach
-  min-height: 100vh !important;
+  // min-height: 100vh !important;
 }
 
 // Typography

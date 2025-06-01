@@ -1,0 +1,41 @@
+<!-- Critical Performance Optimizations -->
+
+<!-- DNS Prefetch for external resources -->
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//github.com">
+<link rel="dns-prefetch" href="//buymeacoffee.com">
+
+<!-- Preconnect to critical origins -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Preload critical images with proper sizing -->
+<link rel="preload" as="image" href="assets/images/me/headshot_rounded.webp"
+    imagesrcset="assets/images/me/headshot_rounded.webp 448w" imagesizes="(max-width: 768px) 320px, 448px">
+<link rel="preload" as="image" href="assets/icons/favicon-36x36.webp" imagesrcset="assets/icons/favicon-36x36.webp 36w"
+    imagesizes="36px">
+
+<!-- Resource Hints for better loading -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Optimize rendering -->
+<style>
+    /* Critical CSS for above-the-fold content */
+    .about-image {
+        aspect-ratio: 1;
+        max-width: 28em;
+        object-fit: cover;
+    }
+
+    .navbar-logo {
+        aspect-ratio: 1;
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+    }
+
+    .figure-img[src*="figure-html"],
+    .img-fluid[src*="index_files"] {
+        /* aspect-ratio: 1; */
+        object-fit: contain;
+    }
+</style>
