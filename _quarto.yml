@@ -78,5 +78,5 @@ execute:
 
 include-in-header:
   - _includes/umami.html
-  - _includes/preload-fonts.html
-  - _includes/performance-headers.html
+  # - _includes/preload-fonts.html
+  # - _includes/performance-headers.html
