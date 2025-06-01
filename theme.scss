@@ -1,35 +1,28 @@
 /*-- scss:defaults --*/
 
-/*-- scss:defaults --*/
-
 // Optimized font declarations
 // FIRA CODE - monospace for code
 @font-face {
   font-family: 'Fira Code';
   src: url('assets/fonts/FiraCode-VariableFont_wght.woff2') format('woff2');
-    // url('assets/fonts/FiraCode-VariableFont_wght.woff') format('woff');
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
 }
 
 // LORA - for headings (serif)
-// Normal styles
 @font-face {
   font-family: 'Lora';
   src: url('assets/fonts/Lora-VariableFont_wght.woff2') format('woff2');
-    // url('assets/fonts/Lora-VariableFont_wght.woff') format('woff');
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 
-// POPPINS - for body text and UI elements (sans-serif)
-// Regular weight for body text
+// POPPINS - Regular weight for body text
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Regular.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -39,7 +32,6 @@
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Medium.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -49,7 +41,6 @@
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Bold.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -59,7 +50,6 @@
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins-Italic.woff2') format('woff2');
-    // url('assets/fonts/Poppins-Italic.woff') format('woff');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -97,6 +87,14 @@ $pagination-active-bg: $primary;
 $pagination-active-border-color: $primary;
 
 /*-- scss:rules --*/
+
+// Image sizing
+.about-image {
+  // Reserve space
+  max-width: 28em;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
 
 // Typography
 .title {

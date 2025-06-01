@@ -2,6 +2,7 @@ project:
   type: website
   resources: _redirects
   pre-render: build/redirects.lua
+  post-render: bash build/purge_css.sh
 
 website:
   title: Paul Johnson
@@ -16,7 +17,6 @@ website:
   image: assets/images/me/headshot_rounded.webp
   image-alt: Me looking handsome as hell
   comments: false
-
   navbar:
     title: P(Johnson) > 0.05
     logo: assets/icons/favicon-36x36.webp
@@ -41,10 +41,8 @@ website:
       - text: Curriculum Vitae
         aria-label: Curriculum Vitae
         href: cv/index.qmd
-
   page-footer:
     left: 2024 Paul Johnson &#8729; Made with [Quarto](https://quarto.org)
-
     right:
       - text: Contact
         aria-label: Contact Form
@@ -59,9 +57,13 @@ format:
       - cosmo
       - theme.scss
     highlight-style: assets/github-plus.theme
-    # pagetitle: "{{< meta title >}} | Paul Johnson"
     fig-align: center
-    lightbox: true
+    # fig-width: 7
+    # fig-height: 5
+    fig-dpi: 150
+    fig-responsive: true
+    mainfont: "Poppins"
+    monofont: "Fira Code"
     mermaid:
       theme: neutral
 
@@ -76,4 +78,5 @@ execute:
 
 include-in-header:
   - _includes/umami.html
+  - _includes/performance-headers.html
   - _includes/preload-fonts.html
