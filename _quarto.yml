@@ -81,4 +81,3 @@ include-in-header:
   - _includes/umami.html
   - _includes/performance-headers.html
   - _includes/preload-fonts.html
-  - _includes/defer-js.html

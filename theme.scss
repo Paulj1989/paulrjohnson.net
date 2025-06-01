@@ -96,18 +96,6 @@ $pagination-active-border-color: $primary;
   object-fit: cover;
 }
 
-// Blog post images
-// .figure-img,
-// .img-fluid {
-
-//   // Only add aspect-ratio for content images, not decorative ones
-//   &[src*="figure-html"],
-//   &[src*="index_files"] {
-//     // aspect-ratio: 1;
-//     object-fit: contain; // Preserve chart readability
-//   }
-// }
-
 // Typography
 .title {
   font-size: 2.5rem;
