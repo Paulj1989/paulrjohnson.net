@@ -11,7 +11,7 @@
 <link rel="preload" href="assets/fonts/Lora-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Font loading optimization script -->
-<script>
+<!-- <script>
     // Optimize font loading to prevent FOIT (Flash of Invisible Text)
     (function () {
         'use strict';
@@ -57,10 +57,10 @@
             document.documentElement.classList.add('fonts-loaded');
         }
     })();
-</script>
+</script> -->
 
 <!-- Preload other font weights after critical path -->
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Use requestIdleCallback for non-critical font preloading
         const loadRemainingFonts = function () {
@@ -87,4 +87,4 @@
             setTimeout(loadRemainingFonts, 1000);
         }
     });
-</script>
+</script> -->
