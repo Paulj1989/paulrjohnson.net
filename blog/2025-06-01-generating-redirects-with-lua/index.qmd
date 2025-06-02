@@ -14,7 +14,7 @@ image-alt: |
 categories: [Netlify, Quarto, Web Development, Lua]
 ---
 
-Last year I wrote a [blog post](/blog/setting-up-netlify-redirects-with-quarto) about my process for generating Netlify redirects. It was an adapted version of a similar process that many others use, made to work for my slightly different setup. It involved housing a couple chunks of code in the homepage (`index.qmd` in the root directory) that would generate redirects every time the homepage is rendered.
+Last year I wrote a [blog post](/blog/setting-up-netlify-redirects-with-quarto) about my process for generating Netlify redirects. It was a similar process to that many others use, adapted slightly to work for my slightly different setup. It involved housing a couple chunks of code in the homepage (`index.qmd` in the root directory) that would generate redirects every time the homepage is rendered.
 
 This worked fine. It got the job done. But it bugged me that I had to make sure to remember to re-render the homepage every time I needed to update the redirects file. This relied too heavily on my remembering to do something. So, I've finally had a crack at fixing this and setting something up that will run without my intervention.
 
@@ -297,9 +297,9 @@ Lua provides basic file I/O operations, which the script uses:
 - **File reading**: Processing blog post metadata and manual redirect files
 - **File writing**: Creating the final `_redirects` file
 
-#### Pattern Matching Magic
+#### Pattern Matching
 
-One of Lua's strengths is its pattern matching system (similar to regular expressions but simpler). The script uses this to find blog posts.
+One of Lua's strengths is its pattern matching system. The script uses this to find my blog posts based on the pattern of ISO dates at the start of a blog post folder.
 
 ```lua
 -- Extract date-prefixed blog posts
@@ -319,9 +319,9 @@ local cat_match = line:match("^categories:%s*%[(.+)%]")
 
 This looks for lines like `categories: [Netlify, Quarto, Web Development, Lua]` in the blog post's YAML header.
 
-## The Power of Automation
+## Wrapping Up
 
-Every time I publish a new blog post or add categories, the redirects are automatically updated without any manual intervention.
+So that's a job well done. Now, every time I publish a new blog post or add categories, the redirects are automatically updated without any manual intervention.
 
 ## Acknowledgments {.appendix}
 
