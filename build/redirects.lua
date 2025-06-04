@@ -5,6 +5,11 @@ local system = require("pandoc.system")
 -- Toggle for debug output
 local DEBUG = false
 
+if not os.getenv("QUARTO_PROJECT_RENDER_ALL") then
+    print("Skipping redirects...")
+    os.exit()
+end
+
 local function debug_log(message)
     if DEBUG then
         io.stderr:write("[Redirects Debug] " .. message .. "\n")
@@ -207,7 +212,7 @@ function Pandoc(doc)
     -- Write redirects file
     if write_redirects_file(project_root, all_redirects) then
         debug_log("Redirect generation complete")
-        print("✅ Redirects written to _redirects (" ..
+        print("Redirects written to _redirects (" ..
             #all_redirects ..
             " entries, " ..
             #blog_posts .. " posts, " .. #manual_redirects ..
