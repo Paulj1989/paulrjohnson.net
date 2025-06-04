@@ -1,0 +1,29 @@
+<!-- Critical Performance Optimizations -->
+<!-- DNS Prefetch for external resources -->
+<link rel="dns-prefetch" href="//api.iconify.design">
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
+
+<!-- Preconnect to critical origins -->
+<link rel="preconnect" href="https://api.iconify.design" crossorigin>
+
+<!-- Preload critical images with proper sizing -->
+<link rel="preload" as="image" href="/assets/images/me/headshot_rounded.webp"
+    imagesrcset="/assets/images/me/headshot_rounded.webp 448w" fetchpriority="high"
+    imagesizes="(max-width: 768px) 320px, 448px">
+<link rel="preload" as="image" href="/assets/icons/favicon-36x36.webp" imagesrcset="/assets/icons/favicon-36x36.webp 36w"
+    imagesizes="36px">
+
+<!-- Critical JavaScript - only load what's needed for LCP -->
+<script>
+    // Immediately mark critical images to prevent lazy loading
+    document.addEventListener('DOMContentLoaded', function () {
+        const criticalImages = document.querySelectorAll('.about-image, .navbar-logo, img[src*="headshot"], img[src*="favicon"]');
+        criticalImages.forEach(function (img) {
+            img.setAttribute('data-critical', 'true');
+            img.fetchPriority = 'high';
+        });
+    });
+</script>
+
+<!-- Resource Hints for better loading -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
