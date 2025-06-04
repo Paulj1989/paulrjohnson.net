@@ -1,6 +1,7 @@
 #!/bin/bash
 # purge_css.sh
 if [[ -z "$QUARTO_PROJECT_RENDER_ALL" ]]; then
+echo "Skipping CSS purge and minification.."
 exit
 fi
 
