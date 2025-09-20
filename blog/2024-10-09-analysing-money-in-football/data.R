@@ -197,7 +197,7 @@ player_values_raw <-
     start_year = c(2012:2023)
   )
 
-# wrangle to team total values per season?tm
+# wrangle to team total values per season?
 squad_values <-
   player_values_raw |>
   dplyr::mutate(
