@@ -1,8 +1,5 @@
 [build]
-command = """
-    sudo apt-get update
-    sudo apt-get install -y weasyprint
-    """
+command = "uv add weasyprint"
 
 [[plugins]]
 package = "@quarto/netlify-plugin-quarto"
