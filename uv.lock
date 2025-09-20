@@ -1208,9 +1208,6 @@ requires-dist = [
     { name = "xgboost", specifier = ">=2.1.3" },
 ]
 
-[package.metadata.requires-dev]
-dev = []
-
 [[package]]
 name = "pexpect"
 version = "4.9.0"

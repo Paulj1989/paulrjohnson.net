@@ -9,12 +9,9 @@ description-meta: |
 css:
   - ../assets/css/cv.css
 format:
-  html:
-    toc: false
-    toc-depth: 2
+  html: default
   pdf:
     pdf-engine: weasyprint
-format-links: [pdf]
 ---
 
 ## Selected Work Experience  {{< fa briefcase >}}
