@@ -4,10 +4,6 @@
   font-style: italic;
 }
 
-.print-only {
-  display: none;
-}
-
 /* pdf styles */
 @media print {
   @page {

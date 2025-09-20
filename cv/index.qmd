@@ -11,7 +11,7 @@ css:
 format:
   html: default
   pdf:
-    pdf-engine: weasyprint
+    pdf-engine: wkhtmltopdf
 ---
 
 ## Selected Work Experience  {{< fa briefcase >}}
@@ -80,3 +80,10 @@ _Charity Sector & NHS_
 \
 *University of Sussex* [*2008 --- 2011*]{.cvdate}
 \
+
+::: {.content-visible when-format="pdf"}
+
+## References
+Available upon request.
+
+:::

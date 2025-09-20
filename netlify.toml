@@ -1,5 +1,2 @@
-[build]
-command = "uv add weasyprint"
-
 [[plugins]]
 package = "@quarto/netlify-plugin-quarto"
