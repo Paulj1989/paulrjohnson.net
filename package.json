@@ -1,7 +1,7 @@
 {
     "dependencies": {
         "@quarto/netlify-plugin-quarto": "^0.0.5",
-        "purgecss": "^6.0.0",
+        "purgecss": "^7.0.2",
         "uglify-js": "^3.19.3",
         "uglifycss": "^0.0.29"
     }

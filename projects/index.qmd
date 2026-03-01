@@ -11,8 +11,8 @@ description-meta: |
 
 - Data Science Guides [[R](https://r-data-science-guides.netlify.app/)|[Python](https://python-data-science-guides.netlify.app/)] - Guides for common data science tasks, in R & Python.
 - [CAIP App](https://0195527d-3bc5-1025-fd07-35ef0a9dd189.share.connect.posit.cloud) - The PCN Capacity and Access Improvement Payment (CAIP) App.
-- [Expected Kills](https://github.com/Paulj1989/expected-kills) - Predicting kills in volleyball using XGBoost.
-- [Player Similarities](https://github.com/Paulj1989/player-similarities) - Using clustering methods to measure player similarity within positions.
+- [Predicting Ball](https://predicting-ball.co.uk) - A web app for simulating Bundesliga outcomes at match and season level.
+- [Code Club](https://nhs-south-central-and-west.github.io/code-club/) - Resources for the learning and development of Python and data science skills in the NHS.
 - [Football Analytics](https://github.com/Paulj1989/football-analytics) - A repository of past football analytics work.
 
 ## Packages {{< fa box-open >}}

@@ -65,3 +65,5 @@ blog/2024-10-09-analysing-money-in-football/data/squad_values.csv
 
 # Node.js
 /node_modules
+
+**/*.quarto_ipynb
